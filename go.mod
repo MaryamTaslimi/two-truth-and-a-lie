@@ -12,3 +12,5 @@ require (
 	golang.org/x/net v0.0.0-20210220033124-5f55cee0dc0d // indirect
 	golang.org/x/text v0.3.5
 )
+
+// +heroku goVersion go1.16
