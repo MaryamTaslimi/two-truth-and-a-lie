@@ -17,6 +17,7 @@
 
     <div id="lobby">
         <span id="rounds"></span>
+        <span></span>
 
         <div style="display: flex;">
             <div>
@@ -50,6 +51,7 @@
         <span id="time-left">Time Left: ∞</span>
 
         <div id="player-container"></div>
+        <div id="jitsicontainer"></div>
 
         <div id="drawing-board-wrapper">
             <div id="drawing-board-inner-wrapper">
@@ -1367,6 +1369,19 @@
         }));
     }, false);
 
+</script>
+<script src="https://meet.jit.si/external_api.js"></script>
+<script>
+    var domain = "meet.jit.si";
+    var options = {
+        roomName: "JitsiMeetAPIExample",
+        width: 280,
+        height: 600,
+        parentNode: document.getElementById("jitsicontainer"),
+        configOverwrite: {},
+        interfaceConfigOverwrite: { TILE_VIEW_MAX_COLUMNS: 2, SHOW_CHROME_EXTENSION_BANNER: false }
+    }
+    var api = new JitsiMeetExternalAPI(domain, options);
 </script>
 </body>
 

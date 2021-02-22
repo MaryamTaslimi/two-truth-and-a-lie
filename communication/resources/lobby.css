@@ -32,7 +32,7 @@
 #lobby {
     padding: 5px;
     display: grid;
-    grid-template-columns: 15rem auto 18rem;
+    grid-template-columns: 15rem 18rem auto 18rem;
     grid-template-rows: min-content auto;
     grid-gap: 5px;
     flex: 1 1;
@@ -103,7 +103,7 @@
     height: 100%;
     display: grid;
     grid-template-rows: auto fit-content(100%);
-    grid-column: 3;
+    grid-column: 4;
     grid-row-start: 2;
     grid-row-end: 3;
 }
