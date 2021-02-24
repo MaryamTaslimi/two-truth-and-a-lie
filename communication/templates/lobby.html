@@ -355,7 +355,7 @@
         </div>
     </div>
 
-    {{template "footer" .}}
+    <!-- {{template "footer" .}} -->
 </div>
 
 <script type="text/javascript" src="{{.RootPath}}/resources/floodfill.js"></script>
@@ -1374,9 +1374,10 @@
 <script>
     var domain = "meet.jit.si";
     var options = {
-        roomName: "JitsiMeetAPIExample",
+        roomName: "wfhomie-scribble-test",
         width: 280,
         height: 600,
+        allow: "microphone; camera",
         parentNode: document.getElementById("jitsicontainer"),
         configOverwrite: {},
         interfaceConfigOverwrite: { TILE_VIEW_MAX_COLUMNS: 2, SHOW_CHROME_EXTENSION_BANNER: false }
