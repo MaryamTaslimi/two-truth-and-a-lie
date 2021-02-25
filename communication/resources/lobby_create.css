@@ -9,13 +9,16 @@
 
 .content-container {
     display: block;
-    background-color: rgb(250, 192, 202);
+    background-color: #39b0a4;
     padding: 1rem 3rem 1rem 3rem;
+    border-radius: 10px;
 }
 
 .input-item {
     width: inherit;
     min-width: 300px;
+    font-family: 'RocknRollOne';
+    border-radius: 5px;
 }
 
 .error-list {
@@ -41,12 +44,14 @@
     outline: none;
     cursor: pointer;
     padding: 1rem;
+    border-radius: 10px 10px 0 0;
 }
 
 .tab-button:checked + .tab-label {
-    background-color: rgb(179, 224, 241);
-    border-bottom: 0.3rem solid rgb(102, 102, 212);
+    background-color: #eb553a;
+    border-bottom: 0.3rem solid #f6d65c;
     padding: 1rem;
+    border-radius: 10px 10px 0 0;
 }
 
 .tab-content {
@@ -63,6 +68,7 @@
 /* display: block causes the element to be visible, since the default value is none */
 #create-lobby {
     display: block;
+    border-radius: 0px 0 10px 10px;
 }
 
 .join-lobby-data {
@@ -88,6 +94,8 @@
 
 #refresh-button {
     margin-bottom: 0.5rem;
+    font-family: 'ROCKNROLLONE';
+    border-radius: 5px;
 }
 
 #lobby-table {
@@ -143,6 +151,8 @@ tr:hover {
 #join-button {
     grid-column-start: 1;
     grid-column-end: 3;
+    font-family: 'ROCKNROLLONE';
+    border-radius: 5px;   
 }
 
 tr[selected="true"] {
