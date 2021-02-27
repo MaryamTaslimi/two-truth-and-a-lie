@@ -162,23 +162,23 @@
 
     <script type="text/javascript">
 
-        let lobbyTableLoaded = false;
-        let lobbyTableBody = document.getElementById("lobby-table-body");
+        // let lobbyTableLoaded = false;
+        // let lobbyTableBody = document.getElementById("lobby-table-body");
         let selectedLobby;
         let existcondition;
-        let token = document.getElementById('tokeninput');
-        let createLobbyTabButton = document.getElementById("create-lobby-tab-button");
-        let joinLobbyTabButton = document.getElementById("join-lobby-tab-button");
+        // let token = document.getElementById('tokeninput');
+        // let createLobbyTabButton = document.getElementById("create-lobby-tab-button");
+        // let joinLobbyTabButton = document.getElementById("join-lobby-tab-button");
 
         let joinButton = document.getElementById("join-button");
 
-        let wordpackDetail = document.getElementById("wordpack-detail");
-        let roundsDetail = document.getElementById("rounds-detail");
-        let playersDetail = document.getElementById("players-detail");
-        let drawingTimeDetail = document.getElementById("drawing-time-detail");
-        let customWordsDetail = document.getElementById("custom-words-detail");
-        let votekickingDetail = document.getElementById("votekicking-detail");
-        let maxClientsIPDetail = document.getElementById("max-clients-ip-detail");
+        // let wordpackDetail = document.getElementById("wordpack-detail");
+        // let roundsDetail = document.getElementById("rounds-detail");
+        // let playersDetail = document.getElementById("players-detail");
+        // let drawingTimeDetail = document.getElementById("drawing-time-detail");
+        // let customWordsDetail = document.getElementById("custom-words-detail");
+        // let votekickingDetail = document.getElementById("votekicking-detail");
+        // let maxClientsIPDetail = document.getElementById("max-clients-ip-detail");
 
         function onJoin() {
             window.open("{{.RootPath}}/ssrEnterLobby?lobby_id=" + selectedLobby, "_self");
@@ -248,42 +248,42 @@
             }
         }
 
-        function showLobbyDetails(lobby) {
-            if (lobby === null) {
-                wordpackDetail.innerText = "";
-                roundsDetail.innerText = "";
-                playersDetail.innerText = "";
-                drawingTimeDetail.innerText = "";
-                customWordsDetail.innerText = "";
-                votekickingDetail.innerText = "";
-                maxClientsIPDetail.innerText = "";
-                joinButton.disabled = true;
-            } else {
-                wordpackDetail.innerText = lobby.wordpack;
-                roundsDetail.innerText = lobby.round + "/" + lobby.maxRounds;
-                playersDetail.innerText = lobby.playerCount + "/" + lobby.maxPlayers;
-                drawingTimeDetail.innerText = lobby.drawingTime.toString();
-                customWordsDetail.innerText = lobby.customWords ? "Yes" : "No";
-                votekickingDetail.innerText = lobby.votekick ? "Yes" : "No";
-                maxClientsIPDetail.innerText = lobby.maxClientsPerIp;
-                joinButton.disabled = false;
-            }
-        }
+        // function showLobbyDetails(lobby) {
+        //     if (lobby === null) {
+        //         wordpackDetail.innerText = "";
+        //         roundsDetail.innerText = "";
+        //         playersDetail.innerText = "";
+        //         drawingTimeDetail.innerText = "";
+        //         customWordsDetail.innerText = "";
+        //         votekickingDetail.innerText = "";
+        //         maxClientsIPDetail.innerText = "";
+        //         joinButton.disabled = true;
+        //     } else {
+        //         wordpackDetail.innerText = lobby.wordpack;
+        //         roundsDetail.innerText = lobby.round + "/" + lobby.maxRounds;
+        //         playersDetail.innerText = lobby.playerCount + "/" + lobby.maxPlayers;
+        //         drawingTimeDetail.innerText = lobby.drawingTime.toString();
+        //         customWordsDetail.innerText = lobby.customWords ? "Yes" : "No";
+        //         votekickingDetail.innerText = lobby.votekick ? "Yes" : "No";
+        //         maxClientsIPDetail.innerText = lobby.maxClientsPerIp;
+        //         joinButton.disabled = false;
+        //     }
+        // }
 
-        function openTab(tabId) {
-            if (tabId === "join-lobby") {
-                loadLobbyTable();
-            }
+        // function openTab(tabId) {
+        //     if (tabId === "join-lobby") {
+        //         loadLobbyTable();
+        //     }
 
-            //Initially hide all tabs except for our target tab
-            const tabs = document.getElementsByClassName("tab-content");
-            for (let i = 0; i < tabs.length; i++) {
-                tabs[i].style.display = "none";
-            }
+        //     //Initially hide all tabs except for our target tab
+        //     const tabs = document.getElementsByClassName("tab-content");
+        //     for (let i = 0; i < tabs.length; i++) {
+        //         tabs[i].style.display = "none";
+        //     }
 
-            //Show the newly selected tab.
-            document.getElementById(tabId).style.display = "flex";
-        }
+        //     //Show the newly selected tab.
+        //     document.getElementById(tabId).style.display = "flex";
+        // }
 
         // if (createLobbyTabButton.checked) {
         //     openTab('create-lobby');
