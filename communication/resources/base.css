@@ -79,8 +79,9 @@ ul {
     align-items: center;
     display: inline-grid;
     grid-template-columns: auto auto;
-    grid-column-gap: 20px;
+    grid-column-gap: 0px;
     grid-row-gap: 10px;
+    justify-items: center;
 }
 
 .advanced-section {

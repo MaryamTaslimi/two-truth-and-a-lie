@@ -29,12 +29,12 @@ func createDefaultLobbyCreatePageData() *CreatePageData {
 		BasePageConfig:    CurrentBasePageConfig,
 		SettingBounds:     game.LobbySettingBounds,
 		Languages:         game.SupportedLanguages,
-		Public:            "false",
+		Public:            "true",
 		DrawingTime:       "120",
 		Rounds:            "4",
 		MaxPlayers:        "12",
 		CustomWordsChance: "50",
-		ClientsPerIPLimit: "1",
+		ClientsPerIPLimit: "3",
 		EnableVotekick:    "true",
 		Language:          "english",
 	}
@@ -75,6 +75,7 @@ func ssrCreateLobby(w http.ResponseWriter, r *http.Request) {
 	clientsPerIPLimit, clientsPerIPLimitInvalid := parseClientsPerIPLimit(r.Form.Get("clients_per_ip_limit"))
 	enableVotekick, enableVotekickInvalid := parseBoolean("enable votekick", r.Form.Get("enable_votekick"))
 	publicLobby, publicLobbyInvalid := parseBoolean("public", r.Form.Get("public"))
+	token, tokenInvalid := parseToken(r.Form.Get("token"))
 
 	//Prevent resetting the form, since that would be annoying as hell.
 	pageData := CreatePageData{
@@ -118,6 +119,9 @@ func ssrCreateLobby(w http.ResponseWriter, r *http.Request) {
 	if publicLobbyInvalid != nil {
 		pageData.Errors = append(pageData.Errors, publicLobbyInvalid.Error())
 	}
+	if tokenInvalid != nil {
+		pageData.Errors = append(pageData.Errors, tokenInvalid.Error())
+	}
 
 	if len(pageData.Errors) != 0 {
 		err := pageTemplates.ExecuteTemplate(w, "lobby-create-page", pageData)
@@ -127,9 +131,10 @@ func ssrCreateLobby(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var playerName = getPlayername(r)
+	// var playerName = getPlayername(r)
+	var playerName = "test"
 
-	player, lobby, createError := game.CreateLobby(playerName, language, publicLobby, drawingTime, rounds, maxPlayers, customWordChance, clientsPerIPLimit, customWords, enableVotekick)
+	player, lobby, createError := game.CreateLobby(playerName, language, publicLobby, drawingTime, rounds, maxPlayers, customWordChance, clientsPerIPLimit, customWords, enableVotekick, token)
 	if createError != nil {
 		pageData.Errors = append(pageData.Errors, createError.Error())
 		templateError := pageTemplates.ExecuteTemplate(w, "lobby-create-page", pageData)
@@ -298,4 +303,15 @@ func parseBoolean(valueName string, value string) (bool, error) {
 	}
 
 	return false, fmt.Errorf("the %s value must be a boolean value ('true' or 'false)", valueName)
+}
+
+func parseToken(value string) (string, error) {
+
+	tokenvalue := strings.TrimSpace(value)
+	if tokenvalue != "12345" {
+		return tokenvalue, errors.New("you must enter the valid token")
+	}
+
+	return tokenvalue, nil
+
 }

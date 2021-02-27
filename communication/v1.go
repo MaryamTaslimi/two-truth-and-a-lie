@@ -65,6 +65,7 @@ func createLobby(w http.ResponseWriter, r *http.Request) {
 	clientsPerIPLimit, clientsPerIPLimitInvalid := parseClientsPerIPLimit(r.Form.Get("clients_per_ip_limit"))
 	enableVotekick, enableVotekickInvalid := parseBoolean("enable votekick", r.Form.Get("enable_votekick"))
 	publicLobby, publicLobbyInvalid := parseBoolean("public", r.Form.Get("public"))
+	token, tokenInvalid := parseToken(r.Form.Get("token"))
 
 	var requestErrors []string
 	if languageInvalid != nil {
@@ -94,6 +95,9 @@ func createLobby(w http.ResponseWriter, r *http.Request) {
 	if publicLobbyInvalid != nil {
 		requestErrors = append(requestErrors, publicLobbyInvalid.Error())
 	}
+	if tokenInvalid != nil {
+		requestErrors = append(requestErrors, tokenInvalid.Error())
+	}
 
 	if len(requestErrors) != 0 {
 		http.Error(w, strings.Join(requestErrors, ";"), http.StatusBadRequest)
@@ -101,7 +105,7 @@ func createLobby(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var playerName = getPlayername(r)
-	player, lobby, createError := game.CreateLobby(playerName, language, publicLobby, drawingTime, rounds, maxPlayers, customWordChance, clientsPerIPLimit, customWords, enableVotekick)
+	player, lobby, createError := game.CreateLobby(playerName, language, publicLobby, drawingTime, rounds, maxPlayers, customWordChance, clientsPerIPLimit, customWords, enableVotekick, token)
 	if createError != nil {
 		http.Error(w, createError.Error(), http.StatusBadRequest)
 		return
