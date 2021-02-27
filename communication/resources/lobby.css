@@ -61,7 +61,7 @@
     position: absolute;
     background-color: white;
     width: 100%;
-    height: 100%;
+    height: 170%;
 }
 
 #center-dialogs {
@@ -144,6 +144,7 @@
     border: 0;
     border-top: 3px solid black;
     padding: 5px;
+    font-family: 'RocknRollOne';
 }
 
 #message-input:focus {
@@ -155,7 +156,7 @@
     margin-bottom: 1rem;
     font-size: 2.75rem;
     font-weight: bold;
-    color: rgb(240, 105, 127);
+    color: #1e00f8;
 }
 
 .word-button-container {
@@ -169,6 +170,8 @@
     border: none;
     background-color: white;
     padding: 0.5rem 1rem 0.5rem 1rem;
+    border-radius: 5px;
+    font-family: RocknRollOne;
 }
 
 .button-center-wrapper {
@@ -429,4 +432,6 @@ input[type="button"]:active,
 
 .namechange-field {
     margin-right: 0.25rem;
+    border-radius: 5px;
+    font-family: RocknRollOne;
 }

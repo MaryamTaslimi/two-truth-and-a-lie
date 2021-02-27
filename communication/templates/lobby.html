@@ -4,1386 +4,1417 @@
 
 <head>
     <title>Scribble.rs - Game</title>
-    <meta charset="UTF-8"/>
+    <meta charset="UTF-8" />
     {{template "font-decl" .}}
-    <link rel="stylesheet" type="text/css" href="{{.RootPath}}/resources/base.css"/>
-    <link rel="stylesheet" type="text/css" href="{{.RootPath}}/resources/lobby.css"/>
-    <link rel="icon" type="image/png" href="{{.RootPath}}/resources/favicon.png"/>
+    <link rel="stylesheet" type="text/css" href="{{.RootPath}}/resources/base.css" />
+    <link rel="stylesheet" type="text/css" href="{{.RootPath}}/resources/lobby.css" />
+    <link rel="icon" type="image/png" href="{{.RootPath}}/resources/favicon.png" />
 </head>
 
 <body>
-<div class="content-wrapper">
-    <noscript><span class="noscript">This website requires JavaScript to run properly.</span></noscript>
+    <div class="content-wrapper">
+        <noscript><span class="noscript">This website requires JavaScript to run properly.</span></noscript>
 
-    <div id="lobby">
-        <span id="rounds"></span>
-        <span></span>
+        <div id="lobby">
+            <span id="rounds"></span>
+            <span></span>
 
-        <div style="display: flex;">
-            <div>
-                <!-- this button is basically behaving like a checkbox, but in order to
+            <div style="display: flex;">
+                <div>
+                    <!-- this button is basically behaving like a checkbox, but in order to
                 have a uniform look with the other buttons in the header, we are not using
                 a checkbox anymore. -->
-                <button onclick="toggleSound()" class="dialog-button header-button"
-                        alt="Toggle soundeffects" title="Toggle soundeffects">
-                    <img id="sound-toggle-label" class="header-button-image"/>
-                </button>
+                    <button onclick="toggleSound()" class="dialog-button header-button" alt="Toggle soundeffects"
+                        title="Toggle soundeffects">
+                        <img id="sound-toggle-label" class="header-button-image" />
+                    </button>
 
-                <button onclick="showNameChangeDialog()" class="dialog-button header-button"
-                        alt="Change your name" title="Change your name">
-                    <img src="{{.RootPath}}/resources/user.svg" class="header-button-image"/>
-                </button>
-            </div>
-            <div id="word-container" style="flex: 1; align-self: center; justify-content: baseline;"></div>
-            <div>
-                <button onclick="showKickDialog()" class="dialog-button header-button"
-                        alt="Votekick a player" title="Votekick a player">
-                    <img src="{{.RootPath}}/resources/kick.png" class="header-button-image"/>
-                </button>
+                    <button onclick="showNameChangeDialog()" class="dialog-button header-button" alt="Change your name"
+                        title="Change your name">
+                        <img src="{{.RootPath}}/resources/user.svg" class="header-button-image" />
+                    </button>
+                </div>
+                <div id="word-container" style="flex: 1; align-self: center; justify-content: baseline;"></div>
+                <div>
+                    <button onclick="showKickDialog()" class="dialog-button header-button" alt="Votekick a player"
+                        title="Votekick a player">
+                        <img src="{{.RootPath}}/resources/kick.png" class="header-button-image" />
+                    </button>
 
-                <button onclick="showLobbySettingsDialog()" class="dialog-button header-button"
+                    <button onclick="showLobbySettingsDialog()" class="dialog-button header-button"
                         alt="Change lobby settings" title="Change lobby settings">
-                    <img src="{{.RootPath}}/resources/settings.svg" class="header-button-image"/>
-                </button>
+                        <img src="{{.RootPath}}/resources/settings.svg" class="header-button-image" />
+                    </button>
+                </div>
             </div>
-        </div>
 
-        <span id="time-left">Time Left: ∞</span>
+            <span id="time-left">Time Left: ∞</span>
 
-        <div id="player-container"></div>
-        <div id="jitsicontainer"></div>
+            <div id="player-container"></div>
+            <div id="jitsicontainer"></div>
 
-        <div id="drawing-board-wrapper">
-            <div id="drawing-board-inner-wrapper">
-                <canvas id="drawing-board"></canvas>
+            <div id="drawing-board-wrapper">
+                <div id="drawing-board-inner-wrapper">
+                    <canvas id="drawing-board"></canvas>
 
-                <!-- The so called "center dialogs" are divs that float above the canvas.
+                    <!-- The so called "center dialogs" are divs that float above the canvas.
                 They are centered are always a fraction of the canvas size but never bigger.
                 The "center-dialog-container" is basically like a "window" if you will and the
                 "center-dialog" is the window content. Depending on which dialog
                 we want to show, we show a different content. Technically there could be more
                 than one dialog visible at a time, but they'll be layered. -->
-                <div id="center-dialogs">
-                    <div id="center-dialog-container">
-                        <div id="word-dialog" class="center-dialog">
-                            <span class="dialog-title">Choose a word</span>
-                            <div class="center-dialog-content">
-                                <div class="word-button-container">
-                                    <button id="word-button-zero" class="dialog-button" onclick="chooseWord(0)">Placeholder
-                                    </button>
-                                    <button id="word-button-one" class="dialog-button" onclick="chooseWord(1)">Placeholder
-                                    </button>
-                                    <button id="word-button-two" class="dialog-button" onclick="chooseWord(2)">Placeholder
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div id="center-dialog-container">
-                        <div id="start-dialog" class="center-dialog">
-                            <span class="dialog-title">Start the game</span>
-                            <div class="center-dialog-content">
-                                <div style="display: flex; flex-direction: column;">
-                                    Change your username:
-                                    <div style="display: flex; flex-direction: row;">
-                                        <input class="namechange-field" type="text" id="namechange-field-start-dialog"></input>
-                                        <button class="dialog-button" onclick="changeName(document.getElementById('namechange-field-start-dialog').value)">Change</button>
-                                        <button class="dialog-button" onclick="changeName('')">Randomize</button>
-                                    </div>
-                                </div>
-                                <div class="button-center-wrapper">
-                                    <button class="dialog-button" onclick="startGame()">Start</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div id="center-dialog-container">
-                        <div id="unstarted-dialog" class="center-dialog">
-                            <span class="dialog-title">Game hasn't started</span>
-                            <div class="center-dialog-content">
-                                <div style="display: flex; flex-direction: column;">
-                                    Please wait for your lobby host to start the game.<br/><br/>
-                                    Change your username:
-                                    <div style="display: flex; flex-direction: row;">
-                                        <input class="namechange-field" type="text" id="namechange-field-unstarted-dialog"></input>
-                                        <button class="dialog-button" onclick="changeName(document.getElementById('namechange-field-unstarted-dialog').value)">Change</button>
-                                        <button class="dialog-button" onclick="changeName('')">Randomize</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div id="center-dialog-container">
-                        <div id="namechange-dialog" class="center-dialog">
-                            <span class="dialog-title">Change your username</span>
-                            <div class="center-dialog-content">
-                                <div style="display: flex; flex-direction: column;">
-                                    <div style="display: flex; flex-direction: row;">
-                                        <input class="namechange-field" type="text" id="namechange-field"></input>
-                                        <button class="dialog-button" onclick="changeName(document.getElementById('namechange-field').value)">Change</button>
-                                        <button class="dialog-button" onclick="changeName('')">Randomize</button>
-                                    </div>
-                                    <div class="button-center-wrapper">
-                                        <button class="dialog-button" onclick="hideNameChangeDialog()">Close</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div id="center-dialog-container">
-                        <div id="lobbysettings-dialog" class="center-dialog">
-                            <span class="dialog-title">Change the lobby settings</span>
-                            <div class="center-dialog-content">
-                                <div style="display: flex; flex-direction: column;">
-                                    <div class="input-container">
-                                        <b>Maximum Players</b>
-                                        <input id="lobby-settings-max-players" type="number" name="max_players" min="{{.MinMaxPlayers}}"
-                                        max="{{.MaxMaxPlayers}}" value="{{.MaxPlayers}}"/>
-                                        <b>Public Lobby</b>
-                                        <input id="lobby-settings-public" type="checkbox" name="public" value="true"
-                                            {{if eq .Public true}}checked{{end}}/>
-                                        <b>Custom Words Chance</b>
-                                        <div style="display: flex;">
-                                            0%
-                                            <input style="flex: 1;" id="lobby-settings-custom-words-chance" type="range" name="custom_words_chance" min="1" max="100" value="{{.CustomWordsChance}}">
-                                            100%
-                                        </div>
-                    
-                                        <details class="advanced-section">
-                                            <summary>Advanced</summary>
-                                            <div class="input-container">
-                                                <b>Players per IP Limit</b>
-                                                <input id="lobby-settings-clients-per-ip-limit" type="number"
-                                                name="clients_per_ip_limit" min="{{.MinClientsPerIPLimit}}"
-                                                max="{{.MaxClientsPerIPLimit}}" value="{{.ClientsPerIPLimit}}"/>
-                                                <b>Enable Votekick</b>
-                                                <input id="lobby-settings-enable-votekick" type="checkbox" name="enable_votekick" value="true"
-                                                {{if eq .EnableVotekick true}}checked{{end}}/>
-                                            </div>
-                                        </details>
-                                        <button class="dialog-button" onclick="saveLobbySettings()" style="grid-column-start: 1; grid-column-end: 3;">
-                                                Save settings
+                    <div id="center-dialogs">
+                        <div id="center-dialog-container">
+                            <div id="word-dialog" class="center-dialog">
+                                <span class="dialog-title">Choose a word</span>
+                                <div class="center-dialog-content">
+                                    <div class="word-button-container">
+                                        <button id="word-button-zero" class="dialog-button"
+                                            onclick="chooseWord(0)">Placeholder
+                                        </button>
+                                        <button id="word-button-one" class="dialog-button"
+                                            onclick="chooseWord(1)">Placeholder
+                                        </button>
+                                        <button id="word-button-two" class="dialog-button"
+                                            onclick="chooseWord(2)">Placeholder
                                         </button>
                                     </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="center-dialog-container">
+                            <div id="start-dialog" class="center-dialog">
+                                <span class="dialog-title">Start the game</span>
+                                <div class="center-dialog-content">
+                                    <div style="display: flex; flex-direction: column;">
+                                        Change your username:
+                                        <div style="display: flex; flex-direction: row;">
+                                            <input class="namechange-field" type="text"
+                                                id="namechange-field-start-dialog"></input>
+                                            <button class="dialog-button"
+                                                onclick="changeName(document.getElementById('namechange-field-start-dialog').value)">Change</button>
+                                            <button class="dialog-button" onclick="changeName('')">Randomize</button>
+                                        </div>
+                                    </div>
                                     <div class="button-center-wrapper">
-                                        <button class="dialog-button" onclick="hideLobbySettingsDialog()">Close</button>
+                                        <button class="dialog-button" onclick="startGame()">Start</button>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div id="center-dialog-container">
-                        <div id="game-over-dialog" class="center-dialog">
-                            <span id="game-over-dialog-title" class="dialog-title">Game over!</span>
-                            <div id="game-over-scoreboard"></div>
-                            <button id="restart-button" class="dialog-button" onclick="startGame()">Restart</button>
+                        <div id="center-dialog-container">
+                            <div id="unstarted-dialog" class="center-dialog">
+                                <span class="dialog-title">Game hasn't started</span>
+                                <div class="center-dialog-content">
+                                    <div style="display: flex; flex-direction: column;">
+                                        Please wait for your lobby host to start the game.<br /><br />
+                                        Change your username:
+                                        <div style="display: flex; flex-direction: row;">
+                                            <input class="namechange-field" type="text"
+                                                id="namechange-field-unstarted-dialog"></input>
+                                            <button class="dialog-button"
+                                                onclick="changeName(document.getElementById('namechange-field-unstarted-dialog').value)">Change</button>
+                                            <button class="dialog-button" onclick="changeName('')">Randomize</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="center-dialog-container">
+                            <div id="namechange-dialog" class="center-dialog">
+                                <span class="dialog-title">Change your username</span>
+                                <div class="center-dialog-content">
+                                    <div style="display: flex; flex-direction: column;">
+                                        <div style="display: flex; flex-direction: row;">
+                                            <input class="namechange-field" type="text" id="namechange-field"></input>
+                                            <button class="dialog-button"
+                                                onclick="changeName(document.getElementById('namechange-field').value)">Change</button>
+                                            <button class="dialog-button" onclick="changeName('')">Randomize</button>
+                                        </div>
+                                        <div class="button-center-wrapper">
+                                            <button class="dialog-button"
+                                                onclick="hideNameChangeDialog()">Close</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="center-dialog-container">
+                            <div id="lobbysettings-dialog" class="center-dialog">
+                                <span class="dialog-title">Change the lobby settings</span>
+                                <div class="center-dialog-content">
+                                    <div style="display: flex; flex-direction: column;">
+                                        <div class="input-container">
+                                            <b>Maximum Players</b>
+                                            <input id="lobby-settings-max-players" type="number" name="max_players"
+                                                min="{{.MinMaxPlayers}}" max="{{.MaxMaxPlayers}}"
+                                                value="{{.MaxPlayers}}" />
+                                            <b>Public Lobby</b>
+                                            <input id="lobby-settings-public" type="checkbox" name="public" value="true"
+                                                {{if eq .Public true}}checked{{end}} />
+                                            <b>Custom Words Chance</b>
+                                            <div style="display: flex;">
+                                                0%
+                                                <input style="flex: 1;" id="lobby-settings-custom-words-chance"
+                                                    type="range" name="custom_words_chance" min="1" max="100"
+                                                    value="{{.CustomWordsChance}}">
+                                                100%
+                                            </div>
+
+                                            <details class="advanced-section">
+                                                <summary>Advanced</summary>
+                                                <div class="input-container">
+                                                    <b>Players per IP Limit</b>
+                                                    <input id="lobby-settings-clients-per-ip-limit" type="number"
+                                                        name="clients_per_ip_limit" min="{{.MinClientsPerIPLimit}}"
+                                                        max="{{.MaxClientsPerIPLimit}}"
+                                                        value="{{.ClientsPerIPLimit}}" />
+                                                    <b>Enable Votekick</b>
+                                                    <input id="lobby-settings-enable-votekick" type="checkbox"
+                                                        name="enable_votekick" value="true" {{if eq .EnableVotekick
+                                                        true}}checked{{end}} />
+                                                </div>
+                                            </details>
+                                            <button class="dialog-button" onclick="saveLobbySettings()"
+                                                style="grid-column-start: 1; grid-column-end: 3;">
+                                                Save settings
+                                            </button>
+                                        </div>
+                                        <div class="button-center-wrapper">
+                                            <button class="dialog-button"
+                                                onclick="hideLobbySettingsDialog()">Close</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="center-dialog-container">
+                            <div id="game-over-dialog" class="center-dialog">
+                                <span id="game-over-dialog-title" class="dialog-title">Game over!</span>
+                                <div id="game-over-scoreboard"></div>
+                                <button id="restart-button" class="dialog-button" onclick="startGame()">Restart</button>
+                            </div>
+                        </div>
+
+                        <div id="center-dialog-container">
+                            <div id="kick-dialog" class="center-dialog">
+                                <span class="dialog-title">Vote to kick a player</span>
+                                <div id="kick-dialog-players"></div>
+                                <button onclick="hideKickDialog()"
+                                    class="dialog-button dialog-close-button">Close</button>
+                            </div>
+                        </div>
+
+                        <div id="center-dialog-container">
+                            <div id="reconnect-dialog" class="center-dialog">
+                                <span id="game-over-dialog-title" class="dialog-title">Connection lost!</span>
+                                <p>Attempting to reconnect ...</p>
+                                <p>Make sure your internet connection works.<br />If the problem persists, contact the
+                                    webmaster.</p>
+                            </div>
                         </div>
                     </div>
-
-                    <div id="center-dialog-container">
-                        <div id="kick-dialog" class="center-dialog">
-                            <span class="dialog-title">Vote to kick a player</span>
-                            <div id="kick-dialog-players"></div>
-                            <button onclick="hideKickDialog()" class="dialog-button dialog-close-button">Close</button>
-                        </div>
-                    </div>
-
-                    <div id="center-dialog-container">
-                        <div id="reconnect-dialog" class="center-dialog">
-                            <span id="game-over-dialog-title" class="dialog-title">Connection lost!</span>
-                            <p>Attempting to reconnect ...</p>
-                            <p>Make sure your internet connection works.<br/>If the problem persists, contact the webmaster.</p>
-                        </div>
-                    </div>
-                </div>
-                <div id="toolbox">
-                    <input class="toolbox-group" type="color" id="color-picker" onchange="setColor()" value="#000000"
-                            alt="Current color (Click to change)" title="Current color (Click to change)">
-                    <div class="color-button-container toolbox-group">
-                        <!-- These buttons use !important for their color in order
+                    <div id="toolbox">
+                        <input class="toolbox-group" type="color" id="color-picker" onchange="setColor()"
+                            value="#000000" alt="Current color (Click to change)"
+                            title="Current color (Click to change)">
+                        <div class="color-button-container toolbox-group">
+                            <!-- These buttons use !important for their color in order
                         to prevent hover and active colors to appear. -->
-                        <div class="color-button-row">
-                            <button class="color-button" style="background-color: #ffffff !Important"
+                            <div class="color-button-row">
+                                <button class="color-button" style="background-color: #ffffff !Important"
                                     onmousedown="setColor('#ffffff')" onclick="setColor('#ffffff')"></button>
-                            <button class="color-button" style="background-color: #c1c1c1 !Important"
+                                <button class="color-button" style="background-color: #c1c1c1 !Important"
                                     onmousedown="setColor('#c1c1c1')" onclick="setColor('#c1c1c1')"></button>
-                            <button class="color-button" style="background-color: #ef130b !Important"
+                                <button class="color-button" style="background-color: #ef130b !Important"
                                     onmousedown="setColor('#ef130b')" onclick="setColor('#ef130b')"></button>
-                            <button class="color-button" style="background-color: #ff7100 !Important"
+                                <button class="color-button" style="background-color: #ff7100 !Important"
                                     onmousedown="setColor('#ff7100')" onclick="setColor('#ff7100')"></button>
-                            <button class="color-button" style="background-color: #ffe400 !Important"
+                                <button class="color-button" style="background-color: #ffe400 !Important"
                                     onmousedown="setColor('#ffe400')" onclick="setColor('#ffe400')"></button>
-                            <button class="color-button" style="background-color: #00cc00 !Important"
+                                <button class="color-button" style="background-color: #00cc00 !Important"
                                     onmousedown="setColor('#00cc00')" onclick="setColor('#00cc00')"></button>
-                            <button class="color-button" style="background-color: #00b2ff !Important"
+                                <button class="color-button" style="background-color: #00b2ff !Important"
                                     onmousedown="setColor('#00b2ff')" onclick="setColor('#00b2ff')"></button>
-                            <button class="color-button" style="background-color: #231fd3 !Important"
+                                <button class="color-button" style="background-color: #231fd3 !Important"
                                     onmousedown="setColor('#231fd3')" onclick="setColor('#231fd3')"></button>
-                            <button class="color-button" style="background-color: #a300ba !Important"
+                                <button class="color-button" style="background-color: #a300ba !Important"
                                     onmousedown="setColor('#a300ba')" onclick="setColor('#a300ba')"></button>
-                            <button class="color-button" style="background-color: #d37caa !Important"
+                                <button class="color-button" style="background-color: #d37caa !Important"
                                     onmousedown="setColor('#d37caa')" onclick="setColor('#d37caa')"></button>
-                            <button class="color-button" style="background-color: #a0522d !Important"
+                                <button class="color-button" style="background-color: #a0522d !Important"
                                     onmousedown="setColor('#a0522d')" onclick="setColor('#a0522d')"></button>
-                        </div>
-                        <div class="color-button-row">
-                            <button class="color-button" style="background-color: #000000 !Important"
+                            </div>
+                            <div class="color-button-row">
+                                <button class="color-button" style="background-color: #000000 !Important"
                                     onmousedown="setColor('#000000')" onclick="setColor('#000000')"></button>
-                            <button class="color-button" style="background-color: #4c4c4c !Important"
+                                <button class="color-button" style="background-color: #4c4c4c !Important"
                                     onmousedown="setColor('#4c4c4c')" onclick="setColor('#4c4c4c')"></button>
-                            <button class="color-button" style="background-color: #740b07 !Important"
+                                <button class="color-button" style="background-color: #740b07 !Important"
                                     onmousedown="setColor('#740b07')" onclick="setColor('#740b07')"></button>
-                            <button class="color-button" style="background-color: #c23800 !Important"
+                                <button class="color-button" style="background-color: #c23800 !Important"
                                     onmousedown="setColor('#c23800')" onclick="setColor('#c23800')"></button>
-                            <button class="color-button" style="background-color: #e8a200 !Important"
+                                <button class="color-button" style="background-color: #e8a200 !Important"
                                     onmousedown="setColor('#e8a200')" onclick="setColor('#e8a200')"></button>
-                            <button class="color-button" style="background-color: #005510 !Important"
+                                <button class="color-button" style="background-color: #005510 !Important"
                                     onmousedown="setColor('#005510')" onclick="setColor('#005510')"></button>
-                            <button class="color-button" style="background-color: #00569e !Important"
+                                <button class="color-button" style="background-color: #00569e !Important"
                                     onmousedown="setColor('#00569e')" onclick="setColor('#00569e')"></button>
-                            <button class="color-button" style="background-color: #0e0865 !Important"
+                                <button class="color-button" style="background-color: #0e0865 !Important"
                                     onmousedown="setColor('#0e0865')" onclick="setColor('#0e0865')"></button>
-                            <button class="color-button" style="background-color: #550069 !Important"
+                                <button class="color-button" style="background-color: #550069 !Important"
                                     onmousedown="setColor('#550069')" onclick="setColor('#550069')"></button>
-                            <button class="color-button" style="background-color: #a75574 !Important"
+                                <button class="color-button" style="background-color: #a75574 !Important"
                                     onmousedown="setColor('#a75574')" onclick="setColor('#a75574')"></button>
-                            <button class="color-button" style="background-color: #63300d !Important"
+                                <button class="color-button" style="background-color: #63300d !Important"
                                     onmousedown="setColor('#63300d')" onclick="setColor('#63300d')"></button>
+                            </div>
                         </div>
-                    </div>
-                    <!--The following buttons als override onmousedown and onmouseup to make
+                        <!--The following buttons als override onmousedown and onmouseup to make
                         selection more foolproof. This was done, because many people seem to
                         only make half a click (either up or down) in the right location.-->
-                    <div class="pencil-sizes-container toolbox-group">
-                        <label for="tool-type-pencil">
-                            <input id="tool-type-pencil" class="custom-check-or-radio line-width-button"
-                                onchange="chooseTool(pen)" type="radio" name="tool-type" checked>
-                            <div
-                                onmousedown="document.getElementById('tool-type-pencil').click()"
-                                onmouseup="document.getElementById('tool-type-pencil').click()"
-                                class="line-width-button-content">
-                                <span  id="tool-type-pencil-button" style="font-size: 2rem;">✏️</span>
-                            </div>
-                        </label>
-                        <label for="tool-type-fill">
-                            <input id="tool-type-fill" class="custom-check-or-radio line-width-button"
-                                onchange="chooseTool(fillBucket)" type="radio" name="tool-type">
-                            <div 
-                                onmousedown="document.getElementById('tool-type-fill').click()"
-                                onmouseup="document.getElementById('tool-type-fill').click()"
-                                class="line-width-button-content">
-                                <img alt="Fill" title="Fill tool" src="{{.RootPath}}/resources/fill.svg" width="40px"
-                                    height="40px"/>
-                            </div>
-                        </label>
-                        <label for="tool-type-rubber">
-                            <input id="tool-type-rubber" class="custom-check-or-radio line-width-button"
+                        <div class="pencil-sizes-container toolbox-group">
+                            <label for="tool-type-pencil">
+                                <input id="tool-type-pencil" class="custom-check-or-radio line-width-button"
+                                    onchange="chooseTool(pen)" type="radio" name="tool-type" checked>
+                                <div onmousedown="document.getElementById('tool-type-pencil').click()"
+                                    onmouseup="document.getElementById('tool-type-pencil').click()"
+                                    class="line-width-button-content">
+                                    <span id="tool-type-pencil-button" style="font-size: 2rem;">✏️</span>
+                                </div>
+                            </label>
+                            <label for="tool-type-fill">
+                                <input id="tool-type-fill" class="custom-check-or-radio line-width-button"
+                                    onchange="chooseTool(fillBucket)" type="radio" name="tool-type">
+                                <div onmousedown="document.getElementById('tool-type-fill').click()"
+                                    onmouseup="document.getElementById('tool-type-fill').click()"
+                                    class="line-width-button-content">
+                                    <img alt="Fill" title="Fill tool" src="{{.RootPath}}/resources/fill.svg"
+                                        width="40px" height="40px" />
+                                </div>
+                            </label>
+                            <label for="tool-type-rubber">
+                                <input id="tool-type-rubber" class="custom-check-or-radio line-width-button"
                                     onchange="chooseTool(rubber)" type="radio" name="tool-type">
-                            <div
-                                onmousedown="document.getElementById('tool-type-rubber').click()"
-                                onmouseup="document.getElementById('tool-type-rubber').click()"
-                                class="line-width-button-content">
-                                <img alt="Rubber" title="Rubber tool" src="{{.RootPath}}/resources/rubber.svg" width="40px"
-                                    height="40px"/>
-                            </div>
-                        </label>
-                    </div>
-                    <div class="pencil-sizes-container toolbox-group">
-                        <label for="size8">
-                            <input id="size8" class="custom-check-or-radio line-width-button" onchange="setLineWidth(8)"
-                                    type="radio" name="line-width" checked>
-                            <div
-                                onmousedown="document.getElementById('size8').click()"
-                                onmouseup="document.getElementById('size8').click()"
-                                class="line-width-button-content">
-                                <div id="size-8-button" class="dot"></div>
-                            </div>
-                        </label>
-                        <label for="size16">
-                            <input id="size16" class="custom-check-or-radio line-width-button"
-                                    onchange="setLineWidth(16)"
-                                    type="radio" name="line-width">
-                            <div
-                                onmousedown="document.getElementById('size16').click()"
-                                onmouseup="document.getElementById('size16').click()"
-                                class="line-width-button-content">
-                                <div id="size-16-button" class="dot"></div>
-                            </div>
-                        </label>
-                        <label for="size24">
-                            <input id="size24" class="custom-check-or-radio line-width-button"
-                                    onchange="setLineWidth(24)"
-                                    type="radio" name="line-width">
-                                <div
-                                    onmousedown="document.getElementById('size24').click()"
+                                <div onmousedown="document.getElementById('tool-type-rubber').click()"
+                                    onmouseup="document.getElementById('tool-type-rubber').click()"
+                                    class="line-width-button-content">
+                                    <img alt="Rubber" title="Rubber tool" src="{{.RootPath}}/resources/rubber.svg"
+                                        width="40px" height="40px" />
+                                </div>
+                            </label>
+                        </div>
+                        <div class="pencil-sizes-container toolbox-group">
+                            <label for="size8">
+                                <input id="size8" class="custom-check-or-radio line-width-button"
+                                    onchange="setLineWidth(8)" type="radio" name="line-width" checked>
+                                <div onmousedown="document.getElementById('size8').click()"
+                                    onmouseup="document.getElementById('size8').click()"
+                                    class="line-width-button-content">
+                                    <div id="size-8-button" class="dot"></div>
+                                </div>
+                            </label>
+                            <label for="size16">
+                                <input id="size16" class="custom-check-or-radio line-width-button"
+                                    onchange="setLineWidth(16)" type="radio" name="line-width">
+                                <div onmousedown="document.getElementById('size16').click()"
+                                    onmouseup="document.getElementById('size16').click()"
+                                    class="line-width-button-content">
+                                    <div id="size-16-button" class="dot"></div>
+                                </div>
+                            </label>
+                            <label for="size24">
+                                <input id="size24" class="custom-check-or-radio line-width-button"
+                                    onchange="setLineWidth(24)" type="radio" name="line-width">
+                                <div onmousedown="document.getElementById('size24').click()"
                                     onmouseup="document.getElementById('size24').click()"
                                     class="line-width-button-content">
                                     <div id="size-24-button" class="dot"></div>
-                            </div>
-                        </label>
-                        <label for="size32">
-                            <input id="size32" class="custom-check-or-radio line-width-button"
-                                    onchange="setLineWidth(32)"
-                                    type="radio" name="line-width">
-                                <div
-                                    onmousedown="document.getElementById('size32').click()"
+                                </div>
+                            </label>
+                            <label for="size32">
+                                <input id="size32" class="custom-check-or-radio line-width-button"
+                                    onchange="setLineWidth(32)" type="radio" name="line-width">
+                                <div onmousedown="document.getElementById('size32').click()"
                                     onmouseup="document.getElementById('size32').click()"
                                     class="line-width-button-content">
-                                <div id="size-32-button" class="dot"></div>
-                            </div>
-                        </label>
+                                    <div id="size-32-button" class="dot"></div>
+                                </div>
+                            </label>
+                        </div>
+                        <!--We won't make this button easier to click, as there's no going back. -->
+                        <button class="canvas-button toolbox-group" style="font-size: 2rem;"
+                            onclick="clearCanvasAndSendEvent()" alt="Clear the canvas" title="Clear the canvas">🗑
+                        </button>
                     </div>
-                    <!--We won't make this button easier to click, as there's no going back. -->
-                    <button class="canvas-button toolbox-group" style="font-size: 2rem;"
-                            onclick="clearCanvasAndSendEvent()"
-                            alt="Clear the canvas" title="Clear the canvas">🗑
-                    </button>
                 </div>
+            </div>
+
+            <div id="chat">
+                <div id="message-container"></div>
+                <form class="message-input-form" onsubmit="return sendMessage()">
+                    <input id="message-input" type="text" autocomplete="off"
+                        placeholder="Type your guesses and messages here" />
+                </form>
             </div>
         </div>
 
-        <div id="chat">
-            <div id="message-container"></div>
-            <form class="message-input-form" onsubmit="return sendMessage()">
-                <input id="message-input" type="text" autocomplete="off" placeholder="Type your guesses and messages here"/>
-            </form>
-        </div>
+        <!-- {{template "footer" .}} -->
     </div>
 
-    <!-- {{template "footer" .}} -->
-</div>
+    <script type="text/javascript" src="{{.RootPath}}/resources/floodfill.js"></script>
+    <script type="text/javascript">
+        const reconnectDialog = document.getElementById("reconnect-dialog");
+        let socketIsConnecting = false;
+        let socket;
+        function connectToWebsocket() {
+            if (socketIsConnecting === true) {
+                return;
+            }
+            socketIsConnecting = true;
 
-<script type="text/javascript" src="{{.RootPath}}/resources/floodfill.js"></script>
-<script type="text/javascript">
-    const reconnectDialog = document.getElementById("reconnect-dialog");
-    let socketIsConnecting = false;
-    let socket;
-    function connectToWebsocket() {
-        if (socketIsConnecting === true) {
-            return;
-        }
-        socketIsConnecting = true;
+            if (location.protocol === 'https:') {
+                console.log("Attempting secure socket connection on port " + location.port + "...");
+                socket = new WebSocket("wss://" + location.hostname + ":" + location.port + "{{.RootPath}}/v1/ws?lobby_id={{.LobbyID}}");
+            } else {
+                console.log("Attempting socket connection on port " + location.port + "...");
+                socket = new WebSocket("ws://" + location.hostname + ":" + location.port + "{{.RootPath}}/v1/ws?lobby_id={{.LobbyID}}");
+            }
 
-        if (location.protocol === 'https:') {
-            console.log("Attempting secure socket connection on port " + location.port + "...");
-            socket = new WebSocket("wss://" + location.hostname + ":" + location.port + "{{.RootPath}}/v1/ws?lobby_id={{.LobbyID}}");
-        } else {
-            console.log("Attempting socket connection on port " + location.port + "...");
-            socket = new WebSocket("ws://" + location.hostname + ":" + location.port + "{{.RootPath}}/v1/ws?lobby_id={{.LobbyID}}");
-        }
+            socket.onopen = () => {
+                reconnectDialog.style.visibility = "hidden";
+                socket.onclose = event => {
+                    console.log("Socket Closed Connection: ", event);
+                    console.log("Attempting to reestablish socket connection.");
+                    reconnectDialog.style.visibility = "visible";
+                    connectToWebsocket();
+                };
+                socket.onerror = error => console.log("Socket Error: ", error);
 
-        socket.onopen = () => {
-            reconnectDialog.style.visibility = "hidden";
-            socket.onclose = event => {
-                console.log("Socket Closed Connection: ", event);
-                console.log("Attempting to reestablish socket connection.");
-                reconnectDialog.style.visibility = "visible";
-                connectToWebsocket();
+                socketIsConnecting = false;
+                console.log("Successfully Connected");
             };
-            socket.onerror = error => console.log("Socket Error: ", error);
+        }
 
-            socketIsConnecting = false;
-            console.log("Successfully Connected");
+        connectToWebsocket();
+
+        //In order to avoid automatically canceling the socket connection, we keep
+        //sending dummy events every 5 seconds. This was a problem on Heroku. If
+        //a player took a very long time to choose a word, the connection of all
+        //players could be killed and even cause the lobby being closed. Since
+        //that's very frustrating, we want to avoid that.
+        window.setInterval(() => {
+            socket.send(JSON.stringify({ type: "keep-alive" }));
+        }, 5000);
+
+        //Makes sure that the server notices that the player disconnects.
+        //Otherwise a refresh (on chromium based browsers) can lead to the server
+        //thinking that there's already an open tab with this lobby.
+        window.onbeforeunload = () => {
+            //Avoid unintentionally reestablishing connection.
+            socket.onclose = null;
+            socket.close();
         };
-    }
 
-    connectToWebsocket();
+        const messageInput = document.getElementById("message-input");
+        const playerContainer = document.getElementById("player-container");
+        const wordContainer = document.getElementById("word-container");
+        const messageContainer = document.getElementById("message-container");
+        const roundsSpan = document.getElementById("rounds");
+        const timeLeft = document.getElementById("time-left");
+        const drawingBoard = document.getElementById("drawing-board");
+        const chat = document.getElementById("chat");
 
-    //In order to avoid automatically canceling the socket connection, we keep
-    //sending dummy events every 5 seconds. This was a problem on Heroku. If
-    //a player took a very long time to choose a word, the connection of all
-    //players could be killed and even cause the lobby being closed. Since
-    //that's very frustrating, we want to avoid that.
-    window.setInterval(() => {
-        socket.send(JSON.stringify({type: "keep-alive"}));
-    }, 5000);
+        const toolBox = document.getElementById("toolbox");
+        const colorPicker = document.getElementById("color-picker");
 
-    //Makes sure that the server notices that the player disconnects.
-    //Otherwise a refresh (on chromium based browsers) can lead to the server
-    //thinking that there's already an open tab with this lobby.
-    window.onbeforeunload = () => {
-        //Avoid unintentionally reestablishing connection.
-        socket.onclose = null;
-        socket.close();
-    };
+        const centerDialog = document.getElementById("center-dialog");
+        const unstartedDialog = document.getElementById("unstarted-dialog");
+        const namechangeDialog = document.getElementById("namechange-dialog");
+        const namechangeFieldUnstartedDialog = document.getElementById("namechange-field-unstarted-dialog");
+        const namechangeFieldStartDialog = document.getElementById("namechange-field-start-dialog");
+        const namechangeField = document.getElementById("namechange-field");
 
-    const messageInput = document.getElementById("message-input");
-    const playerContainer = document.getElementById("player-container");
-    const wordContainer = document.getElementById("word-container");
-    const messageContainer = document.getElementById("message-container");
-    const roundsSpan = document.getElementById("rounds");
-    const timeLeft = document.getElementById("time-left");
-    const drawingBoard = document.getElementById("drawing-board");
-    const chat = document.getElementById("chat");
+        const lobbySettingsDialog = document.getElementById("lobbysettings-dialog");
 
-    const toolBox = document.getElementById("toolbox");
-    const colorPicker = document.getElementById("color-picker");
+        const startDialog = document.getElementById("start-dialog");
+        const gameOverDialog = document.getElementById("game-over-dialog");
+        const gameOverDialogTitle = document.getElementById("game-over-dialog-title");
+        const gameOverScoreboard = document.getElementById("game-over-scoreboard");
+        const restartButton = document.getElementById("restart-button");
+        const wordDialog = document.getElementById("word-dialog");
+        const wordButtonZero = document.getElementById("word-button-zero");
+        const wordButtonOne = document.getElementById("word-button-one");
+        const wordButtonTwo = document.getElementById("word-button-two");
 
-    const centerDialog = document.getElementById("center-dialog");
-    const unstartedDialog = document.getElementById("unstarted-dialog");
-    const namechangeDialog = document.getElementById("namechange-dialog");
-    const namechangeFieldUnstartedDialog = document.getElementById("namechange-field-unstarted-dialog");
-    const namechangeFieldStartDialog = document.getElementById("namechange-field-start-dialog");
-    const namechangeField = document.getElementById("namechange-field");
+        const kickDialog = document.getElementById("kick-dialog");
+        const kickDialogPlayers = document.getElementById("kick-dialog-players");
 
-    const lobbySettingsDialog = document.getElementById("lobbysettings-dialog");
-
-    const startDialog = document.getElementById("start-dialog");
-    const gameOverDialog = document.getElementById("game-over-dialog");
-    const gameOverDialogTitle = document.getElementById("game-over-dialog-title");
-    const gameOverScoreboard = document.getElementById("game-over-scoreboard");
-    const restartButton = document.getElementById("restart-button");
-    const wordDialog = document.getElementById("word-dialog");
-    const wordButtonZero = document.getElementById("word-button-zero");
-    const wordButtonOne = document.getElementById("word-button-one");
-    const wordButtonTwo = document.getElementById("word-button-two");
-
-    const kickDialog = document.getElementById("kick-dialog");
-    const kickDialogPlayers = document.getElementById("kick-dialog-players");
-
-    const soundToggleLabel = document.getElementById("sound-toggle-label");
-    let sound = localStorage.getItem("sound") !== "false";
-    updateSoundIcon();
-
-    function showKickDialog() {
-        if (votekickEnabled !== true) {
-            alert("Votekicking isn't enabled in this lobby.");
-            return;
-        }
-
-        if (cachedPlayers && cachedPlayers) {
-            kickDialogPlayers.innerHTML = "";
-
-            cachedPlayers.forEach(player => {
-                //Don't wanna allow kicking ourselves.
-                if (player.id !== ownID && player.connected) {
-                    kickDialogPlayers.innerHTML += '<button class="kick-player-button" onclick="onVotekickPlayer(\'' + player.id + '\')">' + player.name + '</button>';
-                }
-            });
-
-            kickDialog.style.visibility = "visible";
-        }
-    }
-
-    function hideKickDialog() {
-        kickDialog.style.visibility = "hidden";
-    }
-
-    function showNameChangeDialog() {
-        namechangeDialog.style.visibility = "visible";
-    }
-
-    function hideNameChangeDialog() {
-        namechangeDialog.style.visibility = "hidden";
-    }
-
-    function changeName(name) {
-        socket.send(JSON.stringify({
-            type: "name-change",
-            data: name,
-        }));
-    }
-
-    function setUsernameLocally(name) {
-        ownName = name;
-        namechangeFieldUnstartedDialog.value = name;
-        namechangeFieldStartDialog.value = name;
-        namechangeField.value = name;
-    }
-
-    function showLobbySettingsDialog() {
-        lobbySettingsDialog.style.visibility = "visible";
-    }
-
-    function hideLobbySettingsDialog() {
-        lobbySettingsDialog.style.visibility = "hidden";        
-    }
-
-    function saveLobbySettings() {
-        fetch("{{.RootPath}}/v1/lobby?" + new URLSearchParams({
-            lobby_id: '{{.LobbyID}}',
-            public: document.getElementById("lobby-settings-public").value,
-            enable_votekick: document.getElementById("lobby-settings-enable-votekick").value,
-            max_players: document.getElementById("lobby-settings-max-players").value,
-            clients_per_ip_limit: document.getElementById("lobby-settings-clients-per-ip-limit").value,
-            custom_words_chance: document.getElementById("lobby-settings-custom-words-chance").value,
-        }), {
-            method: 'PATCH',    
-        })
-        .then(result => {
-            if (result.status === 200) {
-                hideLobbySettingsDialog();
-                alert("Lobby settings successfully saved.");
-            } else {
-                result.text().then(bodyText => {
-                    alert("Error saving lobby settings: \n\n - " + bodyText.replace(";","\n - "));
-                })
-            }
-        })
-    }
-
-    function toggleSound() {
-        sound = !sound;
-        localStorage.setItem("sound", sound.toString());
+        const soundToggleLabel = document.getElementById("sound-toggle-label");
+        let sound = localStorage.getItem("sound") !== "false";
         updateSoundIcon();
-    }
 
-    function updateSoundIcon() {
-        if (sound) {
-            soundToggleLabel.src = "{{.RootPath}}/resources/sound.svg";
-        } else {
-            soundToggleLabel.src = "{{.RootPath}}/resources/no-sound.svg";
-        }
-    }
-
-    //The drawing board has a base size. This base size results in a certain ratio
-    //that the actual canvas has to be resized accordingly too. This is needed
-    //since not every client has the same screensize.
-    let baseWidth = {{.DrawingBoardBaseWidth}};
-    let baseHeight = {{.DrawingBoardBaseHeight}};
-    let boardRatio = baseWidth / baseHeight;
-    
-    // Moving this here to extract the context after resizing
-    const context = drawingBoard.getContext("2d");
-
-    function handleCanvasResize() {
-        //Resize canvas HTML element properly.
-        drawingBoard.width = drawingBoard.clientWidth;
-        drawingBoard.height = drawingBoard.clientHeight;
-        setLineWidth(localLineWidthUnscaled);
-        chat.style.maxHeight = drawingBoard.height + "px";
-        toolBox.style.top = drawingBoard.height + "px";
-    }
-
-    function scaleUpFactor() {
-        return baseWidth / drawingBoard.clientWidth;
-    }
-
-    function scaleDownFactor() {
-        return drawingBoard.clientWidth / baseWidth;
-    }
-
-    const pen = 0;
-    const rubber = 1;
-    const fillBucket = 2;
-
-    let allowDrawing = false;
-
-    //Initially, we require some values to avoid running into nullpointers
-    //or undefined errors. The specific values don't really matter.
-    let localColor = "#000000";
-    let localTool = pen;
-    let localLineWidth = 8;
-    let localLineWidthUnscaled = 8;
-
-    //Those are not scaled for now, as the whole toolbar would then have to incorrectly size up and down.
-    let sizeButton8 = document.getElementById("size-8-button");
-    let sizeButton16 = document.getElementById("size-16-button");
-    let sizeButton24 = document.getElementById("size-24-button");
-    let sizeButton32 = document.getElementById("size-32-button");
-    sizeButton8.style.width = "8px";
-    sizeButton8.style.height = "8px";
-    sizeButton16.style.width = "16px";
-    sizeButton16.style.height = "16px";
-    sizeButton24.style.width = "24px";
-    sizeButton24.style.height = "24px";
-    sizeButton32.style.width = "32px";
-    sizeButton32.style.height = "32px";
-
-    let toolButtonPen = document.getElementById("tool-type-pencil");
-    let toolButtonRubber = document.getElementById("tool-type-rubber");
-    let toolButtonFill = document.getElementById("tool-type-fill");
-
-    //We use the states present in UI elements, since in case of
-    //hitting F5(Refresh), the browser will not reset these states to the
-    //initial values defined in the HTML.
-    localColor = colorPicker.value;
-
-    if (sizeButton8.checked) {
-        setLineWidth(8);
-    } else if (sizeButton16.checked) {
-        setLineWidth(16);
-    } else if (sizeButton24.checked) {
-        setLineWidth(24);
-    } else if (sizeButton32.checked) {
-        setLineWidth(32);
-    }
-
-    if (toolButtonPen.checked) {
-        chooseTool(pen);
-    } else if (toolButtonFill.checked) {
-        chooseTool(fillBucket);
-    } else if (toolButtonRubber.checked) {
-        chooseTool(rubber);
-    }
-
-    function setColor(value) {
-        if (value === undefined) {
-            localColor = colorPicker.value;
-        } else {
-            localColor = value;
-            colorPicker.value = value;
-        }
-
-        if (localTool === rubber) {
-            //Hack to correct selection. Doesn't automatically trigger chooseTool(pen).
-            toolButtonPen.click();
-            chooseTool(pen);
-            //Cursor update is implicit.
-        } else {
-            updateCursor();
-        }
-    }
-
-    function setLineWidth(value) {
-        localLineWidthUnscaled = value;
-        localLineWidth = value * scaleDownFactor();
-        updateCursor();
-    }
-
-    function chooseTool(value) {
-        if (value === pen || value === rubber || value === fillBucket) {
-            localTool = value;
-        } else {
-            //If this ends up with an invalid value, we use the pencil.
-            localTool = pen;
-        }
-        updateCursor();
-    }
-
-    function hexToRgb(hex) {
-        return hex.replace(/^#?([a-f\d])([a-f\d])([a-f\d])$/i, (m, r, g, b) => '#' + r + r + g + g + b + b)
-            .substring(1).match(/.{2}/g)
-            .map(x => parseInt(x, 16));
-    }
-
-    function updateCursor() {
-        if (localTool === rubber) {
-            setCircleCursor("#FFFFFF", localLineWidth);
-        } else if (localTool === fillBucket) {
-            const {innerColor, outerColor} = getCursorColors(localColor);
-            //HACK HACK HACK IT GETS CRAZY
-            //So, the goal here was to use fill.svg as our cursor, but still
-            //have our default cursor, so that the user knows where exactly
-            //he's going to fill and with which color he's going to fill.
-            //The idea was simple, minify paste the SVG inline. However, for
-            //some reason the browser (neither chrome nor firefox) rendered
-            //the image. Even though there was no error or warning, it simply
-            //accepted the input. However, when using the exact same svg text
-            //data and passing it as base64 encoding, everything works. Sadly
-            //I can't understand why this happens, but I'll live with it. If
-            //anyone can explain this to me ... please, please enlighten me.
-            //The image used here is basically fill.svg, however, the size
-            //has been decreased and the image has been mirrored.
-            //REMARK it could be that we need to escape character by using
-            //encodeURI. While I've tried this and it didn't work, I don't
-            //care anymore ...
-            drawingBoard.style.cursor = `url('data:image/svg+xml;base64,`+btoa(`<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="32" width="32">`+generateSVGCircle(8,innerColor, outerColor)+`<path d="M8.583 22.081a4.913 5.083 0 0 0 1.449-3.618 4.437 4.59 0 0 1 4.433-4.585h2.022a.391.404 0 0 1 .276.69l-1.547 1.6a.391.404 0 0 0 0 .572l3.299 3.412a.391.404 0 0 1 .115.286v1.323a.977 1.011 0 0 1-.977 1.011.195.202 0 0 0-.195.202V25.4a1.368 1.415 0 0 1-2.736 0v-.606a.391.404 0 0 0-.782 0v2.628a1.368 1.415 0 0 1-2.736 0v-1.415a.391.404 0 0 0-.782 0v3.032a1.759 1.819 0 0 1-3.517 0V26.27a5.689 5.885 0 0 1 1.678-4.19zm4.966-.927a.782.809 0 0 0 1.563 0v-1.213a.782.809 0 0 0-1.563 0zm1.563 8.691a.977 1.011 0 1 0 1.95-.118 2.42 2.504 0 0 0-.69-1.422.387.401 0 0 0-.566 0 2.33 2.41 0 0 0-.693 1.54z" fill="#c4a2fc"/><path d="M14.988 15.596l5.529-5.721V8.218a2.345 2.426 0 0 1 4.689 0v2.975l5.586 5.778a1.174 1.215 0 0 1 0 1.715l-6.409 6.63a1.174 1.215 0 0 1-1.658 0l-7.738-8.004a1.172 1.213 0 0 1 .001-1.715zm9.437-7.378a1.563 1.617 0 0 0-3.126 0v.849l.098-.101a1.2 1.241 0 0 1 1.658 0l1.37 1.419zm-.346 2.951l-1.055 1.091 4.533 4.691 1.086-1.061zm-8.536 5.571l7.738 8.004a.391.404 0 0 0 .553 0l6.409-6.63a.391.404 0 0 0 0-.572l-1.046-1.078-1.376 1.347a.391.404 0 0 1-.545-.008l-5.08-5.255a.391.404 0 0 1 0-.572l1.331-1.377-1.024-1.059a.4.414 0 0 0-.553 0l-.651.673v3.74a1.172 1.213 0 1 1-.782 0V11.02l-4.975 5.148a.391.404 0 0 0 0 .572zm5.366-2.054a.391.404 0 1 0 .391.404.391.404 0 0 0-.391-.404z" fill="#151a6a"/></svg>`)+`') 4 4, auto`;
-        } else {
-            setCircleCursor(localColor, localLineWidth);
-        }
-    }
-
-    function getCursorColors(color) {
-        let innerColor;
-        let outerColor = "#FFFFFF";
-        if (color.startsWith("#")) {
-            innerColor = hexToRgb(color);
-
-            const hsp = Math.sqrt(
-                0.299 * (innerColor[0] * innerColor[0]) +
-                0.587 * (innerColor[1] * innerColor[1]) +
-                0.114 * (innerColor[2] * innerColor[2])
-            );
-
-            if (hsp > 127.5) {
-                outerColor = "rgb(0,0,0)";
-            } else {
-                outerColor = "rgb(255,255,255)";
-            }
-
-            innerColor = "rgb(" + innerColor[0] + "," + innerColor[1] + "," + innerColor[2] + ")";
-        } else {
-            innerColor = color;
-        }
-
-        return {
-            innerColor: innerColor,
-            outerColor: outerColor,
-        }
-    }
-
-    function setCircleCursor(color, size) {
-        const {innerColor, outerColor} = getCursorColors(color);
-
-        let circleSize = size * scaleUpFactor();
-        drawingBoard.style.cursor = "url('data:image/svg+xml;utf8,<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" width=\"32\" height=\"32\">"+generateSVGCircle(circleSize, innerColor, outerColor)+"</svg>') " + (circleSize / 2) + " " + (circleSize / 2) + ", auto";
-    }
-
-    function generateSVGCircle(circleSize, innerColor, outerColor) {
-        return "<circle cx=\"" + (circleSize / 2) + "\" cy=\"" + (circleSize / 2) + "\" r=\"" + (circleSize / 2) + "\" style=\"fill: " + innerColor + "; stroke: " + outerColor + ";\"/>";
-    }
-
-    function startGame() {
-        socket.send(JSON.stringify({
-            type: "start",
-        }))
-    }
-
-    function clearCanvasAndSendEvent() {
-        if (allowDrawing) {
-            //Avoid unnecessary traffic back to us and handle the clear directly.
-            clear(context);
-            socket.send(JSON.stringify({
-                type: "clear-drawing-board"
-            }));
-        }
-    }
-
-    const sendMessage = () => {
-        socket.send(JSON.stringify({
-            type: "message",
-            data: messageInput.value
-        }));
-        messageInput.value = "";
-
-        // Necessary in order to keep the page from submitting.
-        return false;
-    };
-
-    function chooseWord(index) {
-        socket.send(JSON.stringify({
-            type: "choose-word",
-            data: index
-        }));
-        allowDrawing = true;
-        wordDialog.style.visibility = "hidden";
-    }
-
-    function onVotekickPlayer(playerId) {
-        socket.send(JSON.stringify({
-            type: "kick-vote",
-            data: playerId
-        }));
-        hideKickDialog();
-    }
-
-    //This automatically scrolls down the chat on arrivals of new messages
-    new MutationObserver(() => messageContainer.scrollTop = messageContainer.scrollHeight)
-        .observe(messageContainer, {
-            attributes: false,
-            childList: true,
-            subtree: false
-        });
-
-    let ownID, ownerID, ownName;
-    let maxRounds = 0;
-    let roundEndTime = 0;
-    let votekickEnabled
-    socket.onmessage = event => {
-        let parsed = JSON.parse(event.data);
-        if (parsed.type === "ready") {
-            let ready = parsed.data;
-            handleReadyEvent(ready);
-            if (ready.gameState === "unstarted") {
-                if(ownerID === ownID) {
-                    startDialog.style.visibility = "visible";
-                } else {
-                    unstartedDialog.style.visibility = "visible";
-                }
-            } else if (ready.gameState === "gameOver") {
-                gameOverDialog.style.visibility = "visible";
-                if(ownerID === ownID) {
-                    restartButton.style.display = "block";
-                }
-
-                gameOverScoreboard.innerHTML = "";
-
-                //Copying array so we can sort.
-                let players = cachedPlayers.slice();
-                players.sort((a,b) => {
-                    return a.rank - b.rank;
-                });
-
-                //Show at least 2 players, but up to 5.
-                const maxScoreboardSize = 5;
-
-                for (let i = 0; i < players.length; i++) {
-                    let player = players[i];
-                    if (!player.connected) {
-                        continue;
-                    }
-
-                    const isSelf = player.id === ownID;
-
-                    //Even if we don't want to show a player-entry, we still need to iterate
-                    //over all players to handle the dialog titles.
-                    if (player.rank <= maxScoreboardSize) {
-                        let newEntry = '<div class="gameover-scoreboard-entry';
-                        if (isSelf) {
-                            newEntry += ' gameover-scoreboard-entry-self';
-                        }
-                        newEntry += '">'
-                                + '<div class="gameover-scoreboard-rank">'
-                                    + player.rank
-                                + '</div>'
-                                + '<div class="gameover-scoreboard-name">'
-                                    + player.name
-                                + '</div>'
-                                + '<span class="gameover-scoreboard-score">'
-                                    + player.score
-                                + '</span>'
-                            + '</div>';
-
-                        gameOverScoreboard.innerHTML += newEntry;
-                    }
-
-                    if (isSelf) {
-                        if (player.rank == 1) {
-                            gameOverDialogTitle.innerText = "Congratiulations, you won!";
-                        } else {
-                            gameOverDialogTitle.innerText = "You placed " + player.rank + ". with " + player.score + " points";
-                        }
-                    }
-                }
-            }
-        } else if (parsed.type === "update-players") {
-            applyPlayers(parsed.data);
-        } else if (parsed.type === "name-change") {
-            const playernameSpan = document.getElementById("playername-" + parsed.data.playerId);
-            if (playernameSpan !== null) {
-                playernameSpan.innerText = parsed.data.playerName;
-            }
-            if (parsed.data.playerId === ownID) {
-                setUsernameLocally(parsed.data.playerName)
-            }
-        } else if (parsed.type === "correct-guess") {
-            playWav('{{.RootPath}}/resources/plop.wav');
-
-            if (parsed.data === ownID) {
-                applyMessage("correct-guess-message", "System", "You have correctly guessed the word.")
-            } else {
-                for (let i = 0; i < cachedPlayers.length; i++) {
-                    let player = cachedPlayers[i];
-                    if (player.id === parsed.data) {
-                        applyMessage("correct-guess-message", "System", player.name + " correctly guessed the word.")
-                        break;
-                    }
-                }
-            }
-        } else if (parsed.type === "close-guess") {
-            applyMessage("close-guess-message", "System", "'"+ parsed.data + "'' is very close.")
-        } else if (parsed.type === "update-wordhint") {
-            applyWordHints(parsed.data);
-        } else if (parsed.type === "message") {
-            applyMessage("", parsed.data.author, parsed.data.content);
-        } else if (parsed.type === "system-message") {
-            applyMessage("system-message", "System", parsed.data);
-        } else if (parsed.type === "non-guessing-player-message") {
-            applyMessage("correct-guess-message", parsed.data.author, parsed.data.content);
-        } else if (parsed.type === "line") {
-            drawLine(context, parsed.data.fromX * scaleDownFactor(), parsed.data.fromY * scaleDownFactor(), parsed.data.toX * scaleDownFactor(), parsed.data.toY * scaleDownFactor(), parsed.data.color, parsed.data.lineWidth * scaleDownFactor());
-        } else if (parsed.type === "fill") {
-            fill(context, parsed.data.x * scaleDownFactor(), parsed.data.y * scaleDownFactor(), parsed.data.color);
-        } else if (parsed.type === "clear-drawing-board") {
-            clear(context)
-        } else if (parsed.type === "next-turn") {
-            //As soon as a turn starts, the round should be ongoing, so we make
-            //sure that all types of dialogs, that indicate the game isn't
-            //ongoing, are not visible anymore.
-            unstartedDialog.style.visibility = "hidden";
-            startDialog.style.visibility = "hidden";
-            restartButton.style.display = "none";
-            gameOverDialog.style.visibility = "hidden";
-
-            //If a player doesn't choose, the dialog will still be up.
-            wordDialog.style.visibility = "hidden";
-            playWav('{{.RootPath}}/resources/end-turn.wav');
-
-            clear(context);
-
-            roundEndTime = parsed.data.roundEndTime;
-            applyRounds(parsed.data.round, maxRounds);
-            applyPlayers(parsed.data.players);
-
-            //We clear this, since there's no word chosen right now.
-            wordContainer.innerHTML = "";
-
-            if (parsed.data.previousWord !== null) {
-                if (parsed.data.previousWord === "") {
-                    applyMessage("system-message", "System", "Round over. No word was chosen.");
-                } else {
-                    applyMessage("system-message", "System", "Round over. Previous word was '"+parsed.data.previousWord+"'");
-                }
-            }
-
-            allowDrawing = false;
-        } else if (parsed.type === "your-turn") {
-            playWav('{{.RootPath}}/resources/your-turn.wav');
-
-            promptWords(parsed.data[0], parsed.data[1], parsed.data[2]);
-        } else if (parsed.type === "drawing") {
-            applyDrawData(parsed.data);
-        } else if (parsed.type === "kick-vote") {
-            if (parsed.data.playerId !== ownID) {
-                let kickMessage = "("+parsed.data.voteCount+"/"+parsed.data.requiredVoteCount+") players voted to kick "+parsed.data.playerName+".";
-                if (parsed.data.voteCount >= parsed.data.requiredVoteCount) {
-                    kickMessage += " Player has been kicked.";
-                }
-                applyMessage("system-message", "System", kickMessage);
-            }
-        } else if (parsed.type === "owner-change") {
-            ownerID = parsed.data.playerId;
-            applyMessage("system-message", "System", parsed.data.playerName + " is the new lobby owner.");
-        } else if (parsed.type === "drawer-kicked") {
-            applyMessage("system-message", "System", "Since the kicked player has been drawing, none of you will get any points this round.");
-        } else if (parsed.type === "lobby-settings-changed") {
-            votekickEnabled = parsed.data.enableVotekick;
-            applyMessage("system-message", "System", "Lobby settings changed:<br/><br/>"
-            + "Public lobby: " + parsed.data.public + "<br/>"
-            + "Enable votekicking: " + parsed.data.enableVotekick + "<br/>"
-            + "Max players: " + parsed.data.maxPlayers + "<br/>"
-            + "Custom words chance: " + parsed.data.customWordsChance + "%<br/>"
-            + "Clients per IP limit: " + parsed.data.clientsPerIpLimit );
-        }
-    };
-
-    function getPlayer(playerID) {
-        for (let i = 0; i < cachedPlayers.length; i++) {
-            let player = cachedPlayers[i];
-            if (player.id === playerID) {
-                return player;
-            }
-        }
-
-        return null;
-    }
-
-    function handleReadyEvent(ready) {
-        ownerID = ready.ownerId;
-        setUsernameLocally(ready.playerName);
-        allowDrawing = ready.allowDrawing;
-        ownID = ready.playerId;
-        maxRounds = ready.maxRounds;
-        roundEndTime = ready.roundEndTime;
-        votekickEnabled = ready.votekickEnabled;
-        applyRounds(ready.round, ready.maxRounds);
-
-        if (ready.players && ready.players.length) {
-            applyPlayers(ready.players)
-        }
-        if (ready.currentDrawing && ready.currentDrawing.length) {
-            applyDrawData(ready.currentDrawing)
-        }
-        if (ready.wordHints && ready.wordHints.length) {
-            applyWordHints(ready.wordHints)
-        }
-    }
-
-    function promptWords(wordOne, wordTwo, wordThree) {
-        wordButtonZero.textContent = wordOne;
-        wordButtonOne.textContent = wordTwo;
-        wordButtonTwo.textContent = wordThree;
-        wordDialog.style.visibility = "visible";
-    }
-
-    function playWav(file) {
-        if (sound) {
-            let audio = new Audio(file);
-            audio.type = 'audio/wav';
-            audio.play();
-        }
-    }
-
-    window.setInterval(function () {
-        if (roundEndTime >= 0) {
-            timeLeft.innerText = "Time Left: " + Math.floor(roundEndTime / 1000);
-            roundEndTime -= 500;
-        } else {
-            timeLeft.innerText = "Time Left: ∞";
-        }
-    }, 500);
-
-    function applyMessage(styleClass, author, message) {
-        if (messageContainer.childElementCount >= 100) {
-            messageContainer.removeChild(messageContainer.firstChild)
-        }
-
-        messageContainer.innerHTML += `<div class="message ` + styleClass + `">
-                            <span class="chat-name">` + author + `</span>
-                            <span class="message-content">` + message + `</span>
-                        </div>`;
-    }
-
-    let cachedPlayers;
-
-    function applyPlayers(players) {
-        playerContainer.innerHTML = "";
-        cachedPlayers = players;
-        players.forEach(function (player) {
-            //We don't wanna show the disconnected players.
-            if (!player.connected) {
+        function showKickDialog() {
+            if (votekickEnabled !== true) {
+                alert("Votekicking isn't enabled in this lobby.");
                 return;
             }
 
-            let stateStyleClass;
-            if (player.state === "standby") {
-                stateStyleClass = 'player-done';
-            } else {
-                stateStyleClass = '';
-            }
-            let newPlayerElement = '<div class="player ' + stateStyleClass + '">' +
-                '<span class="rank">' + player.rank + '</span>' +
-                '<span id="playername-' + player.id + '" class="playername';
-            if (player.id === ownID) {
-                newPlayerElement += ' playername-self';
-            }
-            newPlayerElement +=
-                '">' + player.name + '</span>' +
-                '<div class="score-and-status">' +
-                '<div>' +
-                '<span class="playerscore">' + player.score + '</span>' +
-                '<span class="last-turn-score">(Last turn: ' + player.lastScore + ')</span>' +
-                '</div>';
-            if (player.state === "drawing") {
-                newPlayerElement += '<span>✏️</span>';
-            } else if (player.state === "standby") {
-                newPlayerElement += '<span>✔️</span>';
-            }
-            newPlayerElement += '</div></div>';
-            playerContainer.innerHTML += newPlayerElement;
-        });
-    }
+            if (cachedPlayers && cachedPlayers) {
+                kickDialogPlayers.innerHTML = "";
 
-    function applyRounds(round, maxRound) {
-        roundsSpan.innerText = 'Round ' + round + ' of ' + maxRound;
-    }
+                cachedPlayers.forEach(player => {
+                    //Don't wanna allow kicking ourselves.
+                    if (player.id !== ownID && player.connected) {
+                        kickDialogPlayers.innerHTML += '<button class="kick-player-button" onclick="onVotekickPlayer(\'' + player.id + '\')">' + player.name + '</button>';
+                    }
+                });
 
-    function applyWordHints(wordHints) {
-        wordContainer.innerHTML = "";
-        //If no hint has been revealed
-        wordHints.forEach(function (hint) {
-            if (hint.character === 0) {
-                wordContainer.innerHTML += '<span class="guess-letter guess-letter-underline">&nbsp;</span>';
+                kickDialog.style.visibility = "visible";
+            }
+        }
+
+        function hideKickDialog() {
+            kickDialog.style.visibility = "hidden";
+        }
+
+        function showNameChangeDialog() {
+            namechangeDialog.style.visibility = "visible";
+        }
+
+        function hideNameChangeDialog() {
+            namechangeDialog.style.visibility = "hidden";
+        }
+
+        function changeName(name) {
+            socket.send(JSON.stringify({
+                type: "name-change",
+                data: name,
+            }));
+        }
+
+        function setUsernameLocally(name) {
+            ownName = name;
+            namechangeFieldUnstartedDialog.value = name;
+            namechangeFieldStartDialog.value = name;
+            namechangeField.value = name;
+        }
+
+        function showLobbySettingsDialog() {
+            lobbySettingsDialog.style.visibility = "visible";
+        }
+
+        function hideLobbySettingsDialog() {
+            lobbySettingsDialog.style.visibility = "hidden";
+        }
+
+        function saveLobbySettings() {
+            fetch("{{.RootPath}}/v1/lobby?" + new URLSearchParams({
+                lobby_id: '{{.LobbyID}}',
+                public: document.getElementById("lobby-settings-public").value,
+                enable_votekick: document.getElementById("lobby-settings-enable-votekick").value,
+                max_players: document.getElementById("lobby-settings-max-players").value,
+                clients_per_ip_limit: document.getElementById("lobby-settings-clients-per-ip-limit").value,
+                custom_words_chance: document.getElementById("lobby-settings-custom-words-chance").value,
+            }), {
+                method: 'PATCH',
+            })
+                .then(result => {
+                    if (result.status === 200) {
+                        hideLobbySettingsDialog();
+                        alert("Lobby settings successfully saved.");
+                    } else {
+                        result.text().then(bodyText => {
+                            alert("Error saving lobby settings: \n\n - " + bodyText.replace(";", "\n - "));
+                        })
+                    }
+                })
+        }
+
+        function toggleSound() {
+            sound = !sound;
+            localStorage.setItem("sound", sound.toString());
+            updateSoundIcon();
+        }
+
+        function updateSoundIcon() {
+            if (sound) {
+                soundToggleLabel.src = "{{.RootPath}}/resources/sound.svg";
             } else {
-                let char = String.fromCharCode(hint.character);
-                if (hint.underline) {
-                    wordContainer.innerHTML += '<span class="guess-letter guess-letter-underline">' + char + '</span>'
+                soundToggleLabel.src = "{{.RootPath}}/resources/no-sound.svg";
+            }
+        }
+
+        //The drawing board has a base size. This base size results in a certain ratio
+        //that the actual canvas has to be resized accordingly too. This is needed
+        //since not every client has the same screensize.
+        let baseWidth = {{.DrawingBoardBaseWidth }};
+        let baseHeight = {{.DrawingBoardBaseHeight }};
+        let boardRatio = baseWidth / baseHeight;
+
+        // Moving this here to extract the context after resizing
+        const context = drawingBoard.getContext("2d");
+
+        function handleCanvasResize() {
+            //Resize canvas HTML element properly.
+            drawingBoard.width = drawingBoard.clientWidth;
+            drawingBoard.height = drawingBoard.clientHeight;
+            setLineWidth(localLineWidthUnscaled);
+            chat.style.maxHeight = drawingBoard.height + "px";
+            toolBox.style.top = drawingBoard.height + "px";
+        }
+
+        function scaleUpFactor() {
+            return baseWidth / drawingBoard.clientWidth;
+        }
+
+        function scaleDownFactor() {
+            return drawingBoard.clientWidth / baseWidth;
+        }
+
+        const pen = 0;
+        const rubber = 1;
+        const fillBucket = 2;
+
+        let allowDrawing = false;
+
+        //Initially, we require some values to avoid running into nullpointers
+        //or undefined errors. The specific values don't really matter.
+        let localColor = "#000000";
+        let localTool = pen;
+        let localLineWidth = 8;
+        let localLineWidthUnscaled = 8;
+
+        //Those are not scaled for now, as the whole toolbar would then have to incorrectly size up and down.
+        let sizeButton8 = document.getElementById("size-8-button");
+        let sizeButton16 = document.getElementById("size-16-button");
+        let sizeButton24 = document.getElementById("size-24-button");
+        let sizeButton32 = document.getElementById("size-32-button");
+        sizeButton8.style.width = "8px";
+        sizeButton8.style.height = "8px";
+        sizeButton16.style.width = "16px";
+        sizeButton16.style.height = "16px";
+        sizeButton24.style.width = "24px";
+        sizeButton24.style.height = "24px";
+        sizeButton32.style.width = "32px";
+        sizeButton32.style.height = "32px";
+
+        let toolButtonPen = document.getElementById("tool-type-pencil");
+        let toolButtonRubber = document.getElementById("tool-type-rubber");
+        let toolButtonFill = document.getElementById("tool-type-fill");
+
+        //We use the states present in UI elements, since in case of
+        //hitting F5(Refresh), the browser will not reset these states to the
+        //initial values defined in the HTML.
+        localColor = colorPicker.value;
+
+        if (sizeButton8.checked) {
+            setLineWidth(8);
+        } else if (sizeButton16.checked) {
+            setLineWidth(16);
+        } else if (sizeButton24.checked) {
+            setLineWidth(24);
+        } else if (sizeButton32.checked) {
+            setLineWidth(32);
+        }
+
+        if (toolButtonPen.checked) {
+            chooseTool(pen);
+        } else if (toolButtonFill.checked) {
+            chooseTool(fillBucket);
+        } else if (toolButtonRubber.checked) {
+            chooseTool(rubber);
+        }
+
+        function setColor(value) {
+            if (value === undefined) {
+                localColor = colorPicker.value;
+            } else {
+                localColor = value;
+                colorPicker.value = value;
+            }
+
+            if (localTool === rubber) {
+                //Hack to correct selection. Doesn't automatically trigger chooseTool(pen).
+                toolButtonPen.click();
+                chooseTool(pen);
+                //Cursor update is implicit.
+            } else {
+                updateCursor();
+            }
+        }
+
+        function setLineWidth(value) {
+            localLineWidthUnscaled = value;
+            localLineWidth = value * scaleDownFactor();
+            updateCursor();
+        }
+
+        function chooseTool(value) {
+            if (value === pen || value === rubber || value === fillBucket) {
+                localTool = value;
+            } else {
+                //If this ends up with an invalid value, we use the pencil.
+                localTool = pen;
+            }
+            updateCursor();
+        }
+
+        function hexToRgb(hex) {
+            return hex.replace(/^#?([a-f\d])([a-f\d])([a-f\d])$/i, (m, r, g, b) => '#' + r + r + g + g + b + b)
+                .substring(1).match(/.{2}/g)
+                .map(x => parseInt(x, 16));
+        }
+
+        function updateCursor() {
+            if (localTool === rubber) {
+                setCircleCursor("#FFFFFF", localLineWidth);
+            } else if (localTool === fillBucket) {
+                const { innerColor, outerColor } = getCursorColors(localColor);
+                //HACK HACK HACK IT GETS CRAZY
+                //So, the goal here was to use fill.svg as our cursor, but still
+                //have our default cursor, so that the user knows where exactly
+                //he's going to fill and with which color he's going to fill.
+                //The idea was simple, minify paste the SVG inline. However, for
+                //some reason the browser (neither chrome nor firefox) rendered
+                //the image. Even though there was no error or warning, it simply
+                //accepted the input. However, when using the exact same svg text
+                //data and passing it as base64 encoding, everything works. Sadly
+                //I can't understand why this happens, but I'll live with it. If
+                //anyone can explain this to me ... please, please enlighten me.
+                //The image used here is basically fill.svg, however, the size
+                //has been decreased and the image has been mirrored.
+                //REMARK it could be that we need to escape character by using
+                //encodeURI. While I've tried this and it didn't work, I don't
+                //care anymore ...
+                drawingBoard.style.cursor = `url('data:image/svg+xml;base64,` + btoa(`<svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="32" width="32">` + generateSVGCircle(8, innerColor, outerColor) + `<path d="M8.583 22.081a4.913 5.083 0 0 0 1.449-3.618 4.437 4.59 0 0 1 4.433-4.585h2.022a.391.404 0 0 1 .276.69l-1.547 1.6a.391.404 0 0 0 0 .572l3.299 3.412a.391.404 0 0 1 .115.286v1.323a.977 1.011 0 0 1-.977 1.011.195.202 0 0 0-.195.202V25.4a1.368 1.415 0 0 1-2.736 0v-.606a.391.404 0 0 0-.782 0v2.628a1.368 1.415 0 0 1-2.736 0v-1.415a.391.404 0 0 0-.782 0v3.032a1.759 1.819 0 0 1-3.517 0V26.27a5.689 5.885 0 0 1 1.678-4.19zm4.966-.927a.782.809 0 0 0 1.563 0v-1.213a.782.809 0 0 0-1.563 0zm1.563 8.691a.977 1.011 0 1 0 1.95-.118 2.42 2.504 0 0 0-.69-1.422.387.401 0 0 0-.566 0 2.33 2.41 0 0 0-.693 1.54z" fill="#c4a2fc"/><path d="M14.988 15.596l5.529-5.721V8.218a2.345 2.426 0 0 1 4.689 0v2.975l5.586 5.778a1.174 1.215 0 0 1 0 1.715l-6.409 6.63a1.174 1.215 0 0 1-1.658 0l-7.738-8.004a1.172 1.213 0 0 1 .001-1.715zm9.437-7.378a1.563 1.617 0 0 0-3.126 0v.849l.098-.101a1.2 1.241 0 0 1 1.658 0l1.37 1.419zm-.346 2.951l-1.055 1.091 4.533 4.691 1.086-1.061zm-8.536 5.571l7.738 8.004a.391.404 0 0 0 .553 0l6.409-6.63a.391.404 0 0 0 0-.572l-1.046-1.078-1.376 1.347a.391.404 0 0 1-.545-.008l-5.08-5.255a.391.404 0 0 1 0-.572l1.331-1.377-1.024-1.059a.4.414 0 0 0-.553 0l-.651.673v3.74a1.172 1.213 0 1 1-.782 0V11.02l-4.975 5.148a.391.404 0 0 0 0 .572zm5.366-2.054a.391.404 0 1 0 .391.404.391.404 0 0 0-.391-.404z" fill="#151a6a"/></svg>`) + `') 4 4, auto`;
+            } else {
+                setCircleCursor(localColor, localLineWidth);
+            }
+        }
+
+        function getCursorColors(color) {
+            let innerColor;
+            let outerColor = "#FFFFFF";
+            if (color.startsWith("#")) {
+                innerColor = hexToRgb(color);
+
+                const hsp = Math.sqrt(
+                    0.299 * (innerColor[0] * innerColor[0]) +
+                    0.587 * (innerColor[1] * innerColor[1]) +
+                    0.114 * (innerColor[2] * innerColor[2])
+                );
+
+                if (hsp > 127.5) {
+                    outerColor = "rgb(0,0,0)";
                 } else {
-                    wordContainer.innerHTML += '<span class="guess-letter">' + char + '</span>';
+                    outerColor = "rgb(255,255,255)";
+                }
+
+                innerColor = "rgb(" + innerColor[0] + "," + innerColor[1] + "," + innerColor[2] + ")";
+            } else {
+                innerColor = color;
+            }
+
+            return {
+                innerColor: innerColor,
+                outerColor: outerColor,
+            }
+        }
+
+        function setCircleCursor(color, size) {
+            const { innerColor, outerColor } = getCursorColors(color);
+
+            let circleSize = size * scaleUpFactor();
+            drawingBoard.style.cursor = "url('data:image/svg+xml;utf8,<svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" width=\"32\" height=\"32\">" + generateSVGCircle(circleSize, innerColor, outerColor) + "</svg>') " + (circleSize / 2) + " " + (circleSize / 2) + ", auto";
+        }
+
+        function generateSVGCircle(circleSize, innerColor, outerColor) {
+            return "<circle cx=\"" + (circleSize / 2) + "\" cy=\"" + (circleSize / 2) + "\" r=\"" + (circleSize / 2) + "\" style=\"fill: " + innerColor + "; stroke: " + outerColor + ";\"/>";
+        }
+
+        function startGame() {
+            socket.send(JSON.stringify({
+                type: "start",
+            }))
+        }
+
+        function clearCanvasAndSendEvent() {
+            if (allowDrawing) {
+                //Avoid unnecessary traffic back to us and handle the clear directly.
+                clear(context);
+                socket.send(JSON.stringify({
+                    type: "clear-drawing-board"
+                }));
+            }
+        }
+
+        const sendMessage = () => {
+            socket.send(JSON.stringify({
+                type: "message",
+                data: messageInput.value
+            }));
+            messageInput.value = "";
+
+            // Necessary in order to keep the page from submitting.
+            return false;
+        };
+
+        function chooseWord(index) {
+            socket.send(JSON.stringify({
+                type: "choose-word",
+                data: index
+            }));
+            allowDrawing = true;
+            wordDialog.style.visibility = "hidden";
+        }
+
+        function onVotekickPlayer(playerId) {
+            socket.send(JSON.stringify({
+                type: "kick-vote",
+                data: playerId
+            }));
+            hideKickDialog();
+        }
+
+        //This automatically scrolls down the chat on arrivals of new messages
+        new MutationObserver(() => messageContainer.scrollTop = messageContainer.scrollHeight)
+            .observe(messageContainer, {
+                attributes: false,
+                childList: true,
+                subtree: false
+            });
+
+        let ownID, ownerID, ownName;
+        let maxRounds = 0;
+        let roundEndTime = 0;
+        let votekickEnabled
+        socket.onmessage = event => {
+            let parsed = JSON.parse(event.data);
+            if (parsed.type === "ready") {
+                let ready = parsed.data;
+                handleReadyEvent(ready);
+                if (ready.gameState === "unstarted") {
+                    if (ownerID === ownID) {
+                        startDialog.style.visibility = "visible";
+                    } else {
+                        unstartedDialog.style.visibility = "visible";
+                    }
+                } else if (ready.gameState === "gameOver") {
+                    gameOverDialog.style.visibility = "visible";
+                    if (ownerID === ownID) {
+                        restartButton.style.display = "block";
+                    }
+
+                    gameOverScoreboard.innerHTML = "";
+
+                    //Copying array so we can sort.
+                    let players = cachedPlayers.slice();
+                    players.sort((a, b) => {
+                        return a.rank - b.rank;
+                    });
+
+                    //Show at least 2 players, but up to 5.
+                    const maxScoreboardSize = 5;
+
+                    for (let i = 0; i < players.length; i++) {
+                        let player = players[i];
+                        if (!player.connected) {
+                            continue;
+                        }
+
+                        const isSelf = player.id === ownID;
+
+                        //Even if we don't want to show a player-entry, we still need to iterate
+                        //over all players to handle the dialog titles.
+                        if (player.rank <= maxScoreboardSize) {
+                            let newEntry = '<div class="gameover-scoreboard-entry';
+                            if (isSelf) {
+                                newEntry += ' gameover-scoreboard-entry-self';
+                            }
+                            newEntry += '">'
+                                + '<div class="gameover-scoreboard-rank">'
+                                + player.rank
+                                + '</div>'
+                                + '<div class="gameover-scoreboard-name">'
+                                + player.name
+                                + '</div>'
+                                + '<span class="gameover-scoreboard-score">'
+                                + player.score
+                                + '</span>'
+                                + '</div>';
+
+                            gameOverScoreboard.innerHTML += newEntry;
+                        }
+
+                        if (isSelf) {
+                            if (player.rank == 1) {
+                                gameOverDialogTitle.innerText = "Congratiulations, you won!";
+                            } else {
+                                gameOverDialogTitle.innerText = "You placed " + player.rank + ". with " + player.score + " points";
+                            }
+                        }
+                    }
+                }
+            } else if (parsed.type === "update-players") {
+                applyPlayers(parsed.data);
+            } else if (parsed.type === "name-change") {
+                const playernameSpan = document.getElementById("playername-" + parsed.data.playerId);
+                if (playernameSpan !== null) {
+                    playernameSpan.innerText = parsed.data.playerName;
+                }
+                if (parsed.data.playerId === ownID) {
+                    setUsernameLocally(parsed.data.playerName)
+                }
+            } else if (parsed.type === "correct-guess") {
+                playWav('{{.RootPath}}/resources/plop.wav');
+
+                if (parsed.data === ownID) {
+                    applyMessage("correct-guess-message", "System", "You have correctly guessed the word.")
+                } else {
+                    for (let i = 0; i < cachedPlayers.length; i++) {
+                        let player = cachedPlayers[i];
+                        if (player.id === parsed.data) {
+                            applyMessage("correct-guess-message", "System", player.name + " correctly guessed the word.")
+                            break;
+                        }
+                    }
+                }
+            } else if (parsed.type === "close-guess") {
+                applyMessage("close-guess-message", "System", "'" + parsed.data + "'' is very close.")
+            } else if (parsed.type === "update-wordhint") {
+                applyWordHints(parsed.data);
+            } else if (parsed.type === "message") {
+                applyMessage("", parsed.data.author, parsed.data.content);
+            } else if (parsed.type === "system-message") {
+                applyMessage("system-message", "System", parsed.data);
+            } else if (parsed.type === "non-guessing-player-message") {
+                applyMessage("correct-guess-message", parsed.data.author, parsed.data.content);
+            } else if (parsed.type === "line") {
+                drawLine(context, parsed.data.fromX * scaleDownFactor(), parsed.data.fromY * scaleDownFactor(), parsed.data.toX * scaleDownFactor(), parsed.data.toY * scaleDownFactor(), parsed.data.color, parsed.data.lineWidth * scaleDownFactor());
+            } else if (parsed.type === "fill") {
+                fill(context, parsed.data.x * scaleDownFactor(), parsed.data.y * scaleDownFactor(), parsed.data.color);
+            } else if (parsed.type === "clear-drawing-board") {
+                clear(context)
+            } else if (parsed.type === "next-turn") {
+                //As soon as a turn starts, the round should be ongoing, so we make
+                //sure that all types of dialogs, that indicate the game isn't
+                //ongoing, are not visible anymore.
+                unstartedDialog.style.visibility = "hidden";
+                startDialog.style.visibility = "hidden";
+                restartButton.style.display = "none";
+                gameOverDialog.style.visibility = "hidden";
+
+                //If a player doesn't choose, the dialog will still be up.
+                wordDialog.style.visibility = "hidden";
+                playWav('{{.RootPath}}/resources/end-turn.wav');
+
+                clear(context);
+
+                roundEndTime = parsed.data.roundEndTime;
+                applyRounds(parsed.data.round, maxRounds);
+                applyPlayers(parsed.data.players);
+
+                //We clear this, since there's no word chosen right now.
+                wordContainer.innerHTML = "";
+
+                if (parsed.data.previousWord !== null) {
+                    if (parsed.data.previousWord === "") {
+                        applyMessage("system-message", "System", "Round over. No word was chosen.");
+                    } else {
+                        applyMessage("system-message", "System", "Round over. Previous word was '" + parsed.data.previousWord + "'");
+                    }
+                }
+
+                allowDrawing = false;
+            } else if (parsed.type === "your-turn") {
+                playWav('{{.RootPath}}/resources/your-turn.wav');
+
+                promptWords(parsed.data[0], parsed.data[1], parsed.data[2]);
+            } else if (parsed.type === "drawing") {
+                applyDrawData(parsed.data);
+            } else if (parsed.type === "kick-vote") {
+                if (parsed.data.playerId !== ownID) {
+                    let kickMessage = "(" + parsed.data.voteCount + "/" + parsed.data.requiredVoteCount + ") players voted to kick " + parsed.data.playerName + ".";
+                    if (parsed.data.voteCount >= parsed.data.requiredVoteCount) {
+                        kickMessage += " Player has been kicked.";
+                    }
+                    applyMessage("system-message", "System", kickMessage);
+                }
+            } else if (parsed.type === "owner-change") {
+                ownerID = parsed.data.playerId;
+                applyMessage("system-message", "System", parsed.data.playerName + " is the new lobby owner.");
+            } else if (parsed.type === "drawer-kicked") {
+                applyMessage("system-message", "System", "Since the kicked player has been drawing, none of you will get any points this round.");
+            } else if (parsed.type === "lobby-settings-changed") {
+                votekickEnabled = parsed.data.enableVotekick;
+                applyMessage("system-message", "System", "Lobby settings changed:<br/><br/>"
+                    + "Public lobby: " + parsed.data.public + "<br/>"
+                    + "Enable votekicking: " + parsed.data.enableVotekick + "<br/>"
+                    + "Max players: " + parsed.data.maxPlayers + "<br/>"
+                    + "Custom words chance: " + parsed.data.customWordsChance + "%<br/>"
+                    + "Clients per IP limit: " + parsed.data.clientsPerIpLimit);
+            }
+        };
+
+        function getPlayer(playerID) {
+            for (let i = 0; i < cachedPlayers.length; i++) {
+                let player = cachedPlayers[i];
+                if (player.id === playerID) {
+                    return player;
                 }
             }
-        });
-    }
 
-    function applyDrawData(drawElements) {
-        clear(context);
-        drawElements.forEach(function (drawElement) {
-            let drawData = drawElement.data;
-            if (drawElement.type === "fill") {
-                fill(context, drawData.x * scaleDownFactor(), drawData.y * scaleDownFactor(), drawData.color);
-            } else if (drawElement.type === "line") {
-                drawLine(context, drawData.fromX * scaleDownFactor(), drawData.fromY * scaleDownFactor(), drawData.toX * scaleDownFactor(), drawData.toY * scaleDownFactor(), drawData.color, drawData.lineWidth * scaleDownFactor());
-            } else {
-                console.log("Unknown draw element type: " + drawData.type)
+            return null;
+        }
+
+        function handleReadyEvent(ready) {
+            ownerID = ready.ownerId;
+            setUsernameLocally(ready.playerName);
+            allowDrawing = ready.allowDrawing;
+            ownID = ready.playerId;
+            maxRounds = ready.maxRounds;
+            roundEndTime = ready.roundEndTime;
+            votekickEnabled = ready.votekickEnabled;
+            applyRounds(ready.round, ready.maxRounds);
+
+            if (ready.players && ready.players.length) {
+                applyPlayers(ready.players)
             }
-        });
-    }
+            if (ready.currentDrawing && ready.currentDrawing.length) {
+                applyDrawData(ready.currentDrawing)
+            }
+            if (ready.wordHints && ready.wordHints.length) {
+                applyWordHints(ready.wordHints)
+            }
+        }
 
-    let isDrawing = false;
-    let x = 0;
-    let y = 0;
+        function promptWords(wordOne, wordTwo, wordThree) {
+            wordButtonZero.textContent = wordOne;
+            wordButtonOne.textContent = wordTwo;
+            wordButtonTwo.textContent = wordThree;
+            wordDialog.style.visibility = "visible";
+        }
 
-    // Touch input
-    let touchID = 0;
+        function playWav(file) {
+            if (sound) {
+                let audio = new Audio(file);
+                audio.type = 'audio/wav';
+                audio.play();
+            }
+        }
 
-    drawingBoard.ontouchstart = function (e) {
-        if (!isDrawing && allowDrawing) {
-            touchID = e.touches[0].identifier;
+        window.setInterval(function () {
+            if (roundEndTime >= 0) {
+                timeLeft.innerText = "Time Left: " + Math.floor(roundEndTime / 1000);
+                roundEndTime -= 500;
+            } else {
+                timeLeft.innerText = "Time Left: ∞";
+            }
+        }, 500);
 
-            if (allowDrawing && localTool !== 2) {
-                // calculate the offset coordinates based on client touch position and drawing board client origin
+        function applyMessage(styleClass, author, message) {
+            if (messageContainer.childElementCount >= 100) {
+                messageContainer.removeChild(messageContainer.firstChild)
+            }
+
+            messageContainer.innerHTML += `<div class="message ` + styleClass + `">
+                            <span class="chat-name">` + author + `</span>
+                            <span class="message-content">` + message + `</span>
+                        </div>`;
+        }
+
+        let cachedPlayers;
+
+        function applyPlayers(players) {
+            playerContainer.innerHTML = "";
+            cachedPlayers = players;
+            players.forEach(function (player) {
+                //We don't wanna show the disconnected players.
+                if (!player.connected) {
+                    return;
+                }
+
+                let stateStyleClass;
+                if (player.state === "standby") {
+                    stateStyleClass = 'player-done';
+                } else {
+                    stateStyleClass = '';
+                }
+                let newPlayerElement = '<div class="player ' + stateStyleClass + '">' +
+                    '<span class="rank">' + player.rank + '</span>' +
+                    '<span id="playername-' + player.id + '" class="playername';
+                if (player.id === ownID) {
+                    newPlayerElement += ' playername-self';
+                }
+                newPlayerElement +=
+                    '">' + player.name + '</span>' +
+                    '<div class="score-and-status">' +
+                    '<div>' +
+                    '<span class="playerscore">' + player.score + '</span>' +
+                    '<span class="last-turn-score">(Last turn: ' + player.lastScore + ')</span>' +
+                    '</div>';
+                if (player.state === "drawing") {
+                    newPlayerElement += '<span>✏️</span>';
+                } else if (player.state === "standby") {
+                    newPlayerElement += '<span>✔️</span>';
+                }
+                newPlayerElement += '</div></div>';
+                playerContainer.innerHTML += newPlayerElement;
+            });
+        }
+
+        function applyRounds(round, maxRound) {
+            roundsSpan.innerText = 'Round ' + round + ' of ' + maxRound;
+        }
+
+        function applyWordHints(wordHints) {
+            wordContainer.innerHTML = "";
+            //If no hint has been revealed
+            wordHints.forEach(function (hint) {
+                if (hint.character === 0) {
+                    wordContainer.innerHTML += '<span class="guess-letter guess-letter-underline">&nbsp;</span>';
+                } else {
+                    let char = String.fromCharCode(hint.character);
+                    if (hint.underline) {
+                        wordContainer.innerHTML += '<span class="guess-letter guess-letter-underline">' + char + '</span>'
+                    } else {
+                        wordContainer.innerHTML += '<span class="guess-letter">' + char + '</span>';
+                    }
+                }
+            });
+        }
+
+        function applyDrawData(drawElements) {
+            clear(context);
+            drawElements.forEach(function (drawElement) {
+                let drawData = drawElement.data;
+                if (drawElement.type === "fill") {
+                    fill(context, drawData.x * scaleDownFactor(), drawData.y * scaleDownFactor(), drawData.color);
+                } else if (drawElement.type === "line") {
+                    drawLine(context, drawData.fromX * scaleDownFactor(), drawData.fromY * scaleDownFactor(), drawData.toX * scaleDownFactor(), drawData.toY * scaleDownFactor(), drawData.color, drawData.lineWidth * scaleDownFactor());
+                } else {
+                    console.log("Unknown draw element type: " + drawData.type)
+                }
+            });
+        }
+
+        let isDrawing = false;
+        let x = 0;
+        let y = 0;
+
+        // Touch input
+        let touchID = 0;
+
+        drawingBoard.ontouchstart = function (e) {
+            if (!isDrawing && allowDrawing) {
+                touchID = e.touches[0].identifier;
+
+                if (allowDrawing && localTool !== 2) {
+                    // calculate the offset coordinates based on client touch position and drawing board client origin
+                    let clientRect = drawingBoard.getBoundingClientRect();
+                    x = (e.touches[0].clientX - clientRect.left);
+                    y = (e.touches[0].clientY - clientRect.top);
+
+                    isDrawing = true;
+                }
+            }
+        };
+
+        drawingBoard.ontouchmove = function (e) {
+            //FIXME Explanation? Does this prevent moving the page?
+            e.preventDefault();
+
+            if (allowDrawing && isDrawing) {
+                // find touch with correct ID
+                for (let i = e.changedTouches.length - 1; i >= 0; i--) {
+                    if (e.changedTouches[i].identifier === touchID) {
+                        let touch = e.changedTouches[i];
+
+                        // calculate the offset coordinates based on client touch position and drawing board client origin
+                        let clientRect = drawingBoard.getBoundingClientRect();
+                        let offsetX = (touch.clientX - clientRect.left);
+                        let offsetY = (touch.clientY - clientRect.top);
+
+                        // drawing functions must check for context boundaries
+                        drawLineAndSendEvent(context, x, y, offsetX, offsetY, localColor, localLineWidth);
+                        x = offsetX;
+                        y = offsetY;
+
+                        return;
+                    }
+                }
+            }
+        };
+
+        function onTouchEnd(e) {
+            if (isDrawing) {
+                // find touch with correct ID
+                for (let i = e.changedTouches.length - 1; i >= 0; i--) {
+                    if (e.changedTouches[i].identifier === touchID) {
+                        isDrawing = false;
+                        return;
+                    }
+                }
+            }
+        }
+
+        drawingBoard.ontouchend = onTouchEnd;
+        drawingBoard.ontouchcancel = onTouchEnd;
+
+        // Mouse input
+        drawingBoard.onmousedown = function (e) {
+            if (allowDrawing && e.button === 0 && localTool !== 2) {
                 let clientRect = drawingBoard.getBoundingClientRect();
-                x = (e.touches[0].clientX - clientRect.left);
-                y = (e.touches[0].clientY - clientRect.top);
+                x = e.clientX - clientRect.left;
+                y = e.clientY - clientRect.top;
 
                 isDrawing = true;
             }
-        }
-    };
 
-    drawingBoard.ontouchmove = function (e) {
-        //FIXME Explanation? Does this prevent moving the page?
-        e.preventDefault();
+            return false;
+        };
 
-        if (allowDrawing && isDrawing) {
-            // find touch with correct ID
-            for (let i = e.changedTouches.length - 1; i >= 0; i--) {
-                if (e.changedTouches[i].identifier === touchID) {
-                    let touch = e.changedTouches[i];
-
-                    // calculate the offset coordinates based on client touch position and drawing board client origin
-                    let clientRect = drawingBoard.getBoundingClientRect();
-                    let offsetX = (touch.clientX - clientRect.left);
-                    let offsetY = (touch.clientY - clientRect.top);
-
-                    // drawing functions must check for context boundaries
-                    drawLineAndSendEvent(context, x, y, offsetX, offsetY, localColor, localLineWidth);
-                    x = offsetX;
-                    y = offsetY;
-
-                    return;
-                }
-            }
-        }
-    };
-
-    function onTouchEnd(e) {
-        if (isDrawing) {
-            // find touch with correct ID
-            for (let i = e.changedTouches.length - 1; i >= 0; i--) {
-                if (e.changedTouches[i].identifier === touchID) {
-                    isDrawing = false;
-                    return;
-                }
-            }
-        }
-    }
-
-    drawingBoard.ontouchend = onTouchEnd;
-    drawingBoard.ontouchcancel = onTouchEnd;
-
-    // Mouse input
-    drawingBoard.onmousedown = function (e) {
-        if (allowDrawing && e.button === 0 && localTool !== 2) {
-            let clientRect = drawingBoard.getBoundingClientRect();
-            x = e.clientX - clientRect.left;
-            y = e.clientY - clientRect.top;
-
-            isDrawing = true;
-        }
-
-        return false;
-    };
-
-    // This is executed even if the mouse is not above the browser anymore.
-    window.onmouseup = function (e) {
-        if (isDrawing === true) {
-            isDrawing = false;
-        }
-    };
-
-    function mouseUpdate(e) {
-        if (allowDrawing && isDrawing === true && e.button === 0) {
-            // calculate the offset coordinates based on client mouse position and drawing board client origin
-            let clientRect = drawingBoard.getBoundingClientRect();
-            let offsetX = (e.clientX - clientRect.left);
-            let offsetY = (e.clientY - clientRect.top);
-
-            // drawing functions must check for context boundaries
-            drawLineAndSendEvent(context, x, y, offsetX, offsetY, localColor, localLineWidth);
-            x = offsetX;
-            y = offsetY;
-        }
-    }
-
-    drawingBoard.onmousemove = mouseUpdate;
-    drawingBoard.onmouseleave = mouseUpdate;
-
-    // necessary for mousemove to not use the previous exit coordinates.
-    window.onmousemove = function (e) {
-        let clientRect = drawingBoard.getBoundingClientRect();
-        x = Math.min(clientRect.width - 1, Math.max(0, e.clientX - clientRect.left));
-        y = Math.min(clientRect.height - 1, Math.max(0, e.clientY - clientRect.top));
-    };
-
-    drawingBoard.onclick = function (e) {
-        if (allowDrawing && e.button === 0) {
-            if (localTool === fillBucket) {
-                fillAndSendEvent(context, e.offsetX, e.offsetY, localColor)
-            } else {
-                drawLineAndSendEvent(context, e.offsetX, e.offsetY, e.offsetX, e.offsetY, localColor, localLineWidth);
-            }
-            isDrawing = false;
-        }
-    };
-
-    function clear(context) {
-        context.fillStyle = "#FFFFFF";
-        context.fillRect(0, 0, drawingBoard.width, drawingBoard.height);
-    }
-
-    function fill(context, x1, y1, color) {
-        context.fillStyle = color;
-        //There seems to be some bug where setting the tolerance to 0 causes a freeze when painting black on white.
-        return context.fillFlood(x1, y1);
-    }
-
-    function fillAndSendEvent(context, x1, y1, color) {
-        if (fill(context, x1, y1, color)) {
-            let fillInstruction = {
-                type: "fill",
-                data: {
-                    x: x1 * scaleUpFactor(),
-                    y: y1 * scaleUpFactor(),
-                    color: color
-                },
-            };
-            socket.send(JSON.stringify(fillInstruction));
-        }
-    }
-
-    function drawLineAndSendEvent(context, x1, y1, x2, y2, color, lineWidth) {
-        if (localTool === rubber) {
-            color = "#ffffff";
-        }
-
-        drawLine(context, x1, y1, x2, y2, color, lineWidth);
-
-        let drawInstruction = {
-            type: "line",
-            data: {
-                fromX: x1 * scaleUpFactor(),
-                fromY: y1 * scaleUpFactor(),
-                toX: x2 * scaleUpFactor(),
-                toY: y2 * scaleUpFactor(),
-                color: color,
-                lineWidth: lineWidth * scaleUpFactor(),
+        // This is executed even if the mouse is not above the browser anymore.
+        window.onmouseup = function (e) {
+            if (isDrawing === true) {
+                isDrawing = false;
             }
         };
-        socket.send(JSON.stringify(drawInstruction));
-    }
 
-    function drawLine(context, x1, y1, x2, y2, color, lineWidth) {
-        // the coordinates must be whole numbers to improve performance.
-        // also, decimals as coordinates is not making sense.
-        x1 = Math.floor(x1);
-        y1 = Math.floor(y1);
-        x2 = Math.floor(x2);
-        y2 = Math.floor(y2);
-        lineWidth = Math.ceil(lineWidth);
+        function mouseUpdate(e) {
+            if (allowDrawing && isDrawing === true && e.button === 0) {
+                // calculate the offset coordinates based on client mouse position and drawing board client origin
+                let clientRect = drawingBoard.getBoundingClientRect();
+                let offsetX = (e.clientX - clientRect.left);
+                let offsetY = (e.clientY - clientRect.top);
 
-        // calculate bounding box
-        let left = Math.max(0, Math.min(context.canvas.width, Math.min(x1, x2) - lineWidth));
-        let top = Math.max(0, Math.min(context.canvas.height, Math.min(y1, y2) - lineWidth));
-        let right = Math.max(0, Math.min(context.canvas.width, Math.max(x1, x2) + lineWidth));
-        let bottom = Math.max(0, Math.min(context.canvas.height, Math.max(y1, y2) + lineWidth));
-
-        // off canvas, so don't draw anything
-        if (right - left === 0 || bottom - top === 0) {
-            return;
-        }
-
-        color = hexToRgb(color);
-        color[3] = 255; //alpha channel
-
-        const circleMap = generateCircleMap(Math.floor(lineWidth / 2));
-        const offset = Math.floor(circleMap.length / 2);
-
-        const imageData = context.getImageData(left, top, right - left, bottom - top);
-
-        for (let ix = 0; ix < circleMap.length; ix++) {
-            for (let iy = 0; iy < circleMap[ix].length; iy++) {
-                if (circleMap[ix][iy] === 1 || (x1 === x2 && y1 === y2 && circleMap[ix][iy] === 2)) {
-                    const newX1 = x1 + ix - offset - left;
-                    const newY1 = y1 + iy - offset - top;
-                    const newX2 = x2 + ix - offset - left;
-                    const newY2 = y2 + iy - offset - top;
-                    drawBresenhamLine(imageData, newX1, newY1, newX2, newY2, color);
-                }
+                // drawing functions must check for context boundaries
+                drawLineAndSendEvent(context, x, y, offsetX, offsetY, localColor, localLineWidth);
+                x = offsetX;
+                y = offsetY;
             }
         }
-        context.putImageData(imageData, left, top);
-    }
 
-    function drawBresenhamLine(imageData, x0, y0, x1, y1, color) {
-        const dx = Math.abs(x1 - x0);
-        const dy = Math.abs(y1 - y0);
-        const sx = (x0 < x1) ? 1 : -1;
-        const sy = (y0 < y1) ? 1 : -1;
-        let err = dx - dy;
+        drawingBoard.onmousemove = mouseUpdate;
+        drawingBoard.onmouseleave = mouseUpdate;
 
-        while (true) {
-            //check if pixel is inside the canvas
-            if (!(x0 < 0 || x0 >= imageData.width || y0 < 0 || y0 >= imageData.height)) {
-                setPixel(imageData, x0, y0, color);
-            }
+        // necessary for mousemove to not use the previous exit coordinates.
+        window.onmousemove = function (e) {
+            let clientRect = drawingBoard.getBoundingClientRect();
+            x = Math.min(clientRect.width - 1, Math.max(0, e.clientX - clientRect.left));
+            y = Math.min(clientRect.height - 1, Math.max(0, e.clientY - clientRect.top));
+        };
 
-
-            if ((x0 === x1) && (y0 === y1)) break;
-            const e2 = 2 * err;
-            if (e2 > -dy) {
-                err -= dy;
-                x0 += sx;
-            }
-            if (e2 < dx) {
-                err += dx;
-                y0 += sy;
-            }
-        }
-    }
-
-    function generateCircleMap(radius) {
-        let circleData = [];
-
-        for (x = 0; x < 2 * radius; x++) {
-            circleData[x] = [];
-            for (y = 0; y < 2 * radius; y++) {
-                const distanceToRadius = Math.sqrt(Math.pow(radius - x, 2) + Math.pow(radius - y, 2));
-                if (distanceToRadius > radius) {
-                    circleData[x][y] = 0;
-                } else if (distanceToRadius < radius - 2) {
-                    //optimize for performance: fill circle only when mouse was not moved
-                    circleData[x][y] = 2;
+        drawingBoard.onclick = function (e) {
+            if (allowDrawing && e.button === 0) {
+                if (localTool === fillBucket) {
+                    fillAndSendEvent(context, e.offsetX, e.offsetY, localColor)
                 } else {
-                    circleData[x][y] = 1;
+                    drawLineAndSendEvent(context, e.offsetX, e.offsetY, e.offsetX, e.offsetY, localColor, localLineWidth);
+                }
+                isDrawing = false;
+            }
+        };
+
+        function clear(context) {
+            context.fillStyle = "#FFFFFF";
+            context.fillRect(0, 0, drawingBoard.width, drawingBoard.height);
+        }
+
+        function fill(context, x1, y1, color) {
+            context.fillStyle = color;
+            //There seems to be some bug where setting the tolerance to 0 causes a freeze when painting black on white.
+            return context.fillFlood(x1, y1);
+        }
+
+        function fillAndSendEvent(context, x1, y1, color) {
+            if (fill(context, x1, y1, color)) {
+                let fillInstruction = {
+                    type: "fill",
+                    data: {
+                        x: x1 * scaleUpFactor(),
+                        y: y1 * scaleUpFactor(),
+                        color: color
+                    },
+                };
+                socket.send(JSON.stringify(fillInstruction));
+            }
+        }
+
+        function drawLineAndSendEvent(context, x1, y1, x2, y2, color, lineWidth) {
+            if (localTool === rubber) {
+                color = "#ffffff";
+            }
+
+            drawLine(context, x1, y1, x2, y2, color, lineWidth);
+
+            let drawInstruction = {
+                type: "line",
+                data: {
+                    fromX: x1 * scaleUpFactor(),
+                    fromY: y1 * scaleUpFactor(),
+                    toX: x2 * scaleUpFactor(),
+                    toY: y2 * scaleUpFactor(),
+                    color: color,
+                    lineWidth: lineWidth * scaleUpFactor(),
+                }
+            };
+            socket.send(JSON.stringify(drawInstruction));
+        }
+
+        function drawLine(context, x1, y1, x2, y2, color, lineWidth) {
+            // the coordinates must be whole numbers to improve performance.
+            // also, decimals as coordinates is not making sense.
+            x1 = Math.floor(x1);
+            y1 = Math.floor(y1);
+            x2 = Math.floor(x2);
+            y2 = Math.floor(y2);
+            lineWidth = Math.ceil(lineWidth);
+
+            // calculate bounding box
+            let left = Math.max(0, Math.min(context.canvas.width, Math.min(x1, x2) - lineWidth));
+            let top = Math.max(0, Math.min(context.canvas.height, Math.min(y1, y2) - lineWidth));
+            let right = Math.max(0, Math.min(context.canvas.width, Math.max(x1, x2) + lineWidth));
+            let bottom = Math.max(0, Math.min(context.canvas.height, Math.max(y1, y2) + lineWidth));
+
+            // off canvas, so don't draw anything
+            if (right - left === 0 || bottom - top === 0) {
+                return;
+            }
+
+            color = hexToRgb(color);
+            color[3] = 255; //alpha channel
+
+            const circleMap = generateCircleMap(Math.floor(lineWidth / 2));
+            const offset = Math.floor(circleMap.length / 2);
+
+            const imageData = context.getImageData(left, top, right - left, bottom - top);
+
+            for (let ix = 0; ix < circleMap.length; ix++) {
+                for (let iy = 0; iy < circleMap[ix].length; iy++) {
+                    if (circleMap[ix][iy] === 1 || (x1 === x2 && y1 === y2 && circleMap[ix][iy] === 2)) {
+                        const newX1 = x1 + ix - offset - left;
+                        const newY1 = y1 + iy - offset - top;
+                        const newX2 = x2 + ix - offset - left;
+                        const newY2 = y2 + iy - offset - top;
+                        drawBresenhamLine(imageData, newX1, newY1, newX2, newY2, color);
+                    }
+                }
+            }
+            context.putImageData(imageData, left, top);
+        }
+
+        function drawBresenhamLine(imageData, x0, y0, x1, y1, color) {
+            const dx = Math.abs(x1 - x0);
+            const dy = Math.abs(y1 - y0);
+            const sx = (x0 < x1) ? 1 : -1;
+            const sy = (y0 < y1) ? 1 : -1;
+            let err = dx - dy;
+
+            while (true) {
+                //check if pixel is inside the canvas
+                if (!(x0 < 0 || x0 >= imageData.width || y0 < 0 || y0 >= imageData.height)) {
+                    setPixel(imageData, x0, y0, color);
+                }
+
+
+                if ((x0 === x1) && (y0 === y1)) break;
+                const e2 = 2 * err;
+                if (e2 > -dy) {
+                    err -= dy;
+                    x0 += sx;
+                }
+                if (e2 < dx) {
+                    err += dx;
+                    y0 += sy;
                 }
             }
         }
 
-        return circleData;
-    }
+        function generateCircleMap(radius) {
+            let circleData = [];
 
-    function setPixel(imageData, x, y, color) {
-        const offset = (y * imageData.width + x) * 4;
-        imageData.data[offset] = color[0];
-        imageData.data[offset + 1] = color[1];
-        imageData.data[offset + 2] = color[2];
-        imageData.data[offset + 3] = color[3];
-    }
+            for (x = 0; x < 2 * radius; x++) {
+                circleData[x] = [];
+                for (y = 0; y < 2 * radius; y++) {
+                    const distanceToRadius = Math.sqrt(Math.pow(radius - x, 2) + Math.pow(radius - y, 2));
+                    if (distanceToRadius > radius) {
+                        circleData[x][y] = 0;
+                    } else if (distanceToRadius < radius - 2) {
+                        //optimize for performance: fill circle only when mouse was not moved
+                        circleData[x][y] = 2;
+                    } else {
+                        circleData[x][y] = 1;
+                    }
+                }
+            }
 
-    //Call intially to correct initial state
-    handleCanvasResize();
-    window.addEventListener("resize", () => {
+            return circleData;
+        }
+
+        function setPixel(imageData, x, y, color) {
+            const offset = (y * imageData.width + x) * 4;
+            imageData.data[offset] = color[0];
+            imageData.data[offset + 1] = color[1];
+            imageData.data[offset + 2] = color[2];
+            imageData.data[offset + 3] = color[3];
+        }
+
+        //Call intially to correct initial state
         handleCanvasResize();
-        //Since the canvas gets cleared, we request the drawing again.
-        //Saving it locally would be wasteful and might slow down some
-        //clients due to a lot of memory allocation.
-        socket.send(JSON.stringify({
-            type: "request-drawing",
-        }));
-    }, false);
+        window.addEventListener("resize", () => {
+            handleCanvasResize();
+            //Since the canvas gets cleared, we request the drawing again.
+            //Saving it locally would be wasteful and might slow down some
+            //clients due to a lot of memory allocation.
+            socket.send(JSON.stringify({
+                type: "request-drawing",
+            }));
+        }, false);
 
-</script>
-<script src="https://meet.jit.si/external_api.js"></script>
-<script>
-    var domain = "meet.jit.si";
-    var options = {
-        roomName: "wfhomie-scribble-test",
-        width: 280,
-        height: 600,
-        allow: "microphone; camera",
-        parentNode: document.getElementById("jitsicontainer"),
-        configOverwrite: {},
-        interfaceConfigOverwrite: { TILE_VIEW_MAX_COLUMNS: 2, SHOW_CHROME_EXTENSION_BANNER: false }
-    }
-    var api = new JitsiMeetExternalAPI(domain, options);
-</script>
+    </script>
+    <script src="https://meet.jit.si/external_api.js"></script>
+    <script>
+        // check conference state (join page or videochat)
+        let videoConferenceJoined = false;
+
+        // set with an string to default value, "John Doe" by example
+        let localDisplayName = "test";
+        var domain = "meet.jit.si";
+        var options = {
+            roomName: "wfhomie-scribble-test",
+            width: 280,
+            height: 600,
+            allow: "microphone; camera",
+            parentNode: document.getElementById("jitsicontainer"),
+            configOverwrite: {},
+            interfaceConfigOverwrite: { TILE_VIEW_MAX_COLUMNS: 2, SHOW_CHROME_EXTENSION_BANNER: false }
+        }
+        var api = new JitsiMeetExternalAPI(domain, options);
+        api.executeCommand('displayName', localDisplayName);
+
+        api.addEventListeners({
+            displayNameChange: function (params) {
+                // if is Videochat, set the Join Page displayName
+                if (videoConferenceJoined) {
+                    return this.executeCommand('displayName', localDisplayName);
+                }
+
+                // if is Join Page, update global variable (localDisplayName) with input value
+                localDisplayName = params.displayname;
+            },
+            videoConferenceJoined: function () {
+                // flag the conference starts
+                videoConferenceJoined = true;
+            }
+        });
+    </script>
 </body>
 
 </html>
