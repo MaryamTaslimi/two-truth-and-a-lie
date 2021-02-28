@@ -69,7 +69,7 @@
             </div>
             <div id="player-container">
                 <div>
-                    <h1 style="color:#f6d65c; font-size: 1rem; margin:10px;">Rankings</h1>
+                    <h1 style="color:#f6d65c; font-size: 1rem; margin:10px;">Ranking</h1>
                 </div>
                 <div id="player-container-old"></div>
             </div>
@@ -389,7 +389,7 @@
                 </div>
                 <form class="message-input-form" onsubmit="return sendMessage()">
                     <input id="message-input" type="text" autocomplete="off" style="color:white;"
-                        placeholder="your guesses and messages" />
+                        placeholder="Type your guesses and messages" />
                 </form>
             </div>
         </div>
@@ -884,7 +884,7 @@
 
                         if (isSelf) {
                             if (player.rank == 1) {
-                                gameOverDialogTitle.innerText = "Congratiulations, you won!";
+                                gameOverDialogTitle.innerText = "Congratulations, you won!";
                             } else {
                                 gameOverDialogTitle.innerText = "You placed " + player.rank + ". with " + player.score + " points";
                             }
@@ -1041,7 +1041,7 @@
 
         window.setInterval(function () {
             if (roundEndTime >= 0) {
-                timeLeft.innerText = "00 : " + Math.floor(roundEndTime / 1000);
+                timeLeft.innerText = Math.floor(roundEndTime / 1000);
                 roundEndTime -= 500;
             } else {
                 timeLeft.innerText = "Time Left: ∞";

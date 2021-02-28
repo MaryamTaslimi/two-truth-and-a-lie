@@ -20,7 +20,7 @@
   border: none;
   height: 60px;
   width: 200px;
-  background-color: #39b0a4;
+  background-color: #00569e;
   color: white;
   font-size: larger;
   margin: auto;
@@ -39,7 +39,7 @@
 }
 
 .guess-letter {
-  font-family: thinoobold;
+  font-family: SourceSansPro-Bold;
   font-weight: bold;
   font-size: 1.5rem;
   color: #39b0a4;
@@ -199,14 +199,15 @@
   border: 0;
   padding: 10px;
   margin-top: 20px;
-  font-family: "thinoothin";
+  font-family: "SourceSansPro-Regular";
   background-color: #39b0a4;
   border-radius: 25px;
 }
 
 #message-input::placeholder {
-  color: white;
-  font-size: 1.5em;
+  color: gray;
+  font-size: 1em;
+  text-align: center;
 }
 
 #message-input:focus {
@@ -233,7 +234,7 @@
   background-color: white;
   padding: 0.5rem 1rem 0.5rem 1rem;
   border-radius: 25px;
-  font-family: thinoobold;
+  font-family: SourceSansPro-Bold;
   font-size: 1.5rem;
 }
 
@@ -508,7 +509,7 @@ input[type="button"]:active,
 .namechange-field {
   margin-right: 0.25rem;
   border-radius: 5px;
-  font-family: thinoothin;
+  font-family: SourceSansPro-Regular;
 }
 .premeeting-screen .content input.field {
   display: none;
