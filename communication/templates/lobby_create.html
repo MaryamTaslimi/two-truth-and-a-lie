@@ -16,7 +16,8 @@
         <noscript><span class="noscript">This website requires JavaScript to run properly.</span></noscript>
 
         <!-- <h1>WFHomie-Scribble</h1> -->
-        <img id="wfhomie-scribble-img" src="{{.RootPath}}/resources/wfhomie-scribble.png" alt="WFHomie-Scribble" />
+        <img class="wfhomie-scribble-img" src="{{.RootPath}}/resources/wfhomie-scribble.png" alt="WFHomie-Scribble" style="margin-left: 40px;
+        margin-top: 40px;" />
         <!-- <div class="tab-header">
             <label for="create-lobby-tab-button">
                 <input id="create-lobby-tab-button" class="custom-check-or-radio tab-button" type="radio"
@@ -47,7 +48,7 @@
 
                 {{end}}
                 <form id="lobby-create" class="input-container" action="{{.RootPath}}/ssrCreateLobby" method="POST">
-                    <div style="background-color:#39b0a4; border-radius: 5px; margin:auto;"><input name="token"
+                    <div style="background-color:#39b0a4; border-radius: 25px; margin:auto;"><input name="token"
                             id="tokeninput" maxlength='5' /></div>
                     <b style="display:none">Lobby-Language</b>
                     <select class="input-item" name="language" placeholder="Choose your language" style="display:none">
@@ -94,7 +95,7 @@
                     <button id="createbtn" type="submit" form="lobby-create" style="grid-column-start: 1;
                         grid-column-end: 3;
                         font-family: 'thinoobold';
-                        border-radius: 5px;
+                        border-radius: 25px;
                         border: none;
                         height: 60px;
                         width: 200px;
@@ -106,7 +107,7 @@
                 </form>
                 <button id="join-button" onclick="onJoin()" style="margin-top:10px;
                 font-family: 'thinoobold';
-                border-radius: 5px;
+                border-radius: 25px;
                 border: none;
                 height: 60px;
                 width: 200px;

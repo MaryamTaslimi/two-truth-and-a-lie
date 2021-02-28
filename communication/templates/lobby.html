@@ -16,7 +16,11 @@
         <noscript><span class="noscript">This website requires JavaScript to run properly.</span></noscript>
 
         <div id="lobby">
-            <span id="rounds"></span>
+            <img id="lobby-wfhomie-scribble-img" class="wfhomie-scribble-img"
+                src="{{.RootPath}}/resources/wfhomie-scribble.png" alt="WFHomie-Scribble" />
+            <span id="rounds-container">
+                <h1 id="rounds" style="color:white;"></h1>
+            </span>
             <span></span>
 
             <div style="display: flex;">
@@ -25,7 +29,7 @@
                 have a uniform look with the other buttons in the header, we are not using
                 a checkbox anymore. -->
                     <button onclick="toggleSound()" class="dialog-button header-button" alt="Toggle soundeffects"
-                        title="Toggle soundeffects">
+                        title="Toggle soundeffects" style= "display: none;">
                         <img id="sound-toggle-label" class="header-button-image" />
                     </button>
 
@@ -48,318 +52,344 @@
                 </div>
             </div>
 
-            <span id="time-left">Time Left: ∞</span>
+            <span style= "display: flex; flex-direction: row;">
+                <img src="{{.RootPath}}/resources/clock.png" style="height: 40px; width: auto; margin: auto;" alt="time left" />
+                <span
+                    style="height: 60px; width: 150px;display:table; background-color:#00569e; border-radius: 25px; margin: auto;">
+                    <p1 id="time-left" style="display:table-cell;   vertical-align: middle;
+                    padding: auto; color:white; text-align: center;"> Time left: ∞ </p1>
+                </span>
+            </span>
+            <div id="jitsicontainer">
+                <div>
+                    <h1 style="color:white; font-size: 2rem; margin:10px;">Players</h1>
+                </div>
+                <div id="jitsi" style="border-radius: 25px; margin:10px;"></div>
 
-            <div id="player-container"></div>
-            <div id="jitsicontainer"></div>
+            </div>
+            <div id="player-container">
+                <div>
+                    <h1 style="color:#f6d65c; font-size: 1rem; margin:10px;">Rankings</h1>
+                </div>
+                <div id="player-container-old"></div>
+            </div>
+            <div>
+                <div id="drawing-board-wrapper">
+                    <div id="drawing-board-inner-wrapper">
+                        <canvas id="drawing-board"></canvas>
 
-            <div id="drawing-board-wrapper">
-                <div id="drawing-board-inner-wrapper">
-                    <canvas id="drawing-board"></canvas>
-
-                    <!-- The so called "center dialogs" are divs that float above the canvas.
+                        <!-- The so called "center dialogs" are divs that float above the canvas.
                 They are centered are always a fraction of the canvas size but never bigger.
                 The "center-dialog-container" is basically like a "window" if you will and the
                 "center-dialog" is the window content. Depending on which dialog
                 we want to show, we show a different content. Technically there could be more
                 than one dialog visible at a time, but they'll be layered. -->
-                    <div id="center-dialogs">
-                        <div id="center-dialog-container">
-                            <div id="word-dialog" class="center-dialog">
-                                <span class="dialog-title">Choose a word</span>
-                                <div class="center-dialog-content">
-                                    <div class="word-button-container">
-                                        <button id="word-button-zero" class="dialog-button"
-                                            onclick="chooseWord(0)">Placeholder
-                                        </button>
-                                        <button id="word-button-one" class="dialog-button"
-                                            onclick="chooseWord(1)">Placeholder
-                                        </button>
-                                        <button id="word-button-two" class="dialog-button"
-                                            onclick="chooseWord(2)">Placeholder
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div id="center-dialog-container">
-                            <div id="start-dialog" class="center-dialog">
-                                <span class="dialog-title">Start the game</span>
-                                <div class="center-dialog-content">
-                                    <div style="display: flex; flex-direction: column;">
-                                        Change your username:
-                                        <div style="display: flex; flex-direction: row;">
-                                            <input class="namechange-field" type="text"
-                                                id="namechange-field-start-dialog"></input>
-                                            <button class="dialog-button"
-                                                onclick="changeName(document.getElementById('namechange-field-start-dialog').value)">Change</button>
-                                            <button class="dialog-button" onclick="changeName('')">Randomize</button>
-                                        </div>
-                                    </div>
-                                    <div class="button-center-wrapper">
-                                        <button class="dialog-button" onclick="startGame()">Start</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div id="center-dialog-container">
-                            <div id="unstarted-dialog" class="center-dialog">
-                                <span class="dialog-title">Game hasn't started</span>
-                                <div class="center-dialog-content">
-                                    <div style="display: flex; flex-direction: column;">
-                                        Please wait for your lobby host to start the game.<br /><br />
-                                        Change your username:
-                                        <div style="display: flex; flex-direction: row;">
-                                            <input class="namechange-field" type="text"
-                                                id="namechange-field-unstarted-dialog"></input>
-                                            <button class="dialog-button"
-                                                onclick="changeName(document.getElementById('namechange-field-unstarted-dialog').value)">Change</button>
-                                            <button class="dialog-button" onclick="changeName('')">Randomize</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div id="center-dialog-container">
-                            <div id="namechange-dialog" class="center-dialog">
-                                <span class="dialog-title">Change your username</span>
-                                <div class="center-dialog-content">
-                                    <div style="display: flex; flex-direction: column;">
-                                        <div style="display: flex; flex-direction: row;">
-                                            <input class="namechange-field" type="text" id="namechange-field"></input>
-                                            <button class="dialog-button"
-                                                onclick="changeName(document.getElementById('namechange-field').value)">Change</button>
-                                            <button class="dialog-button" onclick="changeName('')">Randomize</button>
-                                        </div>
-                                        <div class="button-center-wrapper">
-                                            <button class="dialog-button"
-                                                onclick="hideNameChangeDialog()">Close</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div id="center-dialog-container">
-                            <div id="lobbysettings-dialog" class="center-dialog">
-                                <span class="dialog-title">Change the lobby settings</span>
-                                <div class="center-dialog-content">
-                                    <div style="display: flex; flex-direction: column;">
-                                        <div class="input-container">
-                                            <b>Maximum Players</b>
-                                            <input id="lobby-settings-max-players" type="number" name="max_players"
-                                                min="{{.MinMaxPlayers}}" max="{{.MaxMaxPlayers}}"
-                                                value="{{.MaxPlayers}}" />
-                                            <b>Public Lobby</b>
-                                            <input id="lobby-settings-public" type="checkbox" name="public" value="true"
-                                                {{if eq .Public true}}checked{{end}} />
-                                            <b>Custom Words Chance</b>
-                                            <div style="display: flex;">
-                                                0%
-                                                <input style="flex: 1;" id="lobby-settings-custom-words-chance"
-                                                    type="range" name="custom_words_chance" min="1" max="100"
-                                                    value="{{.CustomWordsChance}}">
-                                                100%
-                                            </div>
-
-                                            <details class="advanced-section">
-                                                <summary>Advanced</summary>
-                                                <div class="input-container">
-                                                    <b>Players per IP Limit</b>
-                                                    <input id="lobby-settings-clients-per-ip-limit" type="number"
-                                                        name="clients_per_ip_limit" min="{{.MinClientsPerIPLimit}}"
-                                                        max="{{.MaxClientsPerIPLimit}}"
-                                                        value="{{.ClientsPerIPLimit}}" />
-                                                    <b>Enable Votekick</b>
-                                                    <input id="lobby-settings-enable-votekick" type="checkbox"
-                                                        name="enable_votekick" value="true" {{if eq .EnableVotekick
-                                                        true}}checked{{end}} />
-                                                </div>
-                                            </details>
-                                            <button class="dialog-button" onclick="saveLobbySettings()"
-                                                style="grid-column-start: 1; grid-column-end: 3;">
-                                                Save settings
+                        <div id="center-dialogs">
+                            <div id="center-dialog-container">
+                                <div id="word-dialog" class="center-dialog">
+                                    <span class="dialog-title">Choose a word</span>
+                                    <div class="center-dialog-content">
+                                        <div class="word-button-container">
+                                            <button id="word-button-zero" class="dialog-button"
+                                                onclick="chooseWord(0)">Placeholder
+                                            </button>
+                                            <button id="word-button-one" class="dialog-button"
+                                                onclick="chooseWord(1)">Placeholder
+                                            </button>
+                                            <button id="word-button-two" class="dialog-button"
+                                                onclick="chooseWord(2)">Placeholder
                                             </button>
                                         </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="center-dialog-container">
+                                <div id="start-dialog" class="center-dialog">
+                                    <span class="dialog-title">Start the game</span>
+                                    <div class="center-dialog-content">
+                                        <div style="display: none; flex-direction: column;">
+                                            Change your username:
+                                            <div style="display: flex; flex-direction: row;">
+                                                <input class="namechange-field" type="text"
+                                                    id="namechange-field-start-dialog"></input>
+                                                <button class="dialog-button"
+                                                    onclick="changeName(document.getElementById('namechange-field-start-dialog').value)">Change</button>
+                                                <button class="dialog-button"
+                                                    onclick="changeName('')">Randomize</button>
+                                            </div>
+                                        </div>
                                         <div class="button-center-wrapper">
-                                            <button class="dialog-button"
-                                                onclick="hideLobbySettingsDialog()">Close</button>
+                                            <button class="dialog-button" onclick="startGame()">Start</button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <div id="center-dialog-container">
-                            <div id="game-over-dialog" class="center-dialog">
-                                <span id="game-over-dialog-title" class="dialog-title">Game over!</span>
-                                <div id="game-over-scoreboard"></div>
-                                <button id="restart-button" class="dialog-button" onclick="startGame()">Restart</button>
+                            <div id="center-dialog-container">
+                                <div id="unstarted-dialog" class="center-dialog">
+                                    <span class="dialog-title">Game hasn't started</span>
+                                    <div class="center-dialog-content">
+                                        <div style="display: flex; flex-direction: column;">
+                                            Please wait for your lobby host to start the game.<br /><br />
+                                            Change your username:
+                                            <div style="display: flex; flex-direction: row;">
+                                                <input class="namechange-field" type="text"
+                                                    id="namechange-field-unstarted-dialog"></input>
+                                                <button class="dialog-button"
+                                                    onclick="changeName(document.getElementById('namechange-field-unstarted-dialog').value)">Change</button>
+                                                <button class="dialog-button"
+                                                    onclick="changeName('')">Randomize</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="center-dialog-container">
+                                <div id="namechange-dialog" class="center-dialog">
+                                    <span class="dialog-title">Change your username</span>
+                                    <div class="center-dialog-content">
+                                        <div style="display: flex; flex-direction: column;">
+                                            <div style="display: flex; flex-direction: row;">
+                                                <input class="namechange-field" type="text"
+                                                    id="namechange-field"></input>
+                                                <button class="dialog-button"
+                                                    onclick="changeName(document.getElementById('namechange-field').value)">Change</button>
+                                                <button class="dialog-button"
+                                                    onclick="changeName('')">Randomize</button>
+                                            </div>
+                                            <div class="button-center-wrapper">
+                                                <button class="dialog-button"
+                                                    onclick="hideNameChangeDialog()">Close</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="center-dialog-container">
+                                <div id="lobbysettings-dialog" class="center-dialog">
+                                    <span class="dialog-title">Change the lobby settings</span>
+                                    <div class="center-dialog-content">
+                                        <div style="display: flex; flex-direction: column;">
+                                            <div class="input-container">
+                                                <b>Maximum Players</b>
+                                                <input id="lobby-settings-max-players" type="number" name="max_players"
+                                                    min="{{.MinMaxPlayers}}" max="{{.MaxMaxPlayers}}"
+                                                    value="{{.MaxPlayers}}" />
+                                                <b>Public Lobby</b>
+                                                <input id="lobby-settings-public" type="checkbox" name="public"
+                                                    value="true" {{if eq .Public true}}checked{{end}} />
+                                                <b>Custom Words Chance</b>
+                                                <div style="display: flex;">
+                                                    0%
+                                                    <input style="flex: 1;" id="lobby-settings-custom-words-chance"
+                                                        type="range" name="custom_words_chance" min="1" max="100"
+                                                        value="{{.CustomWordsChance}}">
+                                                    100%
+                                                </div>
+
+                                                <details class="advanced-section">
+                                                    <summary>Advanced</summary>
+                                                    <div class="input-container">
+                                                        <b>Players per IP Limit</b>
+                                                        <input id="lobby-settings-clients-per-ip-limit" type="number"
+                                                            name="clients_per_ip_limit" min="{{.MinClientsPerIPLimit}}"
+                                                            max="{{.MaxClientsPerIPLimit}}"
+                                                            value="{{.ClientsPerIPLimit}}" />
+                                                        <b>Enable Votekick</b>
+                                                        <input id="lobby-settings-enable-votekick" type="checkbox"
+                                                            name="enable_votekick" value="true" {{if eq .EnableVotekick
+                                                            true}}checked{{end}} />
+                                                    </div>
+                                                </details>
+                                                <button class="dialog-button" onclick="saveLobbySettings()"
+                                                    style="grid-column-start: 1; grid-column-end: 3;">
+                                                    Save settings
+                                                </button>
+                                            </div>
+                                            <div class="button-center-wrapper">
+                                                <button class="dialog-button"
+                                                    onclick="hideLobbySettingsDialog()">Close</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="center-dialog-container">
+                                <div id="game-over-dialog" class="center-dialog">
+                                    <span id="game-over-dialog-title" class="dialog-title">Game over!</span>
+                                    <div id="game-over-scoreboard"></div>
+                                    <button id="restart-button" class="dialog-button"
+                                        onclick="startGame()">Restart</button>
+                                </div>
+                            </div>
+
+                            <div id="center-dialog-container">
+                                <div id="kick-dialog" class="center-dialog">
+                                    <span class="dialog-title">Vote to kick a player</span>
+                                    <div id="kick-dialog-players"></div>
+                                    <button onclick="hideKickDialog()"
+                                        class="dialog-button dialog-close-button">Close</button>
+                                </div>
+                            </div>
+
+                            <div id="center-dialog-container">
+                                <div id="reconnect-dialog" class="center-dialog">
+                                    <span id="game-over-dialog-title" class="dialog-title">Connection lost!</span>
+                                    <p>Attempting to reconnect ...</p>
+                                    <p>Make sure your internet connection works.<br />If the problem persists, contact
+                                        the
+                                        webmaster.</p>
+                                </div>
                             </div>
                         </div>
-
-                        <div id="center-dialog-container">
-                            <div id="kick-dialog" class="center-dialog">
-                                <span class="dialog-title">Vote to kick a player</span>
-                                <div id="kick-dialog-players"></div>
-                                <button onclick="hideKickDialog()"
-                                    class="dialog-button dialog-close-button">Close</button>
-                            </div>
-                        </div>
-
-                        <div id="center-dialog-container">
-                            <div id="reconnect-dialog" class="center-dialog">
-                                <span id="game-over-dialog-title" class="dialog-title">Connection lost!</span>
-                                <p>Attempting to reconnect ...</p>
-                                <p>Make sure your internet connection works.<br />If the problem persists, contact the
-                                    webmaster.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div id="toolbox">
-                        <input class="toolbox-group" type="color" id="color-picker" onchange="setColor()"
-                            value="#000000" alt="Current color (Click to change)"
-                            title="Current color (Click to change)">
-                        <div class="color-button-container toolbox-group">
-                            <!-- These buttons use !important for their color in order
+                        <div id="toolbox">
+                            <input class="toolbox-group" type="color" id="color-picker" onchange="setColor()"
+                                value="#000000" alt="Current color (Click to change)"
+                                title="Current color (Click to change)">
+                            <div class="color-button-container toolbox-group">
+                                <!-- These buttons use !important for their color in order
                         to prevent hover and active colors to appear. -->
-                            <div class="color-button-row">
-                                <button class="color-button" style="background-color: #ffffff !Important"
-                                    onmousedown="setColor('#ffffff')" onclick="setColor('#ffffff')"></button>
-                                <button class="color-button" style="background-color: #c1c1c1 !Important"
-                                    onmousedown="setColor('#c1c1c1')" onclick="setColor('#c1c1c1')"></button>
-                                <button class="color-button" style="background-color: #ef130b !Important"
-                                    onmousedown="setColor('#ef130b')" onclick="setColor('#ef130b')"></button>
-                                <button class="color-button" style="background-color: #ff7100 !Important"
-                                    onmousedown="setColor('#ff7100')" onclick="setColor('#ff7100')"></button>
-                                <button class="color-button" style="background-color: #ffe400 !Important"
-                                    onmousedown="setColor('#ffe400')" onclick="setColor('#ffe400')"></button>
-                                <button class="color-button" style="background-color: #00cc00 !Important"
-                                    onmousedown="setColor('#00cc00')" onclick="setColor('#00cc00')"></button>
-                                <button class="color-button" style="background-color: #00b2ff !Important"
-                                    onmousedown="setColor('#00b2ff')" onclick="setColor('#00b2ff')"></button>
-                                <button class="color-button" style="background-color: #231fd3 !Important"
-                                    onmousedown="setColor('#231fd3')" onclick="setColor('#231fd3')"></button>
-                                <button class="color-button" style="background-color: #a300ba !Important"
-                                    onmousedown="setColor('#a300ba')" onclick="setColor('#a300ba')"></button>
-                                <button class="color-button" style="background-color: #d37caa !Important"
-                                    onmousedown="setColor('#d37caa')" onclick="setColor('#d37caa')"></button>
-                                <button class="color-button" style="background-color: #a0522d !Important"
-                                    onmousedown="setColor('#a0522d')" onclick="setColor('#a0522d')"></button>
+                                <div class="color-button-row">
+                                    <button class="color-button" style="background-color: #ffffff !Important"
+                                        onmousedown="setColor('#ffffff')" onclick="setColor('#ffffff')"></button>
+                                    <button class="color-button" style="background-color: #c1c1c1 !Important"
+                                        onmousedown="setColor('#c1c1c1')" onclick="setColor('#c1c1c1')"></button>
+                                    <button class="color-button" style="background-color: #ef130b !Important"
+                                        onmousedown="setColor('#ef130b')" onclick="setColor('#ef130b')"></button>
+                                    <button class="color-button" style="background-color: #ff7100 !Important"
+                                        onmousedown="setColor('#ff7100')" onclick="setColor('#ff7100')"></button>
+                                    <button class="color-button" style="background-color: #ffe400 !Important"
+                                        onmousedown="setColor('#ffe400')" onclick="setColor('#ffe400')"></button>
+                                    <button class="color-button" style="background-color: #00cc00 !Important"
+                                        onmousedown="setColor('#00cc00')" onclick="setColor('#00cc00')"></button>
+                                    <button class="color-button" style="background-color: #00b2ff !Important"
+                                        onmousedown="setColor('#00b2ff')" onclick="setColor('#00b2ff')"></button>
+                                    <button class="color-button" style="background-color: #231fd3 !Important"
+                                        onmousedown="setColor('#231fd3')" onclick="setColor('#231fd3')"></button>
+                                    <button class="color-button" style="background-color: #a300ba !Important"
+                                        onmousedown="setColor('#a300ba')" onclick="setColor('#a300ba')"></button>
+                                    <button class="color-button" style="background-color: #d37caa !Important"
+                                        onmousedown="setColor('#d37caa')" onclick="setColor('#d37caa')"></button>
+                                    <button class="color-button" style="background-color: #a0522d !Important"
+                                        onmousedown="setColor('#a0522d')" onclick="setColor('#a0522d')"></button>
+                                </div>
+                                <div class="color-button-row">
+                                    <button class="color-button" style="background-color: #000000 !Important"
+                                        onmousedown="setColor('#000000')" onclick="setColor('#000000')"></button>
+                                    <button class="color-button" style="background-color: #4c4c4c !Important"
+                                        onmousedown="setColor('#4c4c4c')" onclick="setColor('#4c4c4c')"></button>
+                                    <button class="color-button" style="background-color: #740b07 !Important"
+                                        onmousedown="setColor('#740b07')" onclick="setColor('#740b07')"></button>
+                                    <button class="color-button" style="background-color: #c23800 !Important"
+                                        onmousedown="setColor('#c23800')" onclick="setColor('#c23800')"></button>
+                                    <button class="color-button" style="background-color: #e8a200 !Important"
+                                        onmousedown="setColor('#e8a200')" onclick="setColor('#e8a200')"></button>
+                                    <button class="color-button" style="background-color: #005510 !Important"
+                                        onmousedown="setColor('#005510')" onclick="setColor('#005510')"></button>
+                                    <button class="color-button" style="background-color: #00569e !Important"
+                                        onmousedown="setColor('#00569e')" onclick="setColor('#00569e')"></button>
+                                    <button class="color-button" style="background-color: #0e0865 !Important"
+                                        onmousedown="setColor('#0e0865')" onclick="setColor('#0e0865')"></button>
+                                    <button class="color-button" style="background-color: #550069 !Important"
+                                        onmousedown="setColor('#550069')" onclick="setColor('#550069')"></button>
+                                    <button class="color-button" style="background-color: #a75574 !Important"
+                                        onmousedown="setColor('#a75574')" onclick="setColor('#a75574')"></button>
+                                    <button class="color-button" style="background-color: #63300d !Important"
+                                        onmousedown="setColor('#63300d')" onclick="setColor('#63300d')"></button>
+                                </div>
                             </div>
-                            <div class="color-button-row">
-                                <button class="color-button" style="background-color: #000000 !Important"
-                                    onmousedown="setColor('#000000')" onclick="setColor('#000000')"></button>
-                                <button class="color-button" style="background-color: #4c4c4c !Important"
-                                    onmousedown="setColor('#4c4c4c')" onclick="setColor('#4c4c4c')"></button>
-                                <button class="color-button" style="background-color: #740b07 !Important"
-                                    onmousedown="setColor('#740b07')" onclick="setColor('#740b07')"></button>
-                                <button class="color-button" style="background-color: #c23800 !Important"
-                                    onmousedown="setColor('#c23800')" onclick="setColor('#c23800')"></button>
-                                <button class="color-button" style="background-color: #e8a200 !Important"
-                                    onmousedown="setColor('#e8a200')" onclick="setColor('#e8a200')"></button>
-                                <button class="color-button" style="background-color: #005510 !Important"
-                                    onmousedown="setColor('#005510')" onclick="setColor('#005510')"></button>
-                                <button class="color-button" style="background-color: #00569e !Important"
-                                    onmousedown="setColor('#00569e')" onclick="setColor('#00569e')"></button>
-                                <button class="color-button" style="background-color: #0e0865 !Important"
-                                    onmousedown="setColor('#0e0865')" onclick="setColor('#0e0865')"></button>
-                                <button class="color-button" style="background-color: #550069 !Important"
-                                    onmousedown="setColor('#550069')" onclick="setColor('#550069')"></button>
-                                <button class="color-button" style="background-color: #a75574 !Important"
-                                    onmousedown="setColor('#a75574')" onclick="setColor('#a75574')"></button>
-                                <button class="color-button" style="background-color: #63300d !Important"
-                                    onmousedown="setColor('#63300d')" onclick="setColor('#63300d')"></button>
-                            </div>
-                        </div>
-                        <!--The following buttons als override onmousedown and onmouseup to make
+                            <!--The following buttons als override onmousedown and onmouseup to make
                         selection more foolproof. This was done, because many people seem to
                         only make half a click (either up or down) in the right location.-->
-                        <div class="pencil-sizes-container toolbox-group">
-                            <label for="tool-type-pencil">
-                                <input id="tool-type-pencil" class="custom-check-or-radio line-width-button"
-                                    onchange="chooseTool(pen)" type="radio" name="tool-type" checked>
-                                <div onmousedown="document.getElementById('tool-type-pencil').click()"
-                                    onmouseup="document.getElementById('tool-type-pencil').click()"
-                                    class="line-width-button-content">
-                                    <span id="tool-type-pencil-button" style="font-size: 2rem;">✏️</span>
-                                </div>
-                            </label>
-                            <label for="tool-type-fill">
-                                <input id="tool-type-fill" class="custom-check-or-radio line-width-button"
-                                    onchange="chooseTool(fillBucket)" type="radio" name="tool-type">
-                                <div onmousedown="document.getElementById('tool-type-fill').click()"
-                                    onmouseup="document.getElementById('tool-type-fill').click()"
-                                    class="line-width-button-content">
-                                    <img alt="Fill" title="Fill tool" src="{{.RootPath}}/resources/fill.svg"
-                                        width="40px" height="40px" />
-                                </div>
-                            </label>
-                            <label for="tool-type-rubber">
-                                <input id="tool-type-rubber" class="custom-check-or-radio line-width-button"
-                                    onchange="chooseTool(rubber)" type="radio" name="tool-type">
-                                <div onmousedown="document.getElementById('tool-type-rubber').click()"
-                                    onmouseup="document.getElementById('tool-type-rubber').click()"
-                                    class="line-width-button-content">
-                                    <img alt="Rubber" title="Rubber tool" src="{{.RootPath}}/resources/rubber.svg"
-                                        width="40px" height="40px" />
-                                </div>
-                            </label>
+                            <div class="pencil-sizes-container toolbox-group">
+                                <label for="tool-type-pencil">
+                                    <input id="tool-type-pencil" class="custom-check-or-radio line-width-button"
+                                        onchange="chooseTool(pen)" type="radio" name="tool-type" checked>
+                                    <div onmousedown="document.getElementById('tool-type-pencil').click()"
+                                        onmouseup="document.getElementById('tool-type-pencil').click()"
+                                        class="line-width-button-content">
+                                        <span id="tool-type-pencil-button" style="font-size: 2rem;">✏️</span>
+                                    </div>
+                                </label>
+                                <label for="tool-type-fill">
+                                    <input id="tool-type-fill" class="custom-check-or-radio line-width-button"
+                                        onchange="chooseTool(fillBucket)" type="radio" name="tool-type">
+                                    <div onmousedown="document.getElementById('tool-type-fill').click()"
+                                        onmouseup="document.getElementById('tool-type-fill').click()"
+                                        class="line-width-button-content">
+                                        <img alt="Fill" title="Fill tool" src="{{.RootPath}}/resources/fill.svg"
+                                            width="40px" height="40px" />
+                                    </div>
+                                </label>
+                                <label for="tool-type-rubber">
+                                    <input id="tool-type-rubber" class="custom-check-or-radio line-width-button"
+                                        onchange="chooseTool(rubber)" type="radio" name="tool-type">
+                                    <div onmousedown="document.getElementById('tool-type-rubber').click()"
+                                        onmouseup="document.getElementById('tool-type-rubber').click()"
+                                        class="line-width-button-content">
+                                        <img alt="Rubber" title="Rubber tool" src="{{.RootPath}}/resources/rubber.svg"
+                                            width="40px" height="40px" />
+                                    </div>
+                                </label>
+                            </div>
+                            <div class="pencil-sizes-container toolbox-group">
+                                <label for="size8">
+                                    <input id="size8" class="custom-check-or-radio line-width-button"
+                                        onchange="setLineWidth(8)" type="radio" name="line-width" checked>
+                                    <div onmousedown="document.getElementById('size8').click()"
+                                        onmouseup="document.getElementById('size8').click()"
+                                        class="line-width-button-content">
+                                        <div id="size-8-button" class="dot"></div>
+                                    </div>
+                                </label>
+                                <label for="size16">
+                                    <input id="size16" class="custom-check-or-radio line-width-button"
+                                        onchange="setLineWidth(16)" type="radio" name="line-width">
+                                    <div onmousedown="document.getElementById('size16').click()"
+                                        onmouseup="document.getElementById('size16').click()"
+                                        class="line-width-button-content">
+                                        <div id="size-16-button" class="dot"></div>
+                                    </div>
+                                </label>
+                                <label for="size24">
+                                    <input id="size24" class="custom-check-or-radio line-width-button"
+                                        onchange="setLineWidth(24)" type="radio" name="line-width">
+                                    <div onmousedown="document.getElementById('size24').click()"
+                                        onmouseup="document.getElementById('size24').click()"
+                                        class="line-width-button-content">
+                                        <div id="size-24-button" class="dot"></div>
+                                    </div>
+                                </label>
+                                <label for="size32">
+                                    <input id="size32" class="custom-check-or-radio line-width-button"
+                                        onchange="setLineWidth(32)" type="radio" name="line-width">
+                                    <div onmousedown="document.getElementById('size32').click()"
+                                        onmouseup="document.getElementById('size32').click()"
+                                        class="line-width-button-content">
+                                        <div id="size-32-button" class="dot"></div>
+                                    </div>
+                                </label>
+                            </div>
+                            <!--We won't make this button easier to click, as there's no going back. -->
+                            <button class="canvas-button toolbox-group" style="font-size: 2rem;"
+                                onclick="clearCanvasAndSendEvent()" alt="Clear the canvas" title="Clear the canvas">🗑
+                            </button>
                         </div>
-                        <div class="pencil-sizes-container toolbox-group">
-                            <label for="size8">
-                                <input id="size8" class="custom-check-or-radio line-width-button"
-                                    onchange="setLineWidth(8)" type="radio" name="line-width" checked>
-                                <div onmousedown="document.getElementById('size8').click()"
-                                    onmouseup="document.getElementById('size8').click()"
-                                    class="line-width-button-content">
-                                    <div id="size-8-button" class="dot"></div>
-                                </div>
-                            </label>
-                            <label for="size16">
-                                <input id="size16" class="custom-check-or-radio line-width-button"
-                                    onchange="setLineWidth(16)" type="radio" name="line-width">
-                                <div onmousedown="document.getElementById('size16').click()"
-                                    onmouseup="document.getElementById('size16').click()"
-                                    class="line-width-button-content">
-                                    <div id="size-16-button" class="dot"></div>
-                                </div>
-                            </label>
-                            <label for="size24">
-                                <input id="size24" class="custom-check-or-radio line-width-button"
-                                    onchange="setLineWidth(24)" type="radio" name="line-width">
-                                <div onmousedown="document.getElementById('size24').click()"
-                                    onmouseup="document.getElementById('size24').click()"
-                                    class="line-width-button-content">
-                                    <div id="size-24-button" class="dot"></div>
-                                </div>
-                            </label>
-                            <label for="size32">
-                                <input id="size32" class="custom-check-or-radio line-width-button"
-                                    onchange="setLineWidth(32)" type="radio" name="line-width">
-                                <div onmousedown="document.getElementById('size32').click()"
-                                    onmouseup="document.getElementById('size32').click()"
-                                    class="line-width-button-content">
-                                    <div id="size-32-button" class="dot"></div>
-                                </div>
-                            </label>
-                        </div>
-                        <!--We won't make this button easier to click, as there's no going back. -->
-                        <button class="canvas-button toolbox-group" style="font-size: 2rem;"
-                            onclick="clearCanvasAndSendEvent()" alt="Clear the canvas" title="Clear the canvas">🗑
-                        </button>
                     </div>
                 </div>
             </div>
 
             <div id="chat">
-                <div id="message-container"></div>
+                <div id="message-container-outer">
+                    <div id="message-container"></div>
+                </div>
                 <form class="message-input-form" onsubmit="return sendMessage()">
-                    <input id="message-input" type="text" autocomplete="off"
-                        placeholder="Type your guesses and messages here" />
+                    <input id="message-input" type="text" autocomplete="off" style="color:white;"
+                        placeholder="your guesses and messages" />
                 </form>
             </div>
         </div>
@@ -422,7 +452,7 @@
         };
 
         const messageInput = document.getElementById("message-input");
-        const playerContainer = document.getElementById("player-container");
+        const playerContainer = document.getElementById("player-container-old");
         const wordContainer = document.getElementById("word-container");
         const messageContainer = document.getElementById("message-container");
         const roundsSpan = document.getElementById("rounds");
@@ -1011,7 +1041,7 @@
 
         window.setInterval(function () {
             if (roundEndTime >= 0) {
-                timeLeft.innerText = "Time Left: " + Math.floor(roundEndTime / 1000);
+                timeLeft.innerText = "00 : " + Math.floor(roundEndTime / 1000);
                 roundEndTime -= 500;
             } else {
                 timeLeft.innerText = "Time Left: ∞";
@@ -1025,7 +1055,7 @@
 
             messageContainer.innerHTML += `<div class="message ` + styleClass + `">
                             <span class="chat-name">` + author + `</span>
-                            <span class="message-content">` + message + `</span>
+                            <span class="message-content" style="color: white;">` + message + `</span>
                         </div>`;
         }
 
@@ -1056,7 +1086,7 @@
                     '">' + player.name + '</span>' +
                     '<div class="score-and-status">' +
                     '<div>' +
-                    '<span class="playerscore">' + player.score + '</span>' +
+                    '<span class="playerscore" style="color:#1e00f8; font-weight:bold;">' + player.score + '</span>' +
                     '<span class="last-turn-score">(Last turn: ' + player.lastScore + ')</span>' +
                     '</div>';
                 if (player.state === "drawing") {
@@ -1068,7 +1098,6 @@
                 playerContainer.innerHTML += newPlayerElement;
             });
         }
-
         function applyRounds(round, maxRound) {
             roundsSpan.innerText = 'Round ' + round + ' of ' + maxRound;
         }
@@ -1389,10 +1418,10 @@
         var domain = "meet.jit.si";
         var options = {
             roomName: "wfhomie-scribble-test",
-            width: 280,
-            height: 600,
+            width: 240,
+            height: 450,
             allow: "microphone; camera",
-            parentNode: document.getElementById("jitsicontainer"),
+            parentNode: document.getElementById("jitsi"),
             configOverwrite: {},
             interfaceConfigOverwrite: { TILE_VIEW_MAX_COLUMNS: 2, SHOW_CHROME_EXTENSION_BANNER: false }
         }

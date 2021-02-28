@@ -88,3 +88,9 @@ ul {
     grid-column-start: 1;
     grid-column-end: 3;
 }
+
+.wfhomie-scribble-img {
+    height: 65px;
+    width: 500px;
+    float: left;
+  }
