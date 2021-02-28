@@ -46,7 +46,7 @@
 .input-item {
   width: inherit;
   min-width: 300px;
-  font-family: "RocknRollOne";
+  font-family: "thinoothin";
   border-radius: 5px;
 }
 
@@ -124,7 +124,7 @@
 
 #refresh-button {
   margin-bottom: 0.5rem;
-  font-family: "ROCKNROLLONE";
+  font-family: "thinoobold";
   border-radius: 5px;
 }
 
@@ -185,7 +185,7 @@ tr:hover {
 #join-button {
   grid-column-start: 1;
   grid-column-end: 3;
-  font-family: "ROCKNROLLONE";
+  font-family: "thinoobold";
   border-radius: 5px;
 }
 

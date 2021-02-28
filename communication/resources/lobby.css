@@ -144,7 +144,7 @@
     border: 0;
     border-top: 3px solid black;
     padding: 5px;
-    font-family: 'RocknRollOne';
+    font-family: 'thinoothin';
 }
 
 #message-input:focus {
@@ -171,7 +171,7 @@
     background-color: white;
     padding: 0.5rem 1rem 0.5rem 1rem;
     border-radius: 5px;
-    font-family: RocknRollOne;
+    font-family: thinoobold;
 }
 
 .button-center-wrapper {
@@ -433,5 +433,5 @@ input[type="button"]:active,
 .namechange-field {
     margin-right: 0.25rem;
     border-radius: 5px;
-    font-family: RocknRollOne;
+    font-family: thinoothin;
 }

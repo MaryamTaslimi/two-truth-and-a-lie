@@ -2,26 +2,17 @@
 {{/* The reason being that we need to be able to define the RootPath here. */}}
 {{define "font-decl"}}
 <style>
+
 @font-face {
-    font-family: 'Montserrat';
+    font-family: 'thinoothin';
     font-weight: normal;
-    src: local('Monserrat'), url({{.RootPath}}/resources/Montserrat-Regular.otf) format("opentype");
+    src: local('thinoothin'), url({{.RootPath}}/resources/thinoothin.otf) format("opentype");
 }
 
 @font-face {
-    font-family: 'Montserrat';
+    font-family: 'thinoobold';
     font-weight: bold;
-    src: local('Monserrat Bold'), url({{.RootPath}}/resources/Montserrat-Bold.otf) format("opentype");
-}
-@font-face {
-    font-family: 'ArchitectsDaughter';
-    font-weight: normal;
-    src: local('ArchitectsDaughter'), url({{.RootPath}}/resources/ArchitectsDaughter-Regular.otf) format("opentype");
-}
-@font-face {
-    font-family: 'RocknRollOne';
-    font-weight: normal;
-    src: local('RocknRollOne'), url({{.RootPath}}/resources/RocknRollOne-Regular.otf) format("opentype");
+    src: local('thinoobold'), url({{.RootPath}}/resources/thinoobold.otf) format("opentype");
 }
 </style>
 {{end}}
