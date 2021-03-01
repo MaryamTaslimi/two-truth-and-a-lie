@@ -29,7 +29,7 @@
                 have a uniform look with the other buttons in the header, we are not using
                 a checkbox anymore. -->
                     <button onclick="toggleSound()" class="dialog-button header-button" alt="Toggle soundeffects"
-                        title="Toggle soundeffects" style= "display: none;">
+                        title="Toggle soundeffects" style="display: none;">
                         <img id="sound-toggle-label" class="header-button-image" />
                     </button>
 
@@ -52,8 +52,9 @@
                 </div>
             </div>
 
-            <span style= "display: flex; flex-direction: row;">
-                <img src="{{.RootPath}}/resources/clock.png" style="height: 40px; width: auto; margin: auto;" alt="time left" />
+            <span style="display: flex; flex-direction: row;">
+                <img src="{{.RootPath}}/resources/clock.png" style="height: 40px; width: auto; margin: auto;"
+                    alt="time left" />
                 <span
                     style="height: 60px; width: 150px;display:table; background-color:#00569e; border-radius: 25px; margin: auto;">
                     <p1 id="time-left" style="display:table-cell;   vertical-align: middle;
@@ -246,7 +247,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div id="toolbox">
+                        <div id="toolbox" style="top: 420px;">
                             <input class="toolbox-group" type="color" id="color-picker" onchange="setColor()"
                                 value="#000000" alt="Current color (Click to change)"
                                 title="Current color (Click to change)">
@@ -312,7 +313,7 @@
                                     <div onmousedown="document.getElementById('tool-type-pencil').click()"
                                         onmouseup="document.getElementById('tool-type-pencil').click()"
                                         class="line-width-button-content">
-                                        <span id="tool-type-pencil-button" style="font-size: 2rem;">✏️</span>
+                                        <span id="tool-type-pencil-button" style="font-size: 1.5rem;">✏️</span>
                                     </div>
                                 </label>
                                 <label for="tool-type-fill">
@@ -322,7 +323,7 @@
                                         onmouseup="document.getElementById('tool-type-fill').click()"
                                         class="line-width-button-content">
                                         <img alt="Fill" title="Fill tool" src="{{.RootPath}}/resources/fill.svg"
-                                            width="40px" height="40px" />
+                                            width="35px" height="35px" />
                                     </div>
                                 </label>
                                 <label for="tool-type-rubber">
@@ -332,10 +333,14 @@
                                         onmouseup="document.getElementById('tool-type-rubber').click()"
                                         class="line-width-button-content">
                                         <img alt="Rubber" title="Rubber tool" src="{{.RootPath}}/resources/rubber.svg"
-                                            width="40px" height="40px" />
+                                            width="35px" height="35px" />
                                     </div>
                                 </label>
                             </div>
+                            <!--We won't make this button easier to click, as there's no going back. -->
+                            <button class="canvas-button toolbox-group" style="font-size: 1.5rem;"
+                                onclick="clearCanvasAndSendEvent()" alt="Clear the canvas" title="Clear the canvas">🗑
+                            </button>
                             <div class="pencil-sizes-container toolbox-group">
                                 <label for="size8">
                                     <input id="size8" class="custom-check-or-radio line-width-button"
@@ -374,16 +379,12 @@
                                     </div>
                                 </label>
                             </div>
-                            <!--We won't make this button easier to click, as there's no going back. -->
-                            <button class="canvas-button toolbox-group" style="font-size: 2rem;"
-                                onclick="clearCanvasAndSendEvent()" alt="Clear the canvas" title="Clear the canvas">🗑
-                            </button>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div id="chat">
+            <div id="chat" style="max-height: 534px;">
                 <div id="message-container-outer">
                     <div id="message-container"></div>
                 </div>
@@ -594,8 +595,9 @@
             //Resize canvas HTML element properly.
             drawingBoard.width = drawingBoard.clientWidth;
             drawingBoard.height = drawingBoard.clientHeight;
+            toolBox.height = toolBox.clientHeight;
             setLineWidth(localLineWidthUnscaled);
-            chat.style.maxHeight = drawingBoard.height + "px";
+            chat.style.maxHeight = drawingBoard.height + toolBox.height+ "px";
             toolBox.style.top = drawingBoard.height + "px";
         }
 
@@ -902,27 +904,27 @@
                     setUsernameLocally(parsed.data.playerName)
                 }
             } else if (parsed.type === "correct-guess") {
-                playWav('{{.RootPath}}/resources/plop.wav');
+                // playWav('{{.RootPath}}/resources/plop.wav');
 
                 if (parsed.data === ownID) {
-                    applyMessage("correct-guess-message", "System", "You have correctly guessed the word.")
+                    applyMessage("correct-guess-message", "You have correctly guessed the word.")
                 } else {
                     for (let i = 0; i < cachedPlayers.length; i++) {
                         let player = cachedPlayers[i];
                         if (player.id === parsed.data) {
-                            applyMessage("correct-guess-message", "System", player.name + " correctly guessed the word.")
+                            applyMessage("correct-guess-message", player.name + " correctly guessed the word.")
                             break;
                         }
                     }
                 }
             } else if (parsed.type === "close-guess") {
-                applyMessage("close-guess-message", "System", "'" + parsed.data + "'' is very close.")
+                applyMessage("close-guess-message", "'" + parsed.data + "'' is very close.")
             } else if (parsed.type === "update-wordhint") {
                 applyWordHints(parsed.data);
             } else if (parsed.type === "message") {
-                applyMessage("", parsed.data.author, parsed.data.content);
+                applyMessage("auhtor-message", parsed.data.author, parsed.data.content);
             } else if (parsed.type === "system-message") {
-                applyMessage("system-message", "System", parsed.data);
+                applyMessage("system-message", parsed.data);
             } else if (parsed.type === "non-guessing-player-message") {
                 applyMessage("correct-guess-message", parsed.data.author, parsed.data.content);
             } else if (parsed.type === "line") {
@@ -942,7 +944,7 @@
 
                 //If a player doesn't choose, the dialog will still be up.
                 wordDialog.style.visibility = "hidden";
-                playWav('{{.RootPath}}/resources/end-turn.wav');
+                // playWav('{{.RootPath}}/resources/end-turn.wav');
 
                 clear(context);
 
@@ -955,15 +957,15 @@
 
                 if (parsed.data.previousWord !== null) {
                     if (parsed.data.previousWord === "") {
-                        applyMessage("system-message", "System", "Round over. No word was chosen.");
+                        applyMessage("system-message", "", "Round over. No word was chosen.");
                     } else {
-                        applyMessage("system-message", "System", "Round over. Previous word was '" + parsed.data.previousWord + "'");
+                        applyMessage("system-message", "", "Round over. Previous word was '" + parsed.data.previousWord + "'");
                     }
                 }
 
                 allowDrawing = false;
             } else if (parsed.type === "your-turn") {
-                playWav('{{.RootPath}}/resources/your-turn.wav');
+                // playWav('{{.RootPath}}/resources/your-turn.wav');
 
                 promptWords(parsed.data[0], parsed.data[1], parsed.data[2]);
             } else if (parsed.type === "drawing") {
@@ -974,16 +976,16 @@
                     if (parsed.data.voteCount >= parsed.data.requiredVoteCount) {
                         kickMessage += " Player has been kicked.";
                     }
-                    applyMessage("system-message", "System", kickMessage);
+                    applyMessage("system-message", kickMessage);
                 }
             } else if (parsed.type === "owner-change") {
                 ownerID = parsed.data.playerId;
-                applyMessage("system-message", "System", parsed.data.playerName + " is the new lobby owner.");
+                applyMessage("system-message", parsed.data.playerName + " is the new lobby owner.");
             } else if (parsed.type === "drawer-kicked") {
-                applyMessage("system-message", "System", "Since the kicked player has been drawing, none of you will get any points this round.");
+                applyMessage("system-message", "Since the kicked player has been drawing, none of you will get any points this round.");
             } else if (parsed.type === "lobby-settings-changed") {
                 votekickEnabled = parsed.data.enableVotekick;
-                applyMessage("system-message", "System", "Lobby settings changed:<br/><br/>"
+                applyMessage("system-message", "Lobby settings changed:<br/><br/>"
                     + "Public lobby: " + parsed.data.public + "<br/>"
                     + "Enable votekicking: " + parsed.data.enableVotekick + "<br/>"
                     + "Max players: " + parsed.data.maxPlayers + "<br/>"
@@ -1031,13 +1033,13 @@
             wordDialog.style.visibility = "visible";
         }
 
-        function playWav(file) {
-            if (sound) {
-                let audio = new Audio(file);
-                audio.type = 'audio/wav';
-                audio.play();
-            }
-        }
+        // function playWav(file) {
+        //     if (sound) {
+        //         let audio = new Audio(file);
+        //         audio.type = 'audio/wav';
+        //         audio.play();
+        //     }
+        // }
 
         window.setInterval(function () {
             if (roundEndTime >= 0) {
@@ -1052,10 +1054,14 @@
             if (messageContainer.childElementCount >= 100) {
                 messageContainer.removeChild(messageContainer.firstChild)
             }
-
-            messageContainer.innerHTML += `<div class="message ` + styleClass + `">
+            if (author != "")
+                messageContainer.innerHTML += `<div class="message ` + styleClass + `">
                             <span class="chat-name">` + author + `</span>
-                            <span class="message-content" style="color: white;">` + message + `</span>
+                            <span class="message-content">` + message + `</span>
+                        </div>`;
+            else
+                messageContainer.innerHTML += `<div class="message ` + styleClass + `">                            
+                            <span class="message-content">` + message + `</span>
                         </div>`;
         }
 
@@ -1086,7 +1092,7 @@
                     '">' + player.name + '</span>' +
                     '<div class="score-and-status">' +
                     '<div>' +
-                    '<span class="playerscore" style="color:#1e00f8; font-weight:bold;">' + player.score + '</span>' +
+                    '<span class="playerscore" style="color:#39b0a4; font-weight:bold;">' + player.score + '</span>' +
                     '<span class="last-turn-score">(Last turn: ' + player.lastScore + ')</span>' +
                     '</div>';
                 if (player.state === "drawing") {
@@ -1422,7 +1428,7 @@
             height: 450,
             allow: "microphone; camera",
             parentNode: document.getElementById("jitsi"),
-            configOverwrite: {},
+            configOverwrite: { prejoinPageEnabled: false },
             interfaceConfigOverwrite: { TILE_VIEW_MAX_COLUMNS: 2, SHOW_CHROME_EXTENSION_BANNER: false }
         }
         var api = new JitsiMeetExternalAPI(domain, options);
