@@ -43,7 +43,7 @@
 }
 
 .guess-letter {
-  font-family: SourceSansPro-Bold;
+  font-family: monospace;
   font-weight: bold;
   font-size: 1.5rem;
   color: #39b0a4;

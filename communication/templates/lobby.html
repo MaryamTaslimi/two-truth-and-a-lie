@@ -399,7 +399,9 @@
     </div>
 
     <script type="text/javascript" src="{{.RootPath}}/resources/floodfill.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script type="text/javascript">
+
         const reconnectDialog = document.getElementById("reconnect-dialog");
         let socketIsConnecting = false;
         let socket;
@@ -597,7 +599,7 @@
             drawingBoard.height = drawingBoard.clientHeight;
             toolBox.height = toolBox.clientHeight;
             setLineWidth(localLineWidthUnscaled);
-            chat.style.maxHeight = drawingBoard.height + toolBox.height+ "px";
+            chat.style.maxHeight = drawingBoard.height + toolBox.height + "px";
             toolBox.style.top = drawingBoard.height + "px";
         }
 
@@ -918,13 +920,13 @@
                     }
                 }
             } else if (parsed.type === "close-guess") {
-                applyMessage("close-guess-message", "'" + parsed.data + "'' is very close.")
+                applyMessage("close-guess-message", "", "'" + parsed.data + "'' is very close.")
             } else if (parsed.type === "update-wordhint") {
                 applyWordHints(parsed.data);
             } else if (parsed.type === "message") {
                 applyMessage("auhtor-message", parsed.data.author, parsed.data.content);
             } else if (parsed.type === "system-message") {
-                applyMessage("system-message", parsed.data);
+                applyMessage("system-message", "", parsed.data);
             } else if (parsed.type === "non-guessing-player-message") {
                 applyMessage("correct-guess-message", parsed.data.author, parsed.data.content);
             } else if (parsed.type === "line") {
@@ -1412,7 +1414,6 @@
                 type: "request-drawing",
             }));
         }, false);
-
     </script>
     <script src="https://meet.jit.si/external_api.js"></script>
     <script>
@@ -1420,7 +1421,7 @@
         let videoConferenceJoined = false;
 
         // set with an string to default value, "John Doe" by example
-        let localDisplayName = "test";
+        let localDisplayName = document.getElementById('namechange-field-start-dialog').value;
         var domain = "meet.jit.si";
         var options = {
             roomName: "wfhomie-scribble-test",

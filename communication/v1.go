@@ -55,7 +55,10 @@ func createLobby(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, formParseError.Error(), http.StatusBadRequest)
 		return
 	}
-
+	WFHomiegroupId := parseWFHomieGroupId(r.Form.Get("WFHomie_group_id"))
+	WFHomieplayerId := parseWFHomiePlayerId(r.Form.Get("WFHomie_player_id"))
+	WFHomiegroupName := parseWFHomieGroupName(r.Form.Get("WFHomie_group_name"))
+	WFHmoieplayerName := parseWFHomiePlayerName(r.Form.Get("WFHomie_player_name"))
 	language, languageInvalid := parseLanguage(r.Form.Get("language"))
 	drawingTime, drawingTimeInvalid := parseDrawingTime(r.Form.Get("drawing_time"))
 	rounds, roundsInvalid := parseRounds(r.Form.Get("rounds"))
@@ -100,8 +103,10 @@ func createLobby(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var playerName = getPlayername(r)
-	player, lobby, createError := game.CreateLobby(playerName, language, publicLobby, drawingTime, rounds, maxPlayers, customWordChance, clientsPerIPLimit, customWords, enableVotekick)
+	// var playerName = getPlayername(r)
+	var playerName = parseWFHomiePlayerName(r.Form.Get("WFHomie_player_name"))
+	fmt.Println(playerName)
+	player, lobby, createError := game.CreateLobby(playerName, WFHomiegroupId, WFHomieplayerId, WFHomiegroupName, WFHmoieplayerName, language, publicLobby, drawingTime, rounds, maxPlayers, customWordChance, clientsPerIPLimit, customWords, enableVotekick)
 	if createError != nil {
 		http.Error(w, createError.Error(), http.StatusBadRequest)
 		return

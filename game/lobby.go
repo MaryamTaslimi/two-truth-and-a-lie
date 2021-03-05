@@ -732,7 +732,7 @@ type Rounds struct {
 
 // CreateLobby allows creating a lobby, optionally returning errors that
 // occurred during creation.
-func CreateLobby(playerName, chosenLanguage string, publicLobby bool, drawingTime, rounds, maxPlayers, customWordChance, clientsPerIPLimit int, customWords []string, enableVotekick bool) (*Player, *Lobby, error) {
+func CreateLobby(playerName, WFHmoiegroupId string, WFHmoieplayerId, WFHmoiegroupName string, WFHmoieplayerName string, chosenLanguage string, publicLobby bool, drawingTime, rounds, maxPlayers, customWordChance, clientsPerIPLimit int, customWords []string, enableVotekick bool) (*Player, *Lobby, error) {
 	lobby := createLobby(drawingTime, rounds, maxPlayers, customWords, customWordChance, clientsPerIPLimit, enableVotekick, publicLobby)
 	lobby.Wordpack = chosenLanguage
 
@@ -746,7 +746,7 @@ func CreateLobby(playerName, chosenLanguage string, publicLobby bool, drawingTim
 		}
 	}
 
-	player := createPlayer(playerName)
+	player := createPlayer(playerName, WFHmoieplayerId)
 
 	lobby.players = append(lobby.players, player)
 	lobby.Owner = player
@@ -758,8 +758,8 @@ func CreateLobby(playerName, chosenLanguage string, publicLobby bool, drawingTim
 	}
 
 	lobby.words = words
-
 	return player, lobby, nil
+
 }
 
 // GeneratePlayerName creates a new playername. A so called petname. It consists
@@ -883,7 +883,7 @@ func (lobby *Lobby) GetAvailableWordHints(player *Player) []*WordHint {
 // JoinPlayer creates a new player object using the given name and adds it
 // to the lobbies playerlist. The new players is returned.
 func (lobby *Lobby) JoinPlayer(playerName string) *Player {
-	player := createPlayer(playerName)
+	player := createPlayer(playerName, "12")
 
 	//FIXME Make a dedicated method that uses a mutex?
 	lobby.players = append(lobby.players, player)

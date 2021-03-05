@@ -30,7 +30,7 @@ func createDefaultLobbyCreatePageData() *CreatePageData {
 		SettingBounds:     game.LobbySettingBounds,
 		Languages:         game.SupportedLanguages,
 		Public:            "true",
-		DrawingTime:       "120",
+		DrawingTime:       "75",
 		Rounds:            "4",
 		MaxPlayers:        "12",
 		CustomWordsChance: "50",
@@ -45,6 +45,7 @@ type CreatePageData struct {
 	*BasePageConfig
 	*game.SettingBounds
 	Errors            []string
+	WFHomiePlayerName string
 	Languages         map[string]string
 	Public            string
 	DrawingTime       string
@@ -66,6 +67,10 @@ func ssrCreateLobby(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	WFHomiegroupId := parseWFHomieGroupId(r.Form.Get("WFHomie_group_id"))
+	WFHomieplayerId := parseWFHomiePlayerId(r.Form.Get("WFHomie_player_id"))
+	WFHomiegroupName := parseWFHomieGroupName(r.Form.Get("WFHomie_group_name"))
+	WFHmoieplayerName := parseWFHomiePlayerName(r.Form.Get("WFHomie_player_name"))
 	language, languageInvalid := parseLanguage(r.Form.Get("language"))
 	drawingTime, drawingTimeInvalid := parseDrawingTime(r.Form.Get("drawing_time"))
 	rounds, roundsInvalid := parseRounds(r.Form.Get("rounds"))
@@ -128,16 +133,16 @@ func ssrCreateLobby(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// var playerName = getPlayername(r)
-	var playerName = "test"
+	var playerName = parseWFHomiePlayerName(r.Form.Get("WFHomie_player_name"))
+	// var groupName = parseWFHomieGroupName(r.Form.Get("WFHomie_group_name"))
 
-	player, lobby, createError := game.CreateLobby(playerName, language, publicLobby, drawingTime, rounds, maxPlayers, customWordChance, clientsPerIPLimit, customWords, enableVotekick)
+	player, lobby, createError := game.CreateLobby(playerName, WFHomiegroupId, WFHomieplayerId, WFHomiegroupName, WFHmoieplayerName, language, publicLobby, drawingTime, rounds, maxPlayers, customWordChance, clientsPerIPLimit, customWords, enableVotekick)
 	if createError != nil {
 		pageData.Errors = append(pageData.Errors, createError.Error())
 		templateError := pageTemplates.ExecuteTemplate(w, "lobby-create-page", pageData)
 		if templateError != nil {
 			userFacingError(w, templateError.Error())
 		}
-
 		return
 	}
 
@@ -168,6 +173,19 @@ func parsePlayerName(value string) (string, error) {
 
 func parsePassword(value string) (string, error) {
 	return value, nil
+}
+
+func parseWFHomiePlayerName(value string) string {
+	return value
+}
+func parseWFHomieGroupName(value string) string {
+	return value
+}
+func parseWFHomieGroupId(value string) string {
+	return value
+}
+func parseWFHomiePlayerId(value string) string {
+	return value
 }
 
 func parseLanguage(value string) (string, error) {
