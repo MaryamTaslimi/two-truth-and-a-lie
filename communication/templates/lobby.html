@@ -399,7 +399,6 @@
     </div>
 
     <script type="text/javascript" src="{{.RootPath}}/resources/floodfill.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://meet.jit.si/external_api.js"></script>
     <script type="text/javascript">
 
@@ -910,12 +909,12 @@
                 // playWav('{{.RootPath}}/resources/plop.wav');
 
                 if (parsed.data === ownID) {
-                    applyMessage("correct-guess-message", "You have correctly guessed the word.")
+                    applyMessage("correct-guess-message", "", "You have correctly guessed the word.")
                 } else {
                     for (let i = 0; i < cachedPlayers.length; i++) {
                         let player = cachedPlayers[i];
                         if (player.id === parsed.data) {
-                            applyMessage("correct-guess-message", player.name + " correctly guessed the word.")
+                            applyMessage("correct-guess-message", "", player.name + " correctly guessed the word.")
                             break;
                         }
                     }
