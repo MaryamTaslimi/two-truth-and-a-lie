@@ -179,7 +179,7 @@
         const check = (e) => {
             const form = new FormData(e.target);
             const token = form.get("token");
-            const url = "https://cors-anywhere.herokuapp.com/https://us-central1-wfhomie-85a56.cloudfunctions.net/validate?token=" + token;
+            const url = "https://us-central1-wfhomie-85a56.cloudfunctions.net/validate?token=" + token;
             fetch(url)
                 .then((response) => {
                     return response.json();

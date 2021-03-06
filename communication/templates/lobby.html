@@ -109,7 +109,7 @@
                                 <div id="start-dialog" class="center-dialog">
                                     <span class="dialog-title">Start the game</span>
                                     <div class="center-dialog-content">
-                                        <div style="display: none; flex-direction: column;">
+                                        <div style=" display:none; flex-direction: column;">
                                             Change your username:
                                             <div style="display: flex; flex-direction: row;">
                                                 <input class="namechange-field" type="text"
@@ -400,6 +400,7 @@
 
     <script type="text/javascript" src="{{.RootPath}}/resources/floodfill.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://meet.jit.si/external_api.js"></script>
     <script type="text/javascript">
 
         const reconnectDialog = document.getElementById("reconnect-dialog");
@@ -924,7 +925,10 @@
             } else if (parsed.type === "update-wordhint") {
                 applyWordHints(parsed.data);
             } else if (parsed.type === "message") {
-                applyMessage("auhtor-message", parsed.data.author, parsed.data.content);
+                if (parsed.data.authorId === ownID)
+                    applyMessage("auhtor-message-self", "You", parsed.data.content);
+                else
+                    applyMessage("auhtor-message", parsed.data.author, parsed.data.content);
             } else if (parsed.type === "system-message") {
                 applyMessage("system-message", "", parsed.data);
             } else if (parsed.type === "non-guessing-player-message") {
@@ -994,6 +998,7 @@
                     + "Custom words chance: " + parsed.data.customWordsChance + "%<br/>"
                     + "Clients per IP limit: " + parsed.data.clientsPerIpLimit);
             }
+
         };
 
         function getPlayer(playerID) {
@@ -1056,11 +1061,18 @@
             if (messageContainer.childElementCount >= 100) {
                 messageContainer.removeChild(messageContainer.firstChild)
             }
-            if (author != "")
-                messageContainer.innerHTML += `<div class="message ` + styleClass + `">
+            if (author != "") {
+                if (author === "You")
+                    messageContainer.innerHTML += `<div class="message ` + styleClass + `">
+                            <span style="color:#1e00f8;">` + author + `:</span>
+                            <span class="message-content">` + message + `</span>
+                        </div>`;
+                else
+                    messageContainer.innerHTML += `<div class="message ` + styleClass + `">
                             <span class="chat-name">` + author + `</span>
                             <span class="message-content">` + message + `</span>
                         </div>`;
+            }
             else
                 messageContainer.innerHTML += `<div class="message ` + styleClass + `">                            
                             <span class="message-content">` + message + `</span>
@@ -1084,24 +1096,31 @@
                 } else {
                     stateStyleClass = '';
                 }
-                let newPlayerElement = '<div class="player ' + stateStyleClass + '">' +
-                    '<span class="rank">' + player.rank + '</span>' +
+                let newPlayerElement = '<div class="player ' + stateStyleClass + '">' + '<span></span>';
+                if (player.rank == "1")
+                    newPlayerElement += '<span>&#128081;</span>';
+                else
+                    newPlayerElement += '<span></span>';
+                if (player.state === "drawing") {
+                    newPlayerElement += '<span class="rank">✏️</span>';
+                } else if (player.state === "standby") {
+                    newPlayerElement += '<span>✔️</span>';
+                } else
+                    newPlayerElement += '<span></span>';
+
+                newPlayerElement += '<span class="rank" style="display:none;">' + player.rank + '</span>' +
                     '<span id="playername-' + player.id + '" class="playername';
                 if (player.id === ownID) {
                     newPlayerElement += ' playername-self';
                 }
                 newPlayerElement +=
                     '">' + player.name + '</span>' +
-                    '<div class="score-and-status">' +
+                    '<div class="score-and-status" style="grid-column-start:2;grid-column-end:3;">' +
                     '<div>' +
                     '<span class="playerscore" style="color:#39b0a4; font-weight:bold;">' + player.score + '</span>' +
                     '<span class="last-turn-score">(Last turn: ' + player.lastScore + ')</span>' +
                     '</div>';
-                if (player.state === "drawing") {
-                    newPlayerElement += '<span>✏️</span>';
-                } else if (player.state === "standby") {
-                    newPlayerElement += '<span>✔️</span>';
-                }
+
                 newPlayerElement += '</div></div>';
                 playerContainer.innerHTML += newPlayerElement;
             });
@@ -1414,14 +1433,16 @@
                 type: "request-drawing",
             }));
         }, false);
-    </script>
-    <script src="https://meet.jit.si/external_api.js"></script>
-    <script>
+
+
+
         // check conference state (join page or videochat)
         let videoConferenceJoined = false;
 
         // set with an string to default value, "John Doe" by example
-        let localDisplayName = document.getElementById('namechange-field-start-dialog').value;
+
+        localDisplayName = document.getElementById('namechange-field-start-dialog').value;
+        console.log(localDisplayName);
         var domain = "meet.jit.si";
         var options = {
             roomName: "wfhomie-scribble-test",

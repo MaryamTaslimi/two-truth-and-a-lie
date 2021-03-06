@@ -1,6 +1,9 @@
 .auhtor-message {
   color: white;
 }
+.auhtor-message-self {
+  color: #1e00f8;
+}
 
 #jitsicontainer {
   display: flex;
@@ -146,7 +149,6 @@
 
 #message-container-outer {
   padding: 10px;
-  word-break: break-all;
   background-color: white;
   border-radius: 25px;
   background-color: #eb553a;
@@ -165,7 +167,6 @@
 
 #message-container {
   padding: 10px;
-  word-break: break-all;
   border-radius: 25px;
   background-color: #eb553a;
 }
@@ -401,9 +402,10 @@ input[type="button"]:active,
   background-color: #00569e;
   padding: 0.2rem;
   display: grid;
-  grid-template-columns: fit-content(100%) auto;
-  grid-template-rows: 1fr 1fr;
+  grid-template-columns: 0.5fr auto;
+  grid-template-rows: 1fr 1fr 1fr;
   border-radius: 25px;
+  gap: 0.2rem;
   color: white;
 }
 
@@ -412,6 +414,8 @@ input[type="button"]:active,
 }
 
 .playername {
+  grid-column-start:2;
+  grid-column-end:3;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
@@ -428,8 +432,8 @@ input[type="button"]:active,
 
 .rank {
   display: flex;
-  grid-row-start: 1;
-  grid-row-end: 3;
+  grid-row-start: 2;
+  grid-row-end: 4;
   justify-content: center;
   align-items: center;
   width: 2.5rem;
