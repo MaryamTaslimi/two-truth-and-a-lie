@@ -903,7 +903,7 @@
                     playernameSpan.innerText = parsed.data.playerName;
                 }
                 if (parsed.data.playerId === ownID) {
-                    setUsernameLocally(parsed.data.playerId)
+                    setUsernameLocally(parsed.data.playerName)
                 }
             } else if (parsed.type === "correct-guess") {
                 // playWav('{{.RootPath}}/resources/plop.wav');
@@ -1013,7 +1013,7 @@
 
         function handleReadyEvent(ready) {
             ownerID = ready.ownerId;
-            setUsernameLocally(ready.playerId);
+            setUsernameLocally(ready.playerName);
             allowDrawing = ready.allowDrawing;
             ownID = ready.playerId;
             maxRounds = ready.maxRounds;

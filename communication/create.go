@@ -42,22 +42,19 @@ func ssrCheckCode(w http.ResponseWriter, r *http.Request) {
 	resp, err := http.Get("https://us-central1-wfhomie-85a56.cloudfunctions.net/validate?token=" + WFHomiecode)
 	if err != nil {
 		///handle the error on the way of calling Api here
-		http.Error(w, err.Error(), 500)
-		return
+
 	}
 	//We Read the response body on the line below.
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		//handle the error in the response of Api here
-		http.Error(w, err.Error(), 500)
-		return
+
 	}
 	//Convert the body to type WFHomieResponseApi
 	var Response WFHomieResoinseApi
 	err = json.Unmarshal(body, &Response)
 	if err != nil {
-		http.Error(w, err.Error(), 500)
-		return
+
 	}
 	log.Printf(Response.Player_Name)
 

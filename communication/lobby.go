@@ -12,7 +12,7 @@ import (
 )
 
 var (
-	errNoLobbyIDSupplied = errors.New("please supply a lobby id via the 'lobby_id' query parameter")
+	errNoLobbyIDSupplied = errors.New("Invalid Code!")
 	errLobbyNotExistent  = errors.New("the requested lobby doesn't exist")
 )
 
@@ -189,7 +189,7 @@ func ssrEnterLobby(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 
-		newPlayer := lobby.JoinPlayer(player.Name, player.ID)
+		newPlayer := lobby.JoinPlayer(getPlayername(r), "12")
 
 		// Use the players generated usersession and pass it as a cookie.
 		http.SetCookie(w, &http.Cookie{
