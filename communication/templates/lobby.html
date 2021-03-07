@@ -816,13 +816,37 @@
             hideKickDialog();
         }
 
+        function ensure_visible(element_id) {
+            // adjust these two to match your HTML hierarchy
+            var element_to_show = document.getElementById(element_id);
+            var scrolling_parent = element_to_show.parentElement;
+
+            var top = parseInt(scrolling_parent.getBoundingClientRect().top);
+            var bot = parseInt(scrolling_parent.getBoundingClientRect().bottom);
+
+            var now_top = parseInt(element_to_show.getBoundingClientRect().top);
+            var now_bot = parseInt(element_to_show.getBoundingClientRect().bottom);
+
+            // console.log("Element: "+now_top+";"+(now_bot)+" Viewport:"+top+";"+(bot) );
+
+            var scroll_by = 0;
+            if (now_top < top)
+                scroll_by = -(top - now_top);
+            else if (now_bot > bot)
+                scroll_by = now_bot - bot;
+            if (scroll_by != 0) {
+                scrolling_parent.scrollTop += scroll_by; // tr.offsetTop;
+            }
+        }
         //This automatically scrolls down the chat on arrivals of new messages
         new MutationObserver(() => {
             // messageContainer.scrollTop = messageContainer.scrollHeight
-            
+
             // messageContainer.scrollIntoView({block: "nearest"})
 
-            messageContainer.parentNode.scrollTop = messageContainer.offsetTop - messageContainer.parentNode.offsetTop;
+            messageContainer.parentNode.scrollTop = messageContainer.offsetTop;
+
+            // ensure_visible("message-container")
 
         })
             .observe(messageContainer, {
