@@ -189,7 +189,7 @@ func ssrEnterLobby(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 
-		newPlayer := lobby.JoinPlayer(getPlayername(r))
+		newPlayer := lobby.JoinPlayer(getPlayername(r), "12")
 
 		// Use the players generated usersession and pass it as a cookie.
 		http.SetCookie(w, &http.Cookie{

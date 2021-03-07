@@ -733,7 +733,7 @@ type Rounds struct {
 // CreateLobby allows creating a lobby, optionally returning errors that
 // occurred during creation.
 func CreateLobby(playerName, WFHmoiegroupId string, WFHmoieplayerId, WFHmoiegroupName string, WFHmoieplayerName string, chosenLanguage string, publicLobby bool, drawingTime, rounds, maxPlayers, customWordChance, clientsPerIPLimit int, customWords []string, enableVotekick bool) (*Player, *Lobby, error) {
-	lobby := createLobby(drawingTime, rounds, maxPlayers, customWords, customWordChance, clientsPerIPLimit, enableVotekick, publicLobby)
+	lobby := createLobby(WFHmoiegroupId, WFHmoiegroupName, drawingTime, rounds, maxPlayers, customWords, customWordChance, clientsPerIPLimit, enableVotekick, publicLobby)
 	lobby.Wordpack = chosenLanguage
 
 	//Neccessary to correctly treat words from player, however, custom words might be treated incorrectly.
@@ -882,8 +882,8 @@ func (lobby *Lobby) GetAvailableWordHints(player *Player) []*WordHint {
 
 // JoinPlayer creates a new player object using the given name and adds it
 // to the lobbies playerlist. The new players is returned.
-func (lobby *Lobby) JoinPlayer(playerName string) *Player {
-	player := createPlayer(playerName, "12")
+func (lobby *Lobby) JoinPlayer(playerName string, playerid string) *Player {
+	player := createPlayer(playerName, playerid)
 
 	//FIXME Make a dedicated method that uses a mutex?
 	lobby.players = append(lobby.players, player)

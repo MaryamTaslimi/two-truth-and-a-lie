@@ -48,24 +48,13 @@
 
                 {{end}}
                 <!-- the form to call WFHomie Api and validate the entered Token -->
-                <form style="display: flex; flex-direction: column;" class="input-container" method="POST"
-                    enctype="multipart/form-data" onsubmit="return check(event)">
-                    <b id="tokenlabel"
-                        style="font-family:SourceSansPro-bold;color:#eb553a;font-size:3rem; margin:auto;">ENTER THE
-                        CODE</b>
+                <form style="display: flex; flex-direction: column;" class="input-container"
+                    action="{{.RootPath}}/ssrCheckCode" method="POST" enctype="multipart/form-data">
+                    <b id="tokenlabel" style="font-family:SourceSansPro-bold;color:#eb553a;font-size:3rem;
+                         margin:auto;">ENTER THE CODE</b>
                     <div style="background-color:#39b0a4; border-radius: 25px; margin:auto;">
                         <input name="token" id="tokeninput" maxlength='1000' />
                     </div>
-                    <button id="tokenbtn" type="submit" style="margin-top:10px;
-                    font-family: 'SourceSansPro-Bold';
-                    border-radius: 25px;
-                    border: none;
-                    height: 60px;
-                    width: 170px;
-                    background-color: #39b0a4;
-                    color: #f6d65c;
-                    font-size: larger;
-                    display:none;">Validate the Token</button>
                 </form>
                 <!-- the form to post default lobby configurations and the response of Api -->
                 <form id="lobby-create" class="input-container" action="{{.RootPath}}/ssrCreateLobby" method="POST">

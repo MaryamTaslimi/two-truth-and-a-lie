@@ -40,6 +40,7 @@ func setupRoutes() {
 		http.StripPrefix(CurrentBasePageConfig.RootPath,
 			http.FileServer(http.FS(frontendResourcesFS))))
 	http.HandleFunc(CurrentBasePageConfig.RootPath+"/", homePage)
+	http.HandleFunc(CurrentBasePageConfig.RootPath+"/ssrCheckCode", ssrCheckCode)
 	http.HandleFunc(CurrentBasePageConfig.RootPath+"/ssrEnterLobby", ssrEnterLobby)
 	http.HandleFunc(CurrentBasePageConfig.RootPath+"/ssrCreateLobby", ssrCreateLobby)
 

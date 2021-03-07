@@ -18,6 +18,8 @@ type Lobby struct {
 	// ID uniquely identified the Lobby.
 	LobbyID string
 
+	GroupName string
+
 	*EditableLobbySettings
 
 	// DrawingTime is the amount of seconds that each player has available to
@@ -261,6 +263,8 @@ func createPlayer(name string, id string) *Player {
 }
 
 func createLobby(
+	groupid string,
+	groupname string,
 	drawingTime int,
 	rounds int,
 	maxPlayers int,
@@ -271,7 +275,8 @@ func createLobby(
 	publicLobby bool) *Lobby {
 
 	lobby := &Lobby{
-		LobbyID:     uuid.Must(uuid.NewV4()).String(),
+		LobbyID:     groupid,
+		GroupName:   groupname,
 		DrawingTime: drawingTime,
 		MaxRounds:   rounds,
 		EditableLobbySettings: &EditableLobbySettings{

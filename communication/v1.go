@@ -159,7 +159,7 @@ func enterLobby(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 
-		newPlayer := lobby.JoinPlayer(getPlayername(r))
+		newPlayer := lobby.JoinPlayer(getPlayername(r), "12")
 		newPlayer.SetLastKnownAddress(getIPAddressFromRequest(r))
 
 		// Use the players generated usersession and pass it as a cookie.

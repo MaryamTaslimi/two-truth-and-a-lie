@@ -1,8 +1,11 @@
 package communication
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
+	"io/ioutil"
+	"log"
 	"net/http"
 	"strconv"
 	"strings"
@@ -22,6 +25,80 @@ func homePage(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
+}
+
+type WFHomieResoinseApi struct {
+	Session_Id  string `json:"session_id"`
+	Player_Id   string `json:"player_id"`
+	Player_Name string `json:"player_name"`
+	Group_Id    string `json:"group_id"`
+	Group_Name  string `json:"group_name"`
+}
+
+//adding a new service called ssrCheckCode
+func ssrCheckCode(w http.ResponseWriter, r *http.Request) {
+	WFHomiecode := r.FormValue("token")
+
+	resp, err := http.Get("https://us-central1-wfhomie-85a56.cloudfunctions.net/validate?token=" + WFHomiecode)
+	if err != nil {
+		///handle the error on the way of calling Api here
+		http.Error(w, err.Error(), 500)
+		return
+	}
+	//We Read the response body on the line below.
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		//handle the error in the response of Api here
+		http.Error(w, err.Error(), 500)
+		return
+	}
+	//Convert the body to type WFHomieResponseApi
+	var Response WFHomieResoinseApi
+	err = json.Unmarshal(body, &Response)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+		return
+	}
+	log.Printf(Response.Player_Name)
+
+	var lobbycheck bool = LobbyCheck(Response.Group_Id)
+	if lobbycheck == false {
+		LobbyCreate(Response.Player_Id, Response.Player_Name, Response.Group_Id, Response.Group_Name, r, w)
+	}
+	http.Redirect(w, r, CurrentBasePageConfig.RootPath+"/ssrEnterLobby?lobby_id="+Response.Group_Id, http.StatusFound)
+
+}
+
+func LobbyCheck(value string) bool {
+	lobbies := state.GetPublicLobbies()
+	if lobbies != nil {
+		for _, lobby := range lobbies {
+			if lobby.LobbyID == value {
+				return true
+			}
+		}
+		return false
+	}
+	return false
+
+}
+
+func LobbyCreate(playerid string, playername string, groupid string, groupname string, Ip *http.Request, Res http.ResponseWriter) {
+	player, lobby, createError := game.CreateLobby(playername, groupid, playerid, groupname, playername, "english", true, 75, 4, 12, 50, 3, nil, false)
+	if createError != nil {
+	}
+	player.SetLastKnownAddress(getIPAddressFromRequest(Ip))
+
+	http.SetCookie(Res, &http.Cookie{
+		Name:     "usersession",
+		Value:    player.GetUserSession(),
+		Path:     "/",
+		SameSite: http.SameSiteStrictMode,
+	})
+
+	state.AddLobby(lobby)
+
+	http.Redirect(Res, Ip, CurrentBasePageConfig.RootPath+"/ssrEnterLobby?lobby_id="+lobby.LobbyID, http.StatusFound)
 }
 
 func createDefaultLobbyCreatePageData() *CreatePageData {
