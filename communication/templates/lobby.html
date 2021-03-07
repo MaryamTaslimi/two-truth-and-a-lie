@@ -903,7 +903,7 @@
                     playernameSpan.innerText = parsed.data.playerName;
                 }
                 if (parsed.data.playerId === ownID) {
-                    setUsernameLocally(parsed.data.playerName)
+                    setUsernameLocally(parsed.data.playerId)
                 }
             } else if (parsed.type === "correct-guess") {
                 // playWav('{{.RootPath}}/resources/plop.wav');
