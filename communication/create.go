@@ -28,11 +28,9 @@ func homePage(w http.ResponseWriter, r *http.Request) {
 }
 
 type WFHomieResoinseApi struct {
-	Session_Id  string `json:"session_id"`
-	Player_Id   string `json:"player_id"`
-	Player_Name string `json:"player_name"`
-	Group_Id    string `json:"group_id"`
-	Group_Name  string `json:"group_name"`
+	Session_Id string `json:"session_id"`
+	Group_Id   string `json:"group_id"`
+	Group_Name string `json:"group_name"`
 }
 
 //adding a new service called ssrCheckCode
@@ -56,11 +54,12 @@ func ssrCheckCode(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 
 	}
-	log.Printf(Response.Player_Name)
+	log.Printf(Response.Group_Name)
 
 	var lobbycheck bool = LobbyCheck(Response.Group_Id)
 	if lobbycheck == false {
-		LobbyCreate(Response.Player_Id, Response.Player_Name, Response.Group_Id, Response.Group_Name, r, w)
+		var playerName = getPlayername(r)
+		LobbyCreate(playerName, Response.Group_Id+Response.Group_Name, Response.Group_Name, r, w)
 	}
 	http.Redirect(w, r, CurrentBasePageConfig.RootPath+"/ssrEnterLobby?lobby_id="+Response.Group_Id, http.StatusFound)
 
@@ -80,8 +79,8 @@ func LobbyCheck(value string) bool {
 
 }
 
-func LobbyCreate(playerid string, playername string, groupid string, groupname string, Ip *http.Request, Res http.ResponseWriter) {
-	player, lobby, createError := game.CreateLobby(playername, groupid, playerid, groupname, playername, "english", true, 75, 4, 12, 50, 3, nil, false)
+func LobbyCreate(playername string, groupid string, groupname string, Ip *http.Request, Res http.ResponseWriter) {
+	player, lobby, createError := game.CreateLobby(playername, groupid, groupname, "english", true, 75, 4, 12, 50, 3, nil, false)
 	if createError != nil {
 	}
 	player.SetLastKnownAddress(getIPAddressFromRequest(Ip))
@@ -142,9 +141,9 @@ func ssrCreateLobby(w http.ResponseWriter, r *http.Request) {
 	}
 
 	WFHomiegroupId := parseWFHomieGroupId(r.Form.Get("WFHomie_group_id"))
-	WFHomieplayerId := parseWFHomiePlayerId(r.Form.Get("WFHomie_player_id"))
+	// WFHomieplayerId := parseWFHomiePlayerId(r.Form.Get("WFHomie_player_id"))
 	WFHomiegroupName := parseWFHomieGroupName(r.Form.Get("WFHomie_group_name"))
-	WFHmoieplayerName := parseWFHomiePlayerName(r.Form.Get("WFHomie_player_name"))
+	// WFHmoieplayerName := parseWFHomiePlayerName(r.Form.Get("WFHomie_player_name"))
 	language, languageInvalid := parseLanguage(r.Form.Get("language"))
 	drawingTime, drawingTimeInvalid := parseDrawingTime(r.Form.Get("drawing_time"))
 	rounds, roundsInvalid := parseRounds(r.Form.Get("rounds"))
@@ -206,11 +205,11 @@ func ssrCreateLobby(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// var playerName = getPlayername(r)
-	var playerName = parseWFHomiePlayerName(r.Form.Get("WFHomie_player_name"))
+	var playerName = getPlayername(r)
+	// var playerName = parseWFHomiePlayerName(r.Form.Get("WFHomie_player_name"))
 	// var groupName = parseWFHomieGroupName(r.Form.Get("WFHomie_group_name"))
 
-	player, lobby, createError := game.CreateLobby(playerName, WFHomiegroupId, WFHomieplayerId, WFHomiegroupName, WFHmoieplayerName, language, publicLobby, drawingTime, rounds, maxPlayers, customWordChance, clientsPerIPLimit, customWords, enableVotekick)
+	player, lobby, createError := game.CreateLobby(playerName, WFHomiegroupId, WFHomiegroupName, language, publicLobby, drawingTime, rounds, maxPlayers, customWordChance, clientsPerIPLimit, customWords, enableVotekick)
 	if createError != nil {
 		pageData.Errors = append(pageData.Errors, createError.Error())
 		templateError := pageTemplates.ExecuteTemplate(w, "lobby-create-page", pageData)
@@ -249,18 +248,19 @@ func parsePassword(value string) (string, error) {
 	return value, nil
 }
 
-func parseWFHomiePlayerName(value string) string {
-	return value
-}
+// func parseWFHomiePlayerName(value string) string {
+// 	return value
+// }
 func parseWFHomieGroupName(value string) string {
 	return value
 }
 func parseWFHomieGroupId(value string) string {
 	return value
 }
-func parseWFHomiePlayerId(value string) string {
-	return value
-}
+
+// func parseWFHomiePlayerId(value string) string {
+// 	return value
+// }
 
 func parseLanguage(value string) (string, error) {
 	toLower := strings.ToLower(strings.TrimSpace(value))

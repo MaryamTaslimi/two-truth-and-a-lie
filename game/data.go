@@ -247,10 +247,10 @@ func (lobby *Lobby) AppendFill(fill *FillEvent) {
 	lobby.currentDrawing = append(lobby.currentDrawing, fill)
 }
 
-func createPlayer(name string, id string) *Player {
+func createPlayer(name string) *Player {
 	return &Player{
 		Name:         name,
-		ID:           id,
+		ID:           uuid.Must(uuid.NewV4()).String(),
 		userSession:  uuid.Must(uuid.NewV4()).String(),
 		Score:        0,
 		LastScore:    0,

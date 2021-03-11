@@ -16,12 +16,9 @@
         <noscript><span class="noscript">This website requires JavaScript to run properly.</span></noscript>
 
         <div id="lobby">
-            <img id="lobby-wfhomie-scribble-img" class="wfhomie-scribble-img"
-                src="{{.RootPath}}/resources/wfhomie-scribble.png" alt="WFHomie-Scribble" />
             <span id="rounds-container">
                 <h1 id="rounds" style="color:white;"></h1>
             </span>
-            <span></span>
 
             <div style="display: flex;">
                 <div>
@@ -56,18 +53,11 @@
                 <img src="{{.RootPath}}/resources/clock.png" style="height: 40px; width: auto; margin: auto;"
                     alt="time left" />
                 <span
-                    style="height: 60px; width: 150px;display:table; background-color:#00569e; border-radius: 25px; margin: auto;">
+                    style="height: 40px; width: 150px;display:table; background-color:#00569e; border-radius: 25px; margin: auto;">
                     <p1 id="time-left" style="display:table-cell;   vertical-align: middle;
                     padding: auto; color:white; text-align: center;"> Time left: ∞ </p1>
                 </span>
             </span>
-            <div id="jitsicontainer">
-                <div>
-                    <h1 style="color:white; font-size: 2rem; margin:10px;">Players</h1>
-                </div>
-                <div id="jitsi" style="border-radius: 25px; margin:10px;"></div>
-
-            </div>
             <div id="player-container">
                 <div>
                     <h1 style="color:#f6d65c; font-size: 1rem; margin:10px;">Ranking</h1>
@@ -109,7 +99,7 @@
                                 <div id="start-dialog" class="center-dialog">
                                     <span class="dialog-title">Start the game</span>
                                     <div class="center-dialog-content">
-                                        <div style=" display:none; flex-direction: column;">
+                                        <div style="flex-direction: column;">
                                             Change your username:
                                             <div style="display: flex; flex-direction: row;">
                                                 <input class="namechange-field" type="text"
@@ -393,6 +383,13 @@
                         placeholder="Type your guesses and messages" />
                 </form>
             </div>
+            <div id="jitsicontainer">
+                <!-- <div>
+                    <h1 style="color:white; font-size: 2rem; margin:10px;">Players</h1>
+                </div> -->
+                <div id="jitsi" style="border-radius: 25px; margin:10px;"></div>
+
+            </div>
         </div>
 
         <!-- {{template "footer" .}} -->
@@ -533,6 +530,7 @@
 
         function setUsernameLocally(name) {
             ownName = name;
+            localDisplayName = name;
             namechangeFieldUnstartedDialog.value = name;
             namechangeFieldStartDialog.value = name;
             namechangeField.value = name;
@@ -545,6 +543,22 @@
         function hideLobbySettingsDialog() {
             lobbySettingsDialog.style.visibility = "hidden";
         }
+
+        function GetCurrentLobbyName() {
+            // fetch("{{.RootPath}}/v1/lobby")
+            //     .then((response) => {
+            //         return response.json();
+            //     })
+            //     .then((data) => {
+            //         data.forEach(lobby => {
+            //             if (lobby.lobby_id == '{{.LobbyID}}')
+            //             return lobby.lobby_nam
+            //             console.log('{{.LobbyID}}');
+            //         })
+            //     });
+            console.log('{{.LobbyID}}');
+        }
+
 
         function saveLobbySettings() {
             fetch("{{.RootPath}}/v1/lobby?" + new URLSearchParams({
@@ -600,7 +614,7 @@
             toolBox.height = toolBox.clientHeight;
             setLineWidth(localLineWidthUnscaled);
             chat.style.maxHeight = drawingBoard.height + toolBox.height + "px";
-            toolBox.style.top = drawingBoard.height + "px";
+            toolBox.style.top = drawingBoard.height - toolBox.height + "px";
         }
 
         function scaleUpFactor() {
@@ -855,12 +869,13 @@
                 subtree: false
             });
 
-        let ownID, ownerID, ownName;
+        let ownID, ownerID, ownName, localDisplayName;
         let maxRounds = 0;
         let roundEndTime = 0;
         let votekickEnabled
         socket.onmessage = event => {
             let parsed = JSON.parse(event.data);
+            console.log(parsed);
             if (parsed.type === "ready") {
                 let ready = parsed.data;
                 handleReadyEvent(ready);
@@ -1045,6 +1060,7 @@
         function handleReadyEvent(ready) {
             ownerID = ready.ownerId;
             setUsernameLocally(ready.playerName);
+            jitsi();
             allowDrawing = ready.allowDrawing;
             ownID = ready.playerId;
             maxRounds = ready.maxRounds;
@@ -1465,42 +1481,44 @@
         }, false);
 
 
+        function jitsi() {
+            // check conference state (join page or videochat)
+            let videoConferenceJoined = false;
 
-        // check conference state (join page or videochat)
-        let videoConferenceJoined = false;
+            // set with an string to default value, "John Doe" by example
 
-        // set with an string to default value, "John Doe" by example
-
-        localDisplayName = document.getElementById('namechange-field-start-dialog').value;
-        console.log(localDisplayName);
-        var domain = "meet.jit.si";
-        var options = {
-            roomName: "wfhomie-scribble-test",
-            width: 240,
-            height: 450,
-            allow: "microphone; camera",
-            parentNode: document.getElementById("jitsi"),
-            configOverwrite: { prejoinPageEnabled: false },
-            interfaceConfigOverwrite: { TILE_VIEW_MAX_COLUMNS: 2, SHOW_CHROME_EXTENSION_BANNER: false }
-        }
-        var api = new JitsiMeetExternalAPI(domain, options);
-        api.executeCommand('displayName', localDisplayName);
-
-        api.addEventListeners({
-            displayNameChange: function (params) {
-                // if is Videochat, set the Join Page displayName
-                if (videoConferenceJoined) {
-                    return this.executeCommand('displayName', localDisplayName);
-                }
-
-                // if is Join Page, update global variable (localDisplayName) with input value
-                localDisplayName = params.displayname;
-            },
-            videoConferenceJoined: function () {
-                // flag the conference starts
-                videoConferenceJoined = true;
+            // localDisplayName = document.getElementById('namechange-field-start-dialog').value;
+            console.log(localDisplayName);
+            var domain = "meet.jit.si";
+            var options = {
+                roomName: '{{.LobbyID}}',
+                width: 1200,
+                height: 150,
+                allow: "microphone; camera",
+                parentNode: document.getElementById("jitsi"),
+                configOverwrite: { prejoinPageEnabled: false },
+                interfaceConfigOverwrite: { TILE_VIEW_MAX_COLUMNS: 2, SHOW_CHROME_EXTENSION_BANNER: false }
             }
-        });
+            var api = new JitsiMeetExternalAPI(domain, options);
+            api.executeCommand('displayName', localDisplayName);
+
+            api.addEventListeners({
+                displayNameChange: function (params) {
+                    // if is Videochat, set the Join Page displayName
+                    if (videoConferenceJoined) {
+                        return this.executeCommand('displayName', localDisplayName);
+                    }
+
+                    // if is Join Page, update global variable (localDisplayName) with input value
+                    localDisplayName = params.displayname;
+                },
+                videoConferenceJoined: function () {
+                    // flag the conference starts
+                    videoConferenceJoined = true;
+                }
+            });
+        }
+
     </script>
 </body>
 

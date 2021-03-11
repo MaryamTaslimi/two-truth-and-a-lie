@@ -56,9 +56,7 @@ func createLobby(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	WFHomiegroupId := parseWFHomieGroupId(r.Form.Get("WFHomie_group_id"))
-	WFHomieplayerId := parseWFHomiePlayerId(r.Form.Get("WFHomie_player_id"))
 	WFHomiegroupName := parseWFHomieGroupName(r.Form.Get("WFHomie_group_name"))
-	WFHmoieplayerName := parseWFHomiePlayerName(r.Form.Get("WFHomie_player_name"))
 	language, languageInvalid := parseLanguage(r.Form.Get("language"))
 	drawingTime, drawingTimeInvalid := parseDrawingTime(r.Form.Get("drawing_time"))
 	rounds, roundsInvalid := parseRounds(r.Form.Get("rounds"))
@@ -103,10 +101,10 @@ func createLobby(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// var playerName = getPlayername(r)
-	var playerName = parseWFHomiePlayerName(r.Form.Get("WFHomie_player_name"))
+	var playerName = getPlayername(r)
+	// var playerName = parseWFHomiePlayerName(r.Form.Get("WFHomie_player_name"))
 	fmt.Println(playerName)
-	player, lobby, createError := game.CreateLobby(playerName, WFHomiegroupId, WFHomieplayerId, WFHomiegroupName, WFHmoieplayerName, language, publicLobby, drawingTime, rounds, maxPlayers, customWordChance, clientsPerIPLimit, customWords, enableVotekick)
+	player, lobby, createError := game.CreateLobby(playerName, WFHomiegroupId, WFHomiegroupName, language, publicLobby, drawingTime, rounds, maxPlayers, customWordChance, clientsPerIPLimit, customWords, enableVotekick)
 	if createError != nil {
 		http.Error(w, createError.Error(), http.StatusBadRequest)
 		return
@@ -159,7 +157,7 @@ func enterLobby(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 
-		newPlayer := lobby.JoinPlayer(getPlayername(r), "12")
+		newPlayer := lobby.JoinPlayer(getPlayername(r))
 		newPlayer.SetLastKnownAddress(getIPAddressFromRequest(r))
 
 		// Use the players generated usersession and pass it as a cookie.
