@@ -59,9 +59,9 @@ func ssrCheckCode(w http.ResponseWriter, r *http.Request) {
 	var lobbycheck bool = LobbyCheck(Response.Group_Id)
 	if lobbycheck == false {
 		var playerName = getPlayername(r)
-		LobbyCreate(playerName, Response.Group_Id, Response.Group_Name, r, w)
+		LobbyCreate(playerName, Response.Group_Id+Response.Group_Name, Response.Group_Name, r, w)
 	}
-	http.Redirect(w, r, CurrentBasePageConfig.RootPath+"/ssrEnterLobby?lobby_id="+Response.Group_Id, http.StatusFound)
+	http.Redirect(w, r, CurrentBasePageConfig.RootPath+"/ssrEnterLobby?lobby_id="+Response.Group_Id+Response.Group_Name, http.StatusFound)
 
 }
 
