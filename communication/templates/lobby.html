@@ -1060,7 +1060,6 @@
         function handleReadyEvent(ready) {
             ownerID = ready.ownerId;
             setUsernameLocally(ready.playerName);
-            jitsi();
             allowDrawing = ready.allowDrawing;
             ownID = ready.playerId;
             maxRounds = ready.maxRounds;
@@ -1131,8 +1130,8 @@
             playerContainer.innerHTML = "";
             cachedPlayers = players;
             players.sort((a, b) => {
-                        return a.rank - b.rank;
-                    });
+                return a.rank - b.rank;
+            });
             players.forEach(function (player) {
                 //We don't wanna show the disconnected players.
                 if (!player.connected) {
@@ -1491,7 +1490,7 @@
             // set with an string to default value, "John Doe" by example
 
             // localDisplayName = document.getElementById('namechange-field-start-dialog').value;
-            console.log(localDisplayName);
+
             var domain = "meet.jit.si";
             var options = {
                 roomName: '{{.LobbyID}}',
@@ -1520,7 +1519,20 @@
                     videoConferenceJoined = true;
                 }
             });
+            api.addEventListener(`videoConferenceJoined`, () => {
+                const listener = ({ enabled }) => {
+                    api.removeEventListener(`tileViewChanged`, listener);
+
+                    if (!enabled) {
+                        api.executeCommand(`toggleTileView`);
+                    }
+                };
+
+                api.addEventListener(`tileViewChanged`, listener);
+                api.executeCommand(`toggleTileView`);
+            });
         }
+        jitsi();
 
     </script>
 </body>
