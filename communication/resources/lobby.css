@@ -413,7 +413,7 @@ input[type="button"]:active,
   background-color: #00569e;
   padding: 0.2rem;
   display: grid;
-  grid-template-columns: 0.5fr auto;
+  grid-template-columns: 0.2fr 1fr;
   grid-template-rows: 1fr 1fr 1fr;
   border-radius: 25px;
   gap: 0.2rem;
