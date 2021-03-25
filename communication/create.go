@@ -21,9 +21,39 @@ import (
 // homePage servers the default page for scribble.rs, which is the page to
 // create a new lobby.
 func homePage(w http.ResponseWriter, r *http.Request) {
-	err := pageTemplates.ExecuteTemplate(w, "lobby-create-page", createDefaultLobbyCreatePageData())
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+	tokens, ok := r.URL.Query()["token"]
+	if !ok || len(tokens[0]) < 1 {
+		err := pageTemplates.ExecuteTemplate(w, "lobby-create-page", createDefaultLobbyCreatePageData())
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+		}
+	} else {
+		token := tokens[0]
+		resp, err := http.Get("https://us-central1-wfhomie-85a56.cloudfunctions.net/validate?token=" + token)
+		if err != nil {
+			///handle the error on the way of calling Api here
+
+		}
+		//We Read the response body on the line below.
+		body, err := ioutil.ReadAll(resp.Body)
+		if err != nil {
+			//handle the error in the response of Api here
+
+		}
+		//Convert the body to type WFHomieResponseApi
+		var Response WFHomieResoinseApi
+		err = json.Unmarshal(body, &Response)
+		if err != nil {
+
+		}
+		log.Printf(Response.Group_Name)
+
+		var lobbycheck bool = LobbyCheck(Response.Group_Id + Response.Group_Name)
+		if lobbycheck == false {
+			var playerName = getPlayername(r)
+			LobbyCreate(playerName, Response.Group_Id+Response.Group_Name, Response.Group_Name, r, w)
+		}
+		http.Redirect(w, r, CurrentBasePageConfig.RootPath+"/ssrEnterLobby?lobby_id="+Response.Group_Id+Response.Group_Name, http.StatusFound)
 	}
 }
 
