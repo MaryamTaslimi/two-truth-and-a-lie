@@ -857,8 +857,11 @@
             // messageContainer.scrollTop = messageContainer.scrollHeight
 
             // messageContainer.scrollIntoView({block: "nearest"})
+            messageContainer.maxScrollTop = messageContainer.scrollHeight - messageContainer.offsetHeight;
 
-            messageContainer.parentNode.scrollTop = messageContainer.offsetTop;
+            if (messageContainer.maxScrollTop - messageContainer.parentNode.scrollTop <= messageContainer.offsetHeight) {
+                messageContainer.parentNode.scrollTop = messageContainer.scrollHeight;
+            }
 
             // ensure_visible("message-container")
 
