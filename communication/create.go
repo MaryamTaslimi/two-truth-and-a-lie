@@ -34,7 +34,6 @@ func homePage(w http.ResponseWriter, r *http.Request) {
 			///handle the error on the way of calling Api here
 
 		}
-		//We Read the response body on the line below.
 		body, err := ioutil.ReadAll(resp.Body)
 		if err != nil {
 			//handle the error in the response of Api here
@@ -47,13 +46,18 @@ func homePage(w http.ResponseWriter, r *http.Request) {
 
 		}
 		log.Printf(Response.Group_Name)
-
-		var lobbycheck bool = LobbyCheck(Response.Group_Id + Response.Group_Name)
-		if lobbycheck == false {
-			var playerName = getPlayername(r)
-			LobbyCreate(playerName, Response.Group_Id+Response.Group_Name, Response.Group_Name, r, w)
+		// Response.Group_Name = "WFHomie"
+		// Response.Group_Id = "1"
+		if Response.Group_Id+Response.Group_Name != "" {
+			var lobbycheck bool = LobbyCheck(Response.Group_Id + Response.Group_Name)
+			if lobbycheck == false {
+				var playerName = getPlayername(r)
+				LobbyCreate(playerName, Response.Group_Id+Response.Group_Name, Response.Group_Name, r, w)
+			}
+			http.Redirect(w, r, CurrentBasePageConfig.RootPath+"/ssrEnterLobby?lobby_id="+Response.Group_Id+Response.Group_Name, http.StatusFound)
+		} else {
+			userFacingError(w, errors.New("Invalid Code!").Error())
 		}
-		http.Redirect(w, r, CurrentBasePageConfig.RootPath+"/ssrEnterLobby?lobby_id="+Response.Group_Id+Response.Group_Name, http.StatusFound)
 	}
 }
 
@@ -66,6 +70,7 @@ type WFHomieResoinseApi struct {
 //adding a new service called ssrCheckCode
 func ssrCheckCode(w http.ResponseWriter, r *http.Request) {
 	WFHomiecode := r.FormValue("token")
+	WFHomieusername := r.FormValue("username")
 
 	resp, err := http.Get("https://us-central1-wfhomie-85a56.cloudfunctions.net/validate?token=" + WFHomiecode)
 	if err != nil {
@@ -85,14 +90,19 @@ func ssrCheckCode(w http.ResponseWriter, r *http.Request) {
 
 	}
 	log.Printf(Response.Group_Name)
-
-	var lobbycheck bool = LobbyCheck(Response.Group_Id + Response.Group_Name)
-	if lobbycheck == false {
-		var playerName = getPlayername(r)
-		LobbyCreate(playerName, Response.Group_Id+Response.Group_Name, Response.Group_Name, r, w)
+	// Response.Group_Name = "WFHomie"
+	// Response.Group_Id = "1"
+	if Response.Group_Id+Response.Group_Name != "" {
+		var lobbycheck bool = LobbyCheck(Response.Group_Id + Response.Group_Name)
+		if lobbycheck == false {
+			var playerName = getPlayername(r)
+			log.Println(playerName)
+			LobbyCreate(playerName, Response.Group_Id+Response.Group_Name, Response.Group_Name, r, w)
+		}
+		http.Redirect(w, r, CurrentBasePageConfig.RootPath+"/ssrEnterLobby?lobby_id="+Response.Group_Id+Response.Group_Name+"&username="+WFHomieusername, http.StatusFound)
+	} else {
+		userFacingError(w, errors.New("Invalid Code!").Error())
 	}
-	http.Redirect(w, r, CurrentBasePageConfig.RootPath+"/ssrEnterLobby?lobby_id="+Response.Group_Id+Response.Group_Name, http.StatusFound)
-
 }
 
 func LobbyCheck(value string) bool {
@@ -124,7 +134,7 @@ func LobbyCreate(playername string, groupid string, groupname string, Ip *http.R
 
 	state.AddLobby(lobby)
 
-	http.Redirect(Res, Ip, CurrentBasePageConfig.RootPath+"/ssrEnterLobby?lobby_id="+lobby.LobbyID, http.StatusFound)
+	http.Redirect(Res, Ip, CurrentBasePageConfig.RootPath+"/ssrEnterLobby?lobby_id="+lobby.LobbyID+"&username="+playername, http.StatusFound)
 }
 
 func createDefaultLobbyCreatePageData() *CreatePageData {

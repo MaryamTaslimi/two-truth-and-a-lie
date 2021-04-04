@@ -878,7 +878,6 @@
         let votekickEnabled
         socket.onmessage = event => {
             let parsed = JSON.parse(event.data);
-            console.log(parsed);
             if (parsed.type === "ready") {
                 let ready = parsed.data;
                 handleReadyEvent(ready);
@@ -1486,13 +1485,14 @@
         }, false);
 
 
-        function jitsi() {
+        setTimeout(function () {
             // check conference state (join page or videochat)
             let videoConferenceJoined = false;
 
             // set with an string to default value, "John Doe" by example
 
-            // localDisplayName = document.getElementById('namechange-field-start-dialog').value;
+            localDisplayName = document.getElementById("namechange-field-start-dialog").value;
+            console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" + localDisplayName);
 
             var domain = "meet.jit.si";
             var options = {
@@ -1534,8 +1534,8 @@
                 api.addEventListener(`tileViewChanged`, listener);
                 api.executeCommand(`toggleTileView`);
             });
-        }
-        jitsi();
+        }, 3000);
+
 
     </script>
 </body>
