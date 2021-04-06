@@ -16,6 +16,20 @@ import (
 	"golang.org/x/text/language"
 )
 
+type UserPageData struct {
+	*BasePageConfig
+	WFHomieUserName string
+	WFHomieToken    string
+}
+
+func createDefaultUserPageData(token string) *UserPageData {
+	return &UserPageData{
+		BasePageConfig:  CurrentBasePageConfig,
+		WFHomieUserName: "",
+		WFHomieToken:    token,
+	}
+}
+
 //This file contains the API for the official web client.
 
 // homePage servers the default page for scribble.rs, which is the page to
@@ -29,34 +43,10 @@ func homePage(w http.ResponseWriter, r *http.Request) {
 		}
 	} else {
 		token := tokens[0]
-		resp, err := http.Get("https://us-central1-wfhomie-85a56.cloudfunctions.net/validate?token=" + token)
+		err := pageTemplates.ExecuteTemplate(w, "enter-user-page", createDefaultUserPageData(token))
 		if err != nil {
-			///handle the error on the way of calling Api here
-
-		}
-		body, err := ioutil.ReadAll(resp.Body)
-		if err != nil {
-			//handle the error in the response of Api here
-
-		}
-		//Convert the body to type WFHomieResponseApi
-		var Response WFHomieResoinseApi
-		err = json.Unmarshal(body, &Response)
-		if err != nil {
-
-		}
-		log.Printf(Response.Group_Name)
-		// Response.Group_Name = "WFHomie"
-		// Response.Group_Id = "1"
-		if Response.Group_Id+Response.Group_Name != "" {
-			var lobbycheck bool = LobbyCheck(Response.Group_Id + Response.Group_Name)
-			if lobbycheck == false {
-				var playerName = getPlayername(r)
-				LobbyCreate(playerName, Response.Group_Id+Response.Group_Name, Response.Group_Name, r, w)
-			}
-			http.Redirect(w, r, CurrentBasePageConfig.RootPath+"/ssrEnterLobby?lobby_id="+Response.Group_Id+Response.Group_Name, http.StatusFound)
-		} else {
-			userFacingError(w, errors.New("Invalid Code!").Error())
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			log.Println(err)
 		}
 	}
 }
@@ -89,14 +79,12 @@ func ssrCheckCode(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 
 	}
-	log.Printf(Response.Group_Name)
 	// Response.Group_Name = "WFHomie"
 	// Response.Group_Id = "1"
 	if Response.Group_Id+Response.Group_Name != "" {
 		var lobbycheck bool = LobbyCheck(Response.Group_Id + Response.Group_Name)
 		if lobbycheck == false {
 			var playerName = getPlayername(r)
-			log.Println(playerName)
 			LobbyCreate(playerName, Response.Group_Id+Response.Group_Name, Response.Group_Name, r, w)
 		}
 		http.Redirect(w, r, CurrentBasePageConfig.RootPath+"/ssrEnterLobby?lobby_id="+Response.Group_Id+Response.Group_Name+"&username="+WFHomieusername, http.StatusFound)

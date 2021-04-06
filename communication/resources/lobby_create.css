@@ -1,17 +1,17 @@
-.WFHomie-username {
+#WFHomie-username {
   border: none;
   width: 15ch;
   background-color: #39b0a4;
-  background: repeating-linear-gradient( 90deg, #f6d65c 0, #f6d65c 0, transparent 0, transparent 0) 0 100%/100% 2px no-repeat;
+  background: repeating-linear-gradient( 90deg, #eb553a 0, #eb553a 0, transparent 0, transparent 0) 0 100%/100% 2px no-repeat;
   color: #f6d65c;
   font: 5ch consolas, monospace;
   letter-spacing: 0.5ch;
   margin: 0 10px 10px 10px;
 }
 
-.WFHomie-username:focus {
+#WFHomie-username:focus {
   outline: none;
-  color: #eb553a;
+  color: #f6d65c;
 }
 
 #tokeninput {

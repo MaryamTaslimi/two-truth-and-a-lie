@@ -55,10 +55,10 @@
                     <div style="background-color:#39b0a4; border-radius: 25px; margin:auto;">
                         <input name="token" id="tokeninput" maxlength='1000' required/>
                     </div>
-                    <b id="usernamelabel" style="font-family:SourceSansPro-bold;color:#f6d65c;font-size:3rem;
+                    <b id="usernamelabel" style="font-family:SourceSansPro-bold;color:#eb553a;font-size:3rem;
                     margin:auto; margin-top:10px;">TYPE YOUR NAME</b>
                     <div style="background-color:#39b0a4; border-radius: 25px; margin:auto;">
-                        <input name="username" class="WFHomie-username" spellcheck="false" required />
+                        <input name="username" id="WFHomie-username" spellcheck="false" required />
                     </div>
                     <button id="okbtn" type="submit" form="okform" style="margin-top:10px;
                         grid-column-start: 1;
@@ -575,4 +575,51 @@
 </body>
 
 </html>
+{{end}}
+{{define "enter-user-page"}}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>WFHomie</title>
+    <meta charset="UTF-8" /> {{template "font-decl" .}}
+    <link rel="stylesheet" type="text/css" href="{{.RootPath}}/resources/base.css" />
+    <link rel="stylesheet" type="text/css" href="{{.RootPath}}/resources/lobby_create.css" />
+    <link rel="icon" type="image/png" href="{{.RootPath}}/resources/favicon.png" />
+</head>
+
+<body>
+    <div class="content-wrapper">
+        <noscript><span class="noscript">This website requires JavaScript to run properly.</span></noscript>
+        <div id="create-lobby">
+            <div class="center-container">
+                <form id="okform"
+                style="display: flex; flex-direction: column;" class="input-container" action="{{.RootPath}}/ssrCheckCode" method="POST" enctype="multipart/form-data">
+                    <b id="usernamelabel" style="font-family:SourceSansPro-bold;color:#eb553a;font-size:3rem;
+                    margin:auto; margin-top:20px;">TYPE YOUR NAME</b>
+                    <div style="background-color:#39b0a4; border-radius: 25px; margin:auto;">
+                        <input name="username" id="WFHomie-username" spellcheck="false" required />
+                    </div>
+                    <b style="display:none;">Token</b>
+                    <input style="display:none;" class="input-item" value="{{.WFHomieToken}}" name="token" id="WFHomie-token">
+                    </input>
+                    <button id="okbtn" type="submit" form="okform" style="margin-top:10px;
+                        grid-column-start: 1;
+                        grid-column-end: 3;
+                        font-family: 'SourceSansPro-Bold';
+                        border-radius: 25px;
+                        border: none;
+                        height: 60px;
+                        width: 170px;
+                        background-color: #39b0a4;
+                        color: #eb553a;
+                        font-size: 3rem;
+                        margin-top: 20px;">
+                        OK
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
 {{end}}
