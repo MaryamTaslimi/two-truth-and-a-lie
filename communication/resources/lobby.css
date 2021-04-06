@@ -73,7 +73,7 @@
   padding: 5px;
   display: grid;
   grid-template-columns: 12rem auto 15rem;
-  grid-template-rows: min-content 25rem min-content;
+  grid-template-rows: min-content min-content min-content;
   grid-gap: 10px;
   flex: 1 1;
   margin: 10px 40px 10px 40px;
