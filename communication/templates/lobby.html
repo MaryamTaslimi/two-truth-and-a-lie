@@ -14,14 +14,16 @@
 <body>
     <div class="content-wrapper">
         <noscript><span class="noscript">This website requires JavaScript to run properly.</span></noscript>
-
         <div id="lobby">
-            <span id="rounds-container">
-                <h1 id="rounds" style="color:white;"></h1>
-            </span>
-
-            <div style="display: flex;">
-                <div>
+            <div class="header" style="grid-column-start: 1; grid-column-end: 4;">
+                <img id="wfhomie-scribble-img" src="{{.RootPath}}/resources/wfhomie-scribble.png"
+                    alt="WFHomie-Scribble" />
+            </div>
+            <div id="top-row">
+                <div style="width: 16.5rem">
+                    <p1 id="rounds"></p1>
+                </div>
+                <div id="top-row-middle-part">
                     <!-- this button is basically behaving like a checkbox, but in order to
                 have a uniform look with the other buttons in the header, we are not using
                 a checkbox anymore. -->
@@ -34,34 +36,16 @@
                         title="Change your name">
                         <img src="{{.RootPath}}/resources/user.svg" class="header-button-image" />
                     </button> -->
+                    <div id="word-container" style="flex: 1; align-self: center; justify-content: baseline;"></div>
                 </div>
-                <div id="word-container" style="flex: 1; align-self: center; justify-content: baseline;"></div>
-                <div>
-                    <!-- <button onclick="showKickDialog()" class="dialog-button header-button" alt="Votekick a player"
-                        title="Votekick a player">
-                        <img src="{{.RootPath}}/resources/kick.png" class="header-button-image" />
-                    </button> -->
 
-                    <!-- <button onclick="showLobbySettingsDialog()" class="dialog-button header-button"
-                        alt="Change lobby settings" title="Change lobby settings">
-                        <img src="{{.RootPath}}/resources/settings.svg" class="header-button-image" />
-                    </button> -->
+                <div style="width: 16.5rem;">
+                    <span id="time-container">
+                        <p1 id="time-left">75</p1>
+                    </span>
                 </div>
             </div>
-
-            <span style="display: flex; flex-direction: row;">
-                <img src="{{.RootPath}}/resources/clock.png" style="height: 40px; width: auto; margin: auto;"
-                    alt="time left" />
-                <span
-                    style="height: 40px; width: 150px;display:table; background-color:#00569e; border-radius: 25px; margin: auto;">
-                    <p1 id="time-left" style="display:table-cell;   vertical-align: middle;
-                    padding: auto; color:white; text-align: center;"> Time left: ∞ </p1>
-                </span>
-            </span>
             <div id="player-container">
-                <div>
-                    <h1 style="color:#f6d65c; font-size: 1rem; margin:10px;">Ranking</h1>
-                </div>
                 <div id="player-container-old"></div>
             </div>
             <div>
@@ -99,7 +83,7 @@
                                 <div id="start-dialog" class="center-dialog">
                                     <span class="dialog-title">Start the game</span>
                                     <div class="center-dialog-content">
-                                        <div style="flex-direction: column;">
+                                        <div style="flex-direction: column; display:none;">
                                             Change your username:
                                             <div style="display: flex; flex-direction: row;">
                                                 <input class="namechange-field" type="text"
@@ -122,9 +106,8 @@
                                     <span class="dialog-title">Game hasn't started</span>
                                     <div class="center-dialog-content">
                                         <div style="display: flex; flex-direction: column;">
-                                            Please wait for your lobby host to start the game.<br /><br />
-                                            Change your username:
-                                            <div style="display: flex; flex-direction: row;">
+                                            Please wait for your lobby host to start the game.<br /><br />                                            
+                                            <div style="display: flex; flex-direction: row; display:none;">
                                                 <input class="namechange-field" type="text"
                                                     id="namechange-field-unstarted-dialog"></input>
                                                 <button class="dialog-button"
@@ -237,149 +220,147 @@
                                 </div>
                             </div>
                         </div>
-                        <div id="toolbox" style="top: 420px;">
-                            <input class="toolbox-group" type="color" id="color-picker" onchange="setColor()"
-                                value="#000000" alt="Current color (Click to change)"
-                                title="Current color (Click to change)">
-                            <div class="color-button-container toolbox-group">
-                                <!-- These buttons use !important for their color in order
-                        to prevent hover and active colors to appear. -->
-                                <div class="color-button-row">
-                                    <button class="color-button" style="background-color: #ffffff !Important"
-                                        onmousedown="setColor('#ffffff')" onclick="setColor('#ffffff')"></button>
-                                    <button class="color-button" style="background-color: #c1c1c1 !Important"
-                                        onmousedown="setColor('#c1c1c1')" onclick="setColor('#c1c1c1')"></button>
-                                    <button class="color-button" style="background-color: #ef130b !Important"
-                                        onmousedown="setColor('#ef130b')" onclick="setColor('#ef130b')"></button>
-                                    <button class="color-button" style="background-color: #ff7100 !Important"
-                                        onmousedown="setColor('#ff7100')" onclick="setColor('#ff7100')"></button>
-                                    <button class="color-button" style="background-color: #ffe400 !Important"
-                                        onmousedown="setColor('#ffe400')" onclick="setColor('#ffe400')"></button>
-                                    <button class="color-button" style="background-color: #00cc00 !Important"
-                                        onmousedown="setColor('#00cc00')" onclick="setColor('#00cc00')"></button>
-                                    <button class="color-button" style="background-color: #00b2ff !Important"
-                                        onmousedown="setColor('#00b2ff')" onclick="setColor('#00b2ff')"></button>
-                                    <button class="color-button" style="background-color: #231fd3 !Important"
-                                        onmousedown="setColor('#231fd3')" onclick="setColor('#231fd3')"></button>
-                                    <button class="color-button" style="background-color: #a300ba !Important"
-                                        onmousedown="setColor('#a300ba')" onclick="setColor('#a300ba')"></button>
-                                    <button class="color-button" style="background-color: #d37caa !Important"
-                                        onmousedown="setColor('#d37caa')" onclick="setColor('#d37caa')"></button>
-                                    <button class="color-button" style="background-color: #a0522d !Important"
-                                        onmousedown="setColor('#a0522d')" onclick="setColor('#a0522d')"></button>
-                                </div>
-                                <div class="color-button-row">
-                                    <button class="color-button" style="background-color: #000000 !Important"
-                                        onmousedown="setColor('#000000')" onclick="setColor('#000000')"></button>
-                                    <button class="color-button" style="background-color: #4c4c4c !Important"
-                                        onmousedown="setColor('#4c4c4c')" onclick="setColor('#4c4c4c')"></button>
-                                    <button class="color-button" style="background-color: #740b07 !Important"
-                                        onmousedown="setColor('#740b07')" onclick="setColor('#740b07')"></button>
-                                    <button class="color-button" style="background-color: #c23800 !Important"
-                                        onmousedown="setColor('#c23800')" onclick="setColor('#c23800')"></button>
-                                    <button class="color-button" style="background-color: #e8a200 !Important"
-                                        onmousedown="setColor('#e8a200')" onclick="setColor('#e8a200')"></button>
-                                    <button class="color-button" style="background-color: #005510 !Important"
-                                        onmousedown="setColor('#005510')" onclick="setColor('#005510')"></button>
-                                    <button class="color-button" style="background-color: #00569e !Important"
-                                        onmousedown="setColor('#00569e')" onclick="setColor('#00569e')"></button>
-                                    <button class="color-button" style="background-color: #0e0865 !Important"
-                                        onmousedown="setColor('#0e0865')" onclick="setColor('#0e0865')"></button>
-                                    <button class="color-button" style="background-color: #550069 !Important"
-                                        onmousedown="setColor('#550069')" onclick="setColor('#550069')"></button>
-                                    <button class="color-button" style="background-color: #a75574 !Important"
-                                        onmousedown="setColor('#a75574')" onclick="setColor('#a75574')"></button>
-                                    <button class="color-button" style="background-color: #63300d !Important"
-                                        onmousedown="setColor('#63300d')" onclick="setColor('#63300d')"></button>
-                                </div>
-                            </div>
-                            <!--The following buttons als override onmousedown and onmouseup to make
-                        selection more foolproof. This was done, because many people seem to
-                        only make half a click (either up or down) in the right location.-->
-                            <div class="pencil-sizes-container toolbox-group">
-                                <label for="tool-type-pencil">
-                                    <input id="tool-type-pencil" class="custom-check-or-radio line-width-button"
-                                        onchange="chooseTool(pen)" type="radio" name="tool-type" checked>
-                                    <div onmousedown="document.getElementById('tool-type-pencil').click()"
-                                        onmouseup="document.getElementById('tool-type-pencil').click()"
-                                        class="line-width-button-content">
-                                        <span id="tool-type-pencil-button" style="font-size: 1.5rem;">✏️</span>
-                                    </div>
-                                </label>
-                                <label for="tool-type-fill">
-                                    <input id="tool-type-fill" class="custom-check-or-radio line-width-button"
-                                        onchange="chooseTool(fillBucket)" type="radio" name="tool-type">
-                                    <div onmousedown="document.getElementById('tool-type-fill').click()"
-                                        onmouseup="document.getElementById('tool-type-fill').click()"
-                                        class="line-width-button-content">
-                                        <img alt="Fill" title="Fill tool" src="{{.RootPath}}/resources/fill.svg"
-                                            width="35px" height="35px" />
-                                    </div>
-                                </label>
-                                <label for="tool-type-rubber">
-                                    <input id="tool-type-rubber" class="custom-check-or-radio line-width-button"
-                                        onchange="chooseTool(rubber)" type="radio" name="tool-type">
-                                    <div onmousedown="document.getElementById('tool-type-rubber').click()"
-                                        onmouseup="document.getElementById('tool-type-rubber').click()"
-                                        class="line-width-button-content">
-                                        <img alt="Rubber" title="Rubber tool" src="{{.RootPath}}/resources/rubber.svg"
-                                            width="35px" height="35px" />
-                                    </div>
-                                </label>
-                            </div>
-                            <!--We won't make this button easier to click, as there's no going back. -->
-                            <button class="canvas-button toolbox-group" style="font-size: 1.5rem;"
-                                onclick="clearCanvasAndSendEvent()" alt="Clear the canvas" title="Clear the canvas">🗑
-                            </button>
-                            <div class="pencil-sizes-container toolbox-group">
-                                <label for="size8">
-                                    <input id="size8" class="custom-check-or-radio line-width-button"
-                                        onchange="setLineWidth(8)" type="radio" name="line-width" checked>
-                                    <div onmousedown="document.getElementById('size8').click()"
-                                        onmouseup="document.getElementById('size8').click()"
-                                        class="line-width-button-content">
-                                        <div id="size-8-button" class="dot"></div>
-                                    </div>
-                                </label>
-                                <label for="size16">
-                                    <input id="size16" class="custom-check-or-radio line-width-button"
-                                        onchange="setLineWidth(16)" type="radio" name="line-width">
-                                    <div onmousedown="document.getElementById('size16').click()"
-                                        onmouseup="document.getElementById('size16').click()"
-                                        class="line-width-button-content">
-                                        <div id="size-16-button" class="dot"></div>
-                                    </div>
-                                </label>
-                                <label for="size24">
-                                    <input id="size24" class="custom-check-or-radio line-width-button"
-                                        onchange="setLineWidth(24)" type="radio" name="line-width">
-                                    <div onmousedown="document.getElementById('size24').click()"
-                                        onmouseup="document.getElementById('size24').click()"
-                                        class="line-width-button-content">
-                                        <div id="size-24-button" class="dot"></div>
-                                    </div>
-                                </label>
-                                <label for="size32">
-                                    <input id="size32" class="custom-check-or-radio line-width-button"
-                                        onchange="setLineWidth(32)" type="radio" name="line-width">
-                                    <div onmousedown="document.getElementById('size32').click()"
-                                        onmouseup="document.getElementById('size32').click()"
-                                        class="line-width-button-content">
-                                        <div id="size-32-button" class="dot"></div>
-                                    </div>
-                                </label>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
 
             <div id="chat" style="max-height: 534px;">
+                <div id="toolbox">
+                    <div class="pencil-sizes-container toolbox-group">
+                        <label for="tool-type-pencil">
+                            <input id="tool-type-pencil" class="custom-check-or-radio line-width-button"
+                                onchange="chooseTool(pen)" type="radio" name="tool-type" checked>
+                            <div onmousedown="document.getElementById('tool-type-pencil').click()"
+                                onmouseup="document.getElementById('tool-type-pencil').click()"
+                                class="line-width-button-content">
+                                <img src="{{.RootPath}}/resources/pencil.gif" width="35px" height="35px">
+                            </div>
+                        </label>
+                        <label for="tool-type-rubber">
+                            <input id="tool-type-rubber" class="custom-check-or-radio line-width-button"
+                                onchange="chooseTool(rubber)" type="radio" name="tool-type">
+                            <div onmousedown="document.getElementById('tool-type-rubber').click()"
+                                onmouseup="document.getElementById('tool-type-rubber').click()"
+                                class="line-width-button-content">
+                                <img alt="Rubber" title="Rubber tool" src="{{.RootPath}}/resources/Rubber.gif"
+                                    width="35px" height="35px" />
+                            </div>
+                        </label>
+                        <label for="tool-type-fill">
+                            <input id="tool-type-fill" class="custom-check-or-radio line-width-button"
+                                onchange="chooseTool(fillBucket)" type="radio" name="tool-type">
+                            <div onmousedown="document.getElementById('tool-type-fill').click()"
+                                onmouseup="document.getElementById('tool-type-fill').click()"
+                                class="line-width-button-content">
+                                <img alt="Fill" title="Fill tool" src="{{.RootPath}}/resources/fill.gif" width="35px"
+                                    height="35px" />
+                            </div>
+                        </label>
+                    </div>
+                    <button class="canvas-button toolbox-group" style="font-size: 1.5rem;"
+                        onclick="clearCanvasAndSendEvent()" alt="Clear the canvas" title="Clear the canvas"><img
+                            alt="Fill" title="Fill tool" src="{{.RootPath}}/resources/clear.gif" width="35px"
+                            height="35px" />
+                    </button>
+                    <input type="color" id="color-picker" onchange="setColor()" value="#000000"
+                        alt="Current color (Click to change)" title="Current color (Click to change)">
+                    <div class="pencil-sizes-container toolbox-group">
+                        <label for="size8">
+                            <input id="size8" class="custom-check-or-radio line-width-button" onchange="setLineWidth(8)"
+                                type="radio" name="line-width" checked>
+                            <div onmousedown="document.getElementById('size8').click()"
+                                onmouseup="document.getElementById('size8').click()" class="line-width-button-content">
+                                <div id="size-8-button" class="dot"></div>
+                            </div>
+                        </label>
+                        <label for="size16">
+                            <input id="size16" class="custom-check-or-radio line-width-button"
+                                onchange="setLineWidth(16)" type="radio" name="line-width">
+                            <div onmousedown="document.getElementById('size16').click()"
+                                onmouseup="document.getElementById('size16').click()" class="line-width-button-content">
+                                <div id="size-16-button" class="dot"></div>
+                            </div>
+                        </label>
+                        <label for="size24">
+                            <input id="size24" class="custom-check-or-radio line-width-button"
+                                onchange="setLineWidth(24)" type="radio" name="line-width">
+                            <div onmousedown="document.getElementById('size24').click()"
+                                onmouseup="document.getElementById('size24').click()" class="line-width-button-content">
+                                <div id="size-24-button" class="dot"></div>
+                            </div>
+                        </label>
+                        <label for="size32">
+                            <input id="size32" class="custom-check-or-radio line-width-button"
+                                onchange="setLineWidth(32)" type="radio" name="line-width">
+                            <div onmousedown="document.getElementById('size32').click()"
+                                onmouseup="document.getElementById('size32').click()" class="line-width-button-content">
+                                <div id="size-32-button" class="dot"></div>
+                            </div>
+                        </label>
+                    </div>
+                    <div class="color-button-container toolbox-group">
+                        <!-- These buttons use !important for their color in order
+                to prevent hover and active colors to appear. -->
+                        <div class="color-button-row">
+                            <button class="color-button" style="background-color: #ffffff !Important"
+                                onmousedown="setColor('#ffffff')" onclick="setColor('#ffffff')"></button>
+                            <button class="color-button" style="background-color: #c1c1c1 !Important"
+                                onmousedown="setColor('#c1c1c1')" onclick="setColor('#c1c1c1')"></button>
+                            <button class="color-button" style="background-color: #ef130b !Important"
+                                onmousedown="setColor('#ef130b')" onclick="setColor('#ef130b')"></button>
+                            <button class="color-button" style="background-color: #ff7100 !Important"
+                                onmousedown="setColor('#ff7100')" onclick="setColor('#ff7100')"></button>
+                            <button class="color-button" style="background-color: #ffe400 !Important"
+                                onmousedown="setColor('#ffe400')" onclick="setColor('#ffe400')"></button>
+                            <button class="color-button" style="background-color: #00cc00 !Important"
+                                onmousedown="setColor('#00cc00')" onclick="setColor('#00cc00')"></button>
+                            <button class="color-button" style="background-color: #00b2ff !Important"
+                                onmousedown="setColor('#00b2ff')" onclick="setColor('#00b2ff')"></button>
+                            <button class="color-button" style="background-color: #231fd3 !Important"
+                                onmousedown="setColor('#231fd3')" onclick="setColor('#231fd3')"></button>
+                            <button class="color-button" style="background-color: #a300ba !Important"
+                                onmousedown="setColor('#a300ba')" onclick="setColor('#a300ba')"></button>
+                            <button class="color-button" style="background-color: #d37caa !Important"
+                                onmousedown="setColor('#d37caa')" onclick="setColor('#d37caa')"></button>
+                            <button class="color-button" style="background-color: #a0522d !Important"
+                                onmousedown="setColor('#a0522d')" onclick="setColor('#a0522d')"></button>
+                        </div>
+                        <div class="color-button-row">
+                            <button class="color-button" style="background-color: #000000 !Important"
+                                onmousedown="setColor('#000000')" onclick="setColor('#000000')"></button>
+                            <button class="color-button" style="background-color: #4c4c4c !Important"
+                                onmousedown="setColor('#4c4c4c')" onclick="setColor('#4c4c4c')"></button>
+                            <button class="color-button" style="background-color: #740b07 !Important"
+                                onmousedown="setColor('#740b07')" onclick="setColor('#740b07')"></button>
+                            <button class="color-button" style="background-color: #c23800 !Important"
+                                onmousedown="setColor('#c23800')" onclick="setColor('#c23800')"></button>
+                            <button class="color-button" style="background-color: #e8a200 !Important"
+                                onmousedown="setColor('#e8a200')" onclick="setColor('#e8a200')"></button>
+                            <button class="color-button" style="background-color: #005510 !Important"
+                                onmousedown="setColor('#005510')" onclick="setColor('#005510')"></button>
+                            <button class="color-button" style="background-color: #00569e !Important"
+                                onmousedown="setColor('#00569e')" onclick="setColor('#00569e')"></button>
+                            <button class="color-button" style="background-color: #0e0865 !Important"
+                                onmousedown="setColor('#0e0865')" onclick="setColor('#0e0865')"></button>
+                            <button class="color-button" style="background-color: #550069 !Important"
+                                onmousedown="setColor('#550069')" onclick="setColor('#550069')"></button>
+                            <button class="color-button" style="background-color: #a75574 !Important"
+                                onmousedown="setColor('#a75574')" onclick="setColor('#a75574')"></button>
+                            <button class="color-button" style="background-color: #63300d !Important"
+                                onmousedown="setColor('#63300d')" onclick="setColor('#63300d')"></button>
+                        </div>
+                    </div>
+                    <!--The following buttons als override onmousedown and onmouseup to make
+                selection more foolproof. This was done, because many people seem to
+                only make half a click (either up or down) in the right location.-->
+
+                    <!--We won't make this button easier to click, as there's no going back. -->
+                </div>
                 <div id="message-container-outer">
                     <div id="message-container"></div>
                 </div>
                 <form class="message-input-form" onsubmit="return sendMessage()">
-                    <input id="message-input" type="text" autocomplete="off" style="color:white;"
+                    <input id="message-input" type="text" autocomplete="off" style="color:#495057;"
                         placeholder="Type your guesses and messages" />
                 </form>
             </div>
@@ -387,7 +368,7 @@
                 <!-- <div>
                     <h1 style="color:white; font-size: 2rem; margin:10px;">Players</h1>
                 </div> -->
-                <div id="jitsi" style="border-radius: 25px; margin:10px;"></div>
+                <div id="jitsi" style="margin:10px;"></div>
 
             </div>
         </div>
@@ -611,11 +592,12 @@
             //Resize canvas HTML element properly.
             drawingBoard.width = drawingBoard.clientWidth;
             drawingBoard.height = drawingBoard.clientHeight;
-            toolBox.height = toolBox.clientHeight;
+            // toolBox.height = toolBox.clientHeight;
             setLineWidth(localLineWidthUnscaled);
-            chat.style.height = drawingBoard.height + "px";
-            toolBox.style.top = drawingBoard.height - toolBox.height + "px";
+            chat.style.height = drawingBoard.height - toolBox.height + "px";
+            // toolBox.style.top = drawingBoard.height - toolBox.height + "px";
             document.getElementById("player-container").style.height = drawingBoard.height + "px";
+            document.getElementById("top-row-middle-part").style.width = drawingBoard.width - 48 + "px";
         }
 
         function scaleUpFactor() {
@@ -1110,7 +1092,7 @@
                 timeLeft.innerText = Math.floor(roundEndTime / 1000);
                 roundEndTime -= 500;
             } else {
-                timeLeft.innerText = "Time Left: ∞";
+                timeLeft.innerText = "75";
             }
         }, 500);
 
@@ -1121,7 +1103,7 @@
             if (author != "") {
                 if (author === "You")
                     messageContainer.innerHTML += `<div class="message ` + styleClass + `">
-                            <span style="color:#1e00f8;">` + author + `:</span>
+                            <span style="color:bLack;">` + author + `:</span>
                             <span class="message-content">` + message + `</span>
                         </div>`;
                 else
@@ -1162,7 +1144,7 @@
                 else
                     newPlayerElement += '<span></span>';
                 if (player.state === "drawing") {
-                    newPlayerElement += '<span class="rank">✏️</span>';
+                    newPlayerElement += '<span class="rank" style="transition: transform 50ms ease-in-out;"><img src="{{.RootPath}}/resources/pencil.gif" width="35px" height="35px"></span>';
                 } else if (player.state === "standby") {
                     newPlayerElement += '<span>✔️</span>';
                 } else
@@ -1177,8 +1159,9 @@
                     '">' + player.name + '</span>' +
                     '<div class="score-and-status" style="grid-column-start:2;grid-column-end:3;">' +
                     '<div>' +
-                    '<span class="playerscore" style="color:#39b0a4; font-weight:bold;">' + player.score + '</span>' +
-                    '<span class="last-turn-score">(Last turn: ' + player.lastScore + ')</span>' +
+                    '<span class="playerscore" style="font-weight:bold;">' + player.score + ' Points</span>'
+                    // '<span class="last-turn-score">(Last turn: ' + player.lastScore + ')</span>' 
+                    +
                     '</div>';
 
                 newPlayerElement += '</div></div>';
@@ -1186,7 +1169,7 @@
             });
         }
         function applyRounds(round, maxRound) {
-            roundsSpan.innerText = 'Round ' + round + ' of ' + maxRound;
+            roundsSpan.innerText = + round + '/' + maxRound;
         }
 
         function applyWordHints(wordHints) {
@@ -1507,7 +1490,7 @@
             var domain = "meet.jit.si";
             var options = {
                 roomName: '{{.LobbyID}}',
-                width: 1200,
+                width: drawingBoard.clientWidth + 460,
                 height: 150,
                 allow: "microphone; camera",
                 parentNode: document.getElementById("jitsi"),

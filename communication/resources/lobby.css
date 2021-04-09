@@ -1,537 +1,645 @@
-.auhtor-message {
-  color: white;
+#time-container {
+    background: #f0f0f0;
+    border-radius: 50%;
+    border: 3px solid #000;
+    width: 55px;
+    height: 55px;
+    padding: 0px 0 0 1px;
+    text-align: center;
+    font-size: 21px;
+    position: absolute;
+    color: #000;
+    font-family: Roboto;
+    font-weight: 700;
+    vertical-align: middle;
+    box-shadow: 3px 3px 6px rgb(33 33 33 / 20%);
+    line-height: 2.2;
 }
+
+#time-container::before {
+    position: absolute;
+    top: -1px;
+    bottom: -1px;
+    left: -1px;
+    right: -1px;
+    border: 5px solid #a90101;
+    border-radius: 50%;
+    content: "";
+}
+
+#time-container::after{
+    width: 90px;
+    height: 90px;
+    left: -20px;
+    position: absolute;
+    top: -20px;
+    background-image: url(data:image/gif;base64,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AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA);
+    background-size: cover;
+    content: "";
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+#top-row {
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    background-color: #fff;
+    display: grid;
+    grid-template-columns: 16.5rem auto 16.5rem;
+    grid-column-start: 1;
+    grid-column-end: 4;
+    border-bottom: 2px solid rgba(0, 0, 0, .25);
+    height: 60px;
+}
+
+.auhtor-message {
+    color: white;
+}
+
 .auhtor-message-self {
-  color: #1e00f8;
+    color: Black;
 }
 
 #jitsicontainer {
-  display: flex;
-  flex-direction: column;
-  background-color: #39b0a4;
-  border-radius: 25px;
-  align-items: center;
-  justify-content: center;
-  grid-column-start: 1;
-  grid-column-end: 4;
-  grid-row-start: 3;
-  grid-row-end: 4;
-  width: -moz-fit-content;
-  width: fit-content;
-  margin: auto;
-  padding: 10px;
+    display: flex;
+    flex-direction: column;
+    background-color: #fff;
+    align-items: center;
+    justify-content: center;
+    grid-column-start: 1;
+    grid-column-end: 4;
+    grid-row-start: 4;
+    grid-row-end: 5;
+    width: -moz-fit-content;
+    width: fit-content;
+    margin: auto;
+    padding: 10px;
+    border-radius: 15px;
+    margin-top: 20px;
 }
 
 #rounds {
-  font-size: 1.7rem;
-  display: table-cell;
-  vertical-align: middle;
-  padding: auto;
+    background: #fff;
+    width: 55px;
+    height: 55px;
+    padding: 0px 0 0 0px;
+    text-align: center;
+    position: relative;
+    font-size: 22px;
+    border-radius: 50%;
+    border: 3px solid #000;
+    color: #000;
+    font-family: Roboto;
+    font-weight: 700;
+    vertical-align: bottom;
+    pointer-events: none;
+    user-select: none;
+    box-shadow: 3px 3px 6px rgb(33 33 33 / 20%);
+    line-height: 2.2;
+    float: right;
+}
+
+#rounds::before {
+    position: absolute;
+    top: -1px;
+    bottom: -1px;
+    left: -1px;
+    right: -1px;
+    border: 5px solid #a90101;
+    border-radius: 50%;
+    content: "";
+}
+
+#time-container::after{
+    width: 90px;
+    height: 90px;
+    left: -20px;
+    position: absolute;
+    top: -20px;
+    background-image: url(data:image/gif;base64,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AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA);
+    background-size: cover;
+    content: "";
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
 }
 
 #rounds-container {
-  display: table;
-  border-radius: 25px;
-  border: none;
-  height: 40px;
-  width: 180px;
-  background-color: #00569e;
-  color: white;
-  font-size: larger;
-  margin: auto;
-  padding-bottom: 5px;
+    border: none;
+    height: 40px;
+    margin: auto;
+    min-width: 15rem;
 }
 
 #time-left {
-  font-size: 1.5rem;
+    font-size: 1.5rem;
 }
 
 #word-container {
-  text-align: center;
+    text-align: center;
 }
 
 .guess-letter-underline {
-  border-bottom: 0.3rem #eb553a solid;
+    border-bottom: 0.3rem #eb553a solid;
 }
 
 .guess-letter {
-  font-family: monospace;
-  font-weight: bold;
-  font-size: 1.5rem;
-  color: #39b0a4;
+    font-family: monospace;
+    font-weight: bold;
+    font-size: 1.5rem;
+    color: #39b0a4;
 }
 
-.guess-letter + .guess-letter {
-  margin-left: 0.5rem;
+.guess-letter+.guess-letter {
+    margin-left: 0.5rem;
 }
+
 
 /*
 
 */
 
 #lobby {
-  padding: 5px;
-  display: grid;
-  grid-template-columns: 12rem auto 15rem;
-  grid-template-rows: min-content min-content min-content;
-  grid-gap: 10px;
-  flex: 1 1;
-  margin: 10px 40px 10px 40px;
+    padding: 5px;
+    display: grid;
+    grid-template-columns: 15rem auto 15rem;
+    grid-template-rows: min-content min-content min-content min-content;
+    flex: 1 1;
+    margin: 20px 70px 10px 70px;
 }
+
 
 /*
  * These two ensure that the drawing board has an aspect ratio of 16/9.
  * Technically we could make this configurable by setting the padding via JS.
  */
+
 #drawing-board-wrapper {
-  width: 100%;
-  height: 0;
-  padding-bottom: 49%;
-  position: relative;
-  grid-row-start: 2;
-  grid-row-end: 3;
+    width: 100%;
+    height: 0;
+    padding-bottom: 49.8%;
+    position: relative;
+    grid-row-start: 3;
+    grid-row-end: 4;
 }
 
 #drawing-board-inner-wrapper {
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
 }
 
 #drawing-board {
-  position: absolute;
-  background-color: white;
-  width: 100%;
-  height: 100%;
-  border-radius: 25px;
+    position: absolute;
+    background-color: white;
+    width: 100%;
+    height: 100%;
 }
 
 #center-dialogs {
-  pointer-events: none;
-  touch-action: none;
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  z-index: 20;
+    pointer-events: none;
+    touch-action: none;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 20;
 }
 
 #center-dialog-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: absolute;
-  width: 100%;
-  height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    width: 100%;
+    height: 100%;
 }
 
 .center-dialog {
-  border-radius: 25px;
-  pointer-events: all;
-  touch-action: auto;
-  background-color: rgb(225, 221, 221);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  /* All dialogs are initially invisible. */
-  visibility: hidden;
-  padding: 1rem;
-  /* A dialog should never fully hide the canvas. */
-  max-width: 80%;
-  max-height: 80%;
+    pointer-events: all;
+    touch-action: auto;
+    background-color: rgb(225, 221, 221);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    /* All dialogs are initially invisible. */
+    visibility: hidden;
+    padding: 1rem;
+    /* A dialog should never fully hide the canvas. */
+    max-width: 80%;
+    max-height: 80%;
+    border-radius: 10px !important;
 }
 
 #lobby-wfhomie-scribble-img {
-  grid-column-start: 1;
-  grid-column-end: 5;
+    grid-column-start: 1;
+    grid-column-end: 5;
 }
 
 #chat {
-  min-width: 15rem;
-  height: 100%;
-  display: grid;
-  grid-template-rows: auto fit-content(100%);
-  grid-column: 3;
-  grid-row-start: 2;
-  grid-row-end: 3;
+    min-width: 15rem;
+    height: 100%;
+    display: grid;
+    grid-template-rows: fit-content(100%) auto fit-content(100%);
+    grid-column: 3;
+    grid-row-start: 3;
+    grid-row-end: 4;
+    border-left: 2px solid rgba(0, 0, 0, .25);
+    background: #fff;
+    border-bottom-right-radius: 15px;
 }
 
 #message-container-outer {
-  padding: 10px;
-  background-color: white;
-  border-radius: 25px;
-  background-color: #eb553a;
-  overflow-y: scroll;
+    padding: 10px;
+    background-color: #fff;
+    overflow-y: scroll;
+    border-bottom: 2px solid rgba(0, 0, 0, .25);
 }
 
 #message-container-outer::-webkit-scrollbar-thumb {
-  background-color: #f6d65c;
-  border: 4px solid transparent;
-  border-radius: 25px;
-  background-clip: padding-box;
+    background-color: rgba(0, 0, 0, .25);
+    border: 4px solid transparent;
+    background-clip: padding-box;
 }
+
 #message-container-outer::-webkit-scrollbar {
-  width: 16px;
+    width: 16px;
 }
 
 #message-container {
-  padding: 10px;
-  border-radius: 25px;
-  background-color: #eb553a;
+    padding: 10px;
+    background-color: #f5f5f5;
 }
 
 #word-container {
-  justify-items: center;
+    justify-items: center;
 }
 
 .chat-name {
-  font-weight: bold;
-  color: white;
+    font-weight: bold;
+    color: black;
 }
 
 .chat-name:after {
-  content: ":";
+    content: ":";
 }
 
 .correct-guess-message {
-  color: rgb(38, 187, 38);
+    color: rgb(38, 187, 38);
 }
 
 .close-guess-message {
-  color: rgb(25, 166, 166);
+    color: rgb(25, 166, 166);
 }
 
 .message-input-form {
-  display: flex;
+    display: flex;
 }
 
 #message-input {
-  flex: 1;
-  border: 0;
-  padding: 10px;
-  margin-top: 10px;
-  font-family: "SourceSansPro-Regular";
-  background-color: #39b0a4;
-  border-radius: 25px;
+    flex: 1;
+    border: 0;
+    padding: 10px;
+    font-family: "SourceSansPro-Regular";
+    background-color: #fff;
+    border-bottom-right-radius: 15px;
 }
 
 #message-input::placeholder {
-  color: #c7c7cd;
-  font-size: 1em;
-  text-align: center;
+    color: rgba(0, 0, 0, .25);
+    font-size: 1em;
+    text-align: center;
 }
 
 #message-input:focus {
-  outline: none;
-  background-color: #377eae;
+    outline: none;
+    background-color: #fff;
 }
 
 .dialog-title {
-  margin-bottom: 1rem;
-  font-size: 2.75rem;
-  font-weight: bold;
-  color: #1e00f8;
+    margin-bottom: 1rem;
+    font-size: 2rem;
+    font-weight: bold;
+    color: #212529;
 }
 
 .word-button-container {
-  display: flex;
-  flex-direction: row;
-  margin-left: 20px;
-  margin-right: 20px;
+    display: flex;
+    flex-direction: row;
+    margin-left: 20px;
+    margin-right: 20px;
 }
 
 .dialog-button {
-  border: none;
-  background-color: white;
-  padding: 0.5rem 1rem 0.5rem 1rem;
-  border-radius: 25px;
-  font-family: SourceSansPro-Bold;
-  font-size: 1.5rem;
+    border: none;
+    background-color: white;
+    padding: 0.5rem 1rem 0.5rem 1rem;
+    font-family: SourceSansPro-Bold;
+    font-size: 1.5rem;
+    border-radius: 10px;
 }
 
 .button-center-wrapper {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-top: 1em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1em;
 }
 
-.dialog-button + .dialog-button {
-  margin-left: 0.25rem;
+.dialog-button+.dialog-button {
+    margin-left: 0.25rem;
 }
 
 .dialog-close-button {
-  margin-top: 1rem;
+    margin-top: 1rem;
 }
 
 button:hover,
 input[type="button"]:hover,
 .line-width-button-content:hover,
 #color-picker:hover {
-  /** Important insures it won't be prevented by a 'transparent' main color*/
-  background-color: #39b0a4 !important;
+    /** Important insures it won't be prevented by a 'transparent' main color*/
+    background-color: #9300ff !important;
 }
 
 button:active,
 input[type="button"]:active,
 #color-picker:active {
-  /** Important insures it won't be prevented by a 'transparent' main color*/
-  background-color: #f6d65c !important;
+    /** Important insures it won't be prevented by a 'transparent' main color*/
+    background-color: #f6d65c !important;
 }
 
 .header-button {
-  padding: 0.2rem;
-  background-color: transparent;
+    padding: 0.2rem;
+    background-color: transparent;
 }
 
 .header-button-image {
-  width: 1.7rem;
-  height: 1.7rem;
-  /** Without these two, the button has too much height. */
-  display: inline-block;
-  vertical-align: middle;
+    width: 1.7rem;
+    height: 1.7rem;
+    /** Without these two, the button has too much height. */
+    display: inline-block;
+    vertical-align: middle;
 }
 
 .dot {
-  background-color: black;
-  border-radius: 50%;
+    background-color: black;
+    border-radius: 50%;
 }
 
-.line-width-button + .line-width-button-content {
-  height: 40px;
-  width: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 5px;
+.line-width-button+.line-width-button-content {
+    height: 40px;
+    width: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    margin-right: 5px;
 }
 
 .line-width-button-content {
-  background-color: rgb(218, 218, 218);
+    background-color: rgb(218, 218, 218);
 }
 
-.line-width-button:checked + .line-width-button-content {
-  background-color: #00569e;
+.line-width-button:checked+.line-width-button-content {
+    background-color: rgb(94, 9, 94);
 }
 
 #color-picker {
-  border: 0.5;
-  background-color: rgb(218, 218, 218);
-  height: 40px;
-  width: 40px;
-  padding: 0;
-  border-radius: 5px;
+    border: 0.5;
+    background-color: rgb(218, 218, 218);
+    height: 40px;
+    width: 40px;
+    padding: 0;
+    border-radius: 5px;
 }
 
 @-moz-document url-prefix() {
-  #color-picker {
-    padding: 5px;
-  }
+    #color-picker {
+        padding: 5px;
+    }
 }
 
 .canvas-button {
-  height: 40px;
-  width: 40px;
-  border: 0;
-  padding: 0;
-  background-color: rgb(218, 218, 218);
-  border-radius: 5px;
+    height: 40px;
+    width: 40px;
+    border: 0;
+    padding: 0;
+    background-color: rgb(218, 218, 218);
+    border-radius: 5px;
 }
 
 .canvas-button::-moz-focus-inner {
-  border: 0;
+    border: 0;
 }
 
 .color-button-container {
-  border: 0px solid gray;
-  display: flex;
-  flex-direction: column;
-  height: 48px;
+    border: 0px solid gray;
+    display: flex;
+    flex-direction: column;
+    height: 48px;
 }
 
 .color-button-row {
-  display: flex;
-  flex-direction: row;
+    display: flex;
+    flex-direction: row;
 }
 
 .color-button {
-  height: 20px;
-  width: 20px;
-  border: 0;
-  border-radius: 5px;
+    height: 20px;
+    width: 20px;
+    border-color: rgba(0, 0, 0, .25);
+    border-radius: 50%;
 }
 
 .color-button::-moz-focus-inner {
-  border: 0;
+    border: 0;
 }
 
 .system-message {
-  color: #005510;
+    color: #005510;
 }
 
 #toolbox {
-  position: absolute;
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  left: 5%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    left: 5%;
+    background-color: #fff;
+    border-bottom: 2px solid rgba(0, 0, 0, .25);
+    justify-content: center;
+    padding-top: 10px;
 }
 
 .toolbox-group {
-  margin-bottom: 10px;
-  margin-right: 10px;
+    margin-bottom: 10px;
+    margin-right: 10px;
+}
+
+.toolbox-group {
+    margin-bottom: 10px;
+    margin-right: 10px;
 }
 
 .toolbox-group:last-child {
-  margin-right: 0;
+    margin-right: 0;
 }
 
 .pencil-sizes-container {
-  display: flex;
+    display: flex;
 }
 
 #player-container {
-  display: flex;
-  flex-direction: column;
-  grid-column: 1;
-  grid-row-start: 2;
-  grid-row-end: 3;
-  background-color: #00569e;
-  border-radius: 25px;
+    display: flex;
+    flex-direction: column;
+    grid-column: 1;
+    grid-row-start: 3;
+    grid-row-end: 4;
+    background-color: #fff;
+    border-right: 2px solid rgba(0, 0, 0, .25);
+    border-bottom-left-radius: 15PX;
 }
 
 #player-container-old {
-  display: flex;
-  flex-direction: column;
-  background-color: #377eae;
-  border-radius: 25px;
-  overflow: auto;
+    display: flex;
+    flex-direction: column;
+    background-color: #fff;
+    overflow: auto;
 }
 
 .player {
-  background-color: #00569e;
-  padding: 0.2rem;
-  display: grid;
-  grid-template-columns: 0.2fr 1fr;
-  grid-template-rows: 1fr 1fr 1fr;
-  border-radius: 25px;
-  gap: 0.2rem;
-  color: white;
+    padding: 0.2rem;
+    display: grid;
+    grid-template-columns: 0.2fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+    gap: 0.2rem;
+    color: black;
+    border-bottom: 2px solid rgba(0, 0, 0, .1);
 }
 
-.player + .player {
-  margin-top: 5px;
+.player+.player {
+    margin-top: 5px;
 }
 
 .playername {
-  grid-column-start: 2;
-  grid-column-end: 3;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
-  flex: 1;
+    grid-column-start: 2;
+    grid-column-end: 3;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    flex: 1;
+    font-family: 'Nunito-Black';
+    color: #39b0a4;
 }
 
 .playername-self {
-  font-weight: bold;
+    font-weight: bold;
 }
 
 .player-done {
-  background-color: rgb(141, 224, 15);
+    background-color: rgb(141, 224, 15);
 }
 
 .rank {
-  display: flex;
-  grid-row-start: 2;
-  grid-row-end: 4;
-  justify-content: center;
-  align-items: center;
-  width: 2.5rem;
-  font-size: 1.5rem;
+    display: flex;
+    grid-row-start: 2;
+    grid-row-end: 4;
+    justify-content: center;
+    align-items: center;
+    width: 2.5rem;
+    font-size: 1.5rem;
 }
 
 .score-and-status {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
 }
 
 .last-turn-score {
-  font-size: 0.8rem;
-  color: #39b0a4;
-  font-weight: bold;
+    font-size: 0.8rem;
+    font-weight: bold;
 }
 
 #kick-dialog-players {
-  width: 100%;
-  overflow-x: hidden;
-  overflow-y: auto;
+    width: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
 .kick-player-button {
-  width: 100%;
-  border: none;
-  padding-top: 1rem;
-  padding-bottom: 1rem;
+    width: 100%;
+    border: none;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
 }
 
-.kick-player-button + .kick-player-button {
-  margin-top: 0.5rem;
+.kick-player-button+.kick-player-button {
+    margin-top: 0.5rem;
 }
 
 .game-over-scoreboard {
-  overflow-y: auto;
+    overflow-y: auto;
 }
 
 .gameover-scoreboard-entry {
-  font-size: 1.3rem;
-  padding: 0.3rem 1rem 0.3rem 1rem;
-  display: flex;
-  flex-direction: row;
-  background-color: rgb(245, 245, 245);
+    font-size: 1.3rem;
+    padding: 0.3rem 1rem 0.3rem 1rem;
+    display: flex;
+    flex-direction: row;
+    background-color: rgb(245, 245, 245);
+    border-radius: 10px;
 }
 
-.gameover-scoreboard-entry + .gameover-scoreboard-entry {
-  margin-top: 0.5rem;
+.gameover-scoreboard-entry+.gameover-scoreboard-entry {
+    margin-top: 0.5rem;
 }
 
 .gameover-scoreboard-entry-self {
-  font-weight: bold;
+    font-weight: bold;
 }
 
 .gameover-scoreboard-entry:last-child {
-  margin-bottom: 1rem;
+    margin-bottom: 1rem;
 }
 
 .gameover-scoreboard-rank {
-  margin-right: 1rem;
+    margin-right: 1rem;
 }
 
 .gameover-scoreboard-name {
-  flex: 1;
-  text-align: center;
+    flex: 1;
+    text-align: center;
 }
 
 .gameover-scoreboard-score {
-  margin-left: 1rem;
+    margin-left: 1rem;
 }
 
 #restart-button {
-  display: none;
+    display: none;
 }
 
 #reconnect-dialog {
-  /* As this dialog is very important, it should always be on the top. */
-  z-index: 100;
+    /* As this dialog is very important, it should always be on the top. */
+    z-index: 100;
 }
 
 .namechange-field {
-  margin-right: 0.25rem;
-  border-radius: 25px;
-  font-family: SourceSansPro-Regular;
+    margin-right: 0.25rem;
+    font-family: SourceSansPro-Regular;
+    border-radius: 10px;
 }
+
 .premeeting-screen .content input.field {
-  display: none;
+    display: none;
 }
