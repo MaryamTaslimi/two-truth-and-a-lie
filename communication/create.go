@@ -171,6 +171,11 @@ func ssrCallBackApi(w http.ResponseWriter, r *http.Request) {
 		//handle the error in the response of Api here
 
 	}
+	var Resp map[string]interface{}
+	err = json.Unmarshal([]byte(body), &Resp)
+	if err != nil {
+	}
+	log.Println(Resp)
 	var Response callbackapi
 	err = json.Unmarshal([]byte(body), &Response)
 	if err != nil {
