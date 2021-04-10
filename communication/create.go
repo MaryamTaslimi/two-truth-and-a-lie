@@ -59,6 +59,7 @@ type WFHomieResoinseApi struct {
 
 //adding a new service called ssrCheckCode
 func ssrCheckCode(w http.ResponseWriter, r *http.Request) {
+	// log.Println(r)
 	WFHomiecode := r.FormValue("token")
 	WFHomieusername := r.FormValue("username")
 
@@ -157,6 +158,14 @@ type CreatePageData struct {
 	ClientsPerIPLimit string
 	EnableVotekick    string
 	Language          string
+}
+
+func ssrCallBackApi(w http.ResponseWriter, r *http.Request) {
+	log.Println(r)
+}
+
+func ssrVerifyApi(w http.ResponseWriter, r *http.Request) {
+	log.Println(r)
 }
 
 // ssrCreateLobby allows creating a lobby, optionally returning errors that
