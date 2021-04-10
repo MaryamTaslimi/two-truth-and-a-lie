@@ -179,7 +179,16 @@ func ssrCallBackApi(w http.ResponseWriter, r *http.Request) {
 }
 
 func ssrVerifyApi(w http.ResponseWriter, r *http.Request) {
-	log.Println(r)
+	body, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		//handle the error in the response of Api here
+
+	}
+	var Response map[string]interface{}
+	err = json.Unmarshal([]byte(body), &Response)
+	if err != nil {
+	}
+	log.Println(Response)
 }
 
 // ssrCreateLobby allows creating a lobby, optionally returning errors that
