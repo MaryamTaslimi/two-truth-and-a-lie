@@ -160,17 +160,22 @@ type CreatePageData struct {
 	Language          string
 }
 
+type callbackapi struct {
+	Lxid string `json:"lxid"`
+}
+
 func ssrCallBackApi(w http.ResponseWriter, r *http.Request) {
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		//handle the error in the response of Api here
 
 	}
-	var Response map[string]interface{}
+	var Response callbackapi
 	err = json.Unmarshal([]byte(body), &Response)
 	if err != nil {
 	}
-	log.Println(Response)
+	log.Println(Response.Lxid)
+	w.WriteHeader(http.StatusInternalServerError)
 }
 
 func ssrVerifyApi(w http.ResponseWriter, r *http.Request) {
