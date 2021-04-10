@@ -161,7 +161,8 @@ type CreatePageData struct {
 }
 
 type callbackapi struct {
-	Lxid string `json:"lxid"`
+	Lxid    string `json:"lxid"`
+	Validto string `json:"starts_on"`
 }
 
 func ssrCallBackApi(w http.ResponseWriter, r *http.Request) {
@@ -175,7 +176,8 @@ func ssrCallBackApi(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 	}
 	log.Println(Response.Lxid)
-	w.WriteHeader(http.StatusInternalServerError)
+	log.Println(Response.Validto)
+	w.WriteHeader(http.StatusOK)
 }
 
 func ssrVerifyApi(w http.ResponseWriter, r *http.Request) {
