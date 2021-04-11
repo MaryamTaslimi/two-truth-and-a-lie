@@ -917,7 +917,7 @@
                             if (isSelf) {
                                 newEntry += ' gameover-scoreboard-entry-self';
                             }
-                            newEntry += '">'
+                            newEntry += '"><div style="display: flex;position: relative;margin: auto;left: 0;right: 0;height: 60px;width: 500px;border-radius: 10px;background: rgba(255,255,255,.85);border: 2px solid rgba(0,0,0,.2);padding: 15px;margin-top: 5px;margin-bottom: 5px;">'
                                 + '<div class="gameover-scoreboard-rank">'
                                 + player.rank
                                 + '</div>'
@@ -927,7 +927,7 @@
                                 + '<span class="gameover-scoreboard-score">'
                                 + player.score
                                 + '</span>'
-                                + '</div>';
+                                + '</div></div>';
 
                             gameOverScoreboard.innerHTML += newEntry;
                         }
@@ -977,6 +977,9 @@
             } else if (parsed.type === "system-message") {
                 applyMessage("system-message", "", parsed.data);
             } else if (parsed.type === "non-guessing-player-message") {
+                if(parsed.data.authorId === ownID)
+                applyMessage("correct-guess-message", "You", parsed.data.content);
+                else
                 applyMessage("correct-guess-message", parsed.data.author, parsed.data.content);
             } else if (parsed.type === "line") {
                 drawLine(context, parsed.data.fromX * scaleDownFactor(), parsed.data.fromY * scaleDownFactor(), parsed.data.toX * scaleDownFactor(), parsed.data.toY * scaleDownFactor(), parsed.data.color, parsed.data.lineWidth * scaleDownFactor());
@@ -1109,18 +1112,18 @@
             if (author != "") {
                 if (author === "You")
                     messageContainer.innerHTML += `<div class="message ` + styleClass + `">
-                            <span style="color:bLack;">` + author + `:</span>
+                            <span style="color:#9300ff; font-family:'Nunito-Bold';">` + author + `:</span>
                             <span class="message-content">` + message + `</span>
                         </div>`;
                 else
                     messageContainer.innerHTML += `<div class="message ` + styleClass + `">
-                            <span class="chat-name">` + author + `</span>
+                            <span class="chat-name" style="font-family:'Nunito-Bold';">` + author + `</span>
                             <span class="message-content">` + message + `</span>
                         </div>`;
             }
             else
                 messageContainer.innerHTML += `<div class="message ` + styleClass + `">                            
-                            <span class="message-content">` + message + `</span>
+                            <span class="message-content" style="font-family:'Nunito-Bold';>` + message + `</span>
                         </div>`;
         }
 

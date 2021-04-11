@@ -57,11 +57,11 @@
 }
 
 .auhtor-message {
-    color: #9300ff;
+    color: Black;
 }
 
 .auhtor-message-self {
-    color: Black;
+    color: #9300ff;
 }
 
 #jitsicontainer {
