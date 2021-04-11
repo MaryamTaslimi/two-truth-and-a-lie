@@ -9,7 +9,7 @@ html{
 
 body {
     height: 100vh;
-    font-family: 'Roboto';
+    font-family: 'Nunito-Black';
     margin: 0;
 }
 
@@ -128,7 +128,7 @@ ul {
 #wfhomie-scribble-img {
     text-align: center;
     margin-top: 0;
-    margin-bottom: 15px;
+    /* margin-bottom: 15px; */
     height: 80px;
-    width: 400px;
+    width: 350px;
 }

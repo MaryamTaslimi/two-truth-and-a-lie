@@ -15,10 +15,9 @@
     <div class="content-wrapper">
         <noscript><span class="noscript">This website requires JavaScript to run properly.</span></noscript>
         <div id="lobby">
-            <div class="header" style="grid-column-start: 1; grid-column-end: 4;">
-                <img id="wfhomie-scribble-img" src="{{.RootPath}}/resources/wfhomie-scribble.png"
-                    alt="WFHomie-Scribble" />
-            </div>
+
+            <img style="grid-column-start: 1; grid-column-end: 4; margin: auto;" id="wfhomie-scribble-img"
+                src="{{.RootPath}}/resources/wfhomie-scribble.png" alt="WFHomie-Scribble" />
             <div id="top-row">
                 <div style="width: 16.5rem">
                     <p1 id="rounds"></p1>
@@ -106,7 +105,7 @@
                                     <span class="dialog-title">Game hasn't started</span>
                                     <div class="center-dialog-content">
                                         <div style="display: flex; flex-direction: column;">
-                                            Please wait for your lobby host to start the game.<br /><br />                                            
+                                            Please wait for your lobby host to start the game.<br /><br />
                                             <div style="display: flex; flex-direction: row; display:none;">
                                                 <input class="namechange-field" type="text"
                                                     id="namechange-field-unstarted-dialog"></input>
@@ -211,7 +210,7 @@
                             </div>
 
                             <div id="center-dialog-container">
-                                <div id="reconnect-dialog" class="center-dialog">
+                                <div id="reconnect-dialog" class="center-dialog" style="width: 100%;">
                                     <span id="game-over-dialog-title" class="dialog-title">Connection lost!</span>
                                     <p>Attempting to reconnect ...</p>
                                     <p>Make sure your internet connection works.<br />If the problem persists, contact
@@ -224,7 +223,7 @@
                 </div>
             </div>
 
-            <div id="chat" style="max-height: 534px;">
+            <div id="chat">
                 <div id="toolbox">
                     <div class="pencil-sizes-container toolbox-group">
                         <label for="tool-type-pencil">
@@ -233,7 +232,8 @@
                             <div onmousedown="document.getElementById('tool-type-pencil').click()"
                                 onmouseup="document.getElementById('tool-type-pencil').click()"
                                 class="line-width-button-content">
-                                <img src="{{.RootPath}}/resources/pencil.gif" width="35px" height="35px">
+                                <img alt="Pencil" title="Drawing tool" src="{{.RootPath}}/resources/pencil.gif"
+                                    width="35px" height="35px">
                             </div>
                         </label>
                         <label for="tool-type-rubber">
@@ -259,7 +259,7 @@
                     </div>
                     <button class="canvas-button toolbox-group" style="font-size: 1.5rem;"
                         onclick="clearCanvasAndSendEvent()" alt="Clear the canvas" title="Clear the canvas"><img
-                            alt="Fill" title="Fill tool" src="{{.RootPath}}/resources/clear.gif" width="35px"
+                            alt="Clear" title="Clear tool" src="{{.RootPath}}/resources/clear.gif" width="35px"
                             height="35px" />
                     </button>
                     <input type="color" id="color-picker" onchange="setColor()" value="#000000"
@@ -592,12 +592,18 @@
             //Resize canvas HTML element properly.
             drawingBoard.width = drawingBoard.clientWidth;
             drawingBoard.height = drawingBoard.clientHeight;
+            // drawingBoard.maxHeight = drawingBoard.clientHeight + "px";
+            // document.getElementById("drawing-board-wrapper").height = drawingBoard.height;
+            // document.getElementById("drawing-board-inner-wrapper").height = drawingBoard.height;
+
             // toolBox.height = toolBox.clientHeight;
             setLineWidth(localLineWidthUnscaled);
-            chat.style.height = drawingBoard.height - toolBox.height + "px";
+            chat.style.maxHeight = drawingBoard.clientHeight + "px";
             // toolBox.style.top = drawingBoard.height - toolBox.height + "px";
-            document.getElementById("player-container").style.height = drawingBoard.height + "px";
-            document.getElementById("top-row-middle-part").style.width = drawingBoard.width - 48 + "px";
+            document.getElementById("player-container").style.maxHeight = drawingBoard.clientHeight + "px";
+            document.getElementById("top-row-middle-part").style.width = drawingBoard.style.width - 48 + "px";
+
+            chat.style.maxHeight = drawingBoard.clientHeight + "px";
         }
 
         function scaleUpFactor() {
@@ -1159,7 +1165,7 @@
                     '">' + player.name + '</span>' +
                     '<div class="score-and-status" style="grid-column-start:2;grid-column-end:3;">' +
                     '<div>' +
-                    '<span class="playerscore" style="font-weight:bold;">' + player.score + ' Points</span>'
+                    '<span class="playerscore" style="font-weight:600;">' + player.score + ' Points</span>'
                     // '<span class="last-turn-score">(Last turn: ' + player.lastScore + ')</span>' 
                     +
                     '</div>';
