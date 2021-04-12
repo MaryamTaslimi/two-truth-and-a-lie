@@ -249,6 +249,8 @@ func handleMessage(message string, sender *Player, lobby *Lobby) {
 				triggerPlayersUpdate(lobby)
 			}
 		} else if levenshtein.ComputeDistance(normInput, normSearched) == 1 {
+			log.Println(normSearched)
+			log.Println(normInput)
 			WriteAsJSON(sender, GameEvent{Type: "close-guess", Data: trimmedMessage})
 			//In cases of a close guess, we still send the message to everyone.
 			//This allows other players to guess the word by watching what the

@@ -598,10 +598,10 @@
 
             // toolBox.height = toolBox.clientHeight;
             setLineWidth(localLineWidthUnscaled);
-            chat.style.maxHeight = drawingBoard.clientHeight + "px";
+            chat.style.maxHeight =  drawingBoard.height - toolBox.height + "px";
             // toolBox.style.top = drawingBoard.height - toolBox.height + "px";
-            document.getElementById("player-container").style.maxHeight = drawingBoard.clientHeight + "px";
-            document.getElementById("top-row-middle-part").style.width = drawingBoard.style.width - 48 + "px";
+            // document.getElementById("player-container").style.maxHeight = drawingBoard.clientHeight + "px";
+            // document.getElementById("top-row-middle-part").style.width = drawingBoard.style.width - 48 + "px";
 
             chat.style.maxHeight = drawingBoard.clientHeight + "px";
         }
@@ -1153,7 +1153,7 @@
                 else
                     newPlayerElement += '<span></span>';
                 if (player.state === "drawing") {
-                    newPlayerElement += '<span class="rank" style="transition: transform 50ms ease-in-out;"><img src="{{.RootPath}}/resources/pencil.gif"></span>';
+                    newPlayerElement += '<span class="rank" style="transition: transform 50ms ease-in-out;"><img src="/{{.RootPath}}/resources/Rubber.gif"></span>';
                 } else if (player.state === "standby") {
                     newPlayerElement += '<span>✔️</span>';
                 } else
@@ -1477,7 +1477,7 @@
         //Call intially to correct initial state
         handleCanvasResize();
         window.addEventListener("resize", () => {
-            handleCanvasResize();
+            // handleCanvasResize();
             //Since the canvas gets cleared, we request the drawing again.
             //Saving it locally would be wasteful and might slow down some
             //clients due to a lot of memory allocation.
