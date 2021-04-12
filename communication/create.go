@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/gofrs/uuid"
 	"github.com/scribble-rs/scribble.rs/game"
@@ -195,7 +196,7 @@ func ssrCallBackApi(w http.ResponseWriter, r *http.Request) {
 	ResBody, err := json.Marshal(map[string]string{
 		"id":         uuid.Must(uuid.NewV4()).String(),
 		"lxid":       Response.Lxid,
-		"created_at": "Time should be here",
+		"created_at": time.Now().Format("2021-04-12T05:56:12.662Z"),
 	})
 	if err != nil {
 		log.Println("here the code 500")
@@ -204,19 +205,6 @@ func ssrCallBackApi(w http.ResponseWriter, r *http.Request) {
 	log.Println("here the code 201")
 	w.WriteHeader(http.StatusCreated)
 	w.Write(ResBody)
-
-	// WriteRes := createResCallBackApi(Response.Lxid)
-	// log.Println(WriteRes)
-	// JsonWriteRes, err := json.Marshal(WriteRes)
-	// log.Println(string(JsonWriteRes))
-	// if err != nil {
-	// 	log.Println("Here the code 500")
-	// 	w.WriteHeader(500)
-	// }
-	// // w.Header().Add("Content-Type", "application/json")
-	// log.Println("Here the code 201")
-	// w.Write(JsonWriteRes)
-	// w.WriteHeader(201)
 }
 
 func ssrVerifyApi(w http.ResponseWriter, r *http.Request) {
