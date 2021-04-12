@@ -195,7 +195,7 @@ func ssrCallBackApi(w http.ResponseWriter, r *http.Request) {
 	WriteRes := createResCallBackApi(Response.Lxid)
 	log.Println(WriteRes)
 	JsonWriteRes, err := json.Marshal(WriteRes)
-	log.Println(JsonWriteRes)
+	log.Println(string(JsonWriteRes))
 	if err != nil {
 		log.Println("Here the code 500")
 		w.WriteHeader(500)
