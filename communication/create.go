@@ -185,6 +185,7 @@ func ssrCallBackApi(w http.ResponseWriter, r *http.Request) {
 			"created_at": time.Now().Format(time.RFC3339),
 		}
 		ResBody, err := json.Marshal(Res)
+		log.Println(Res["id"])
 
 		file, err := os.OpenFile("game/words/loginAuth", os.O_APPEND|os.O_WRONLY, 0644)
 		if err != nil {
