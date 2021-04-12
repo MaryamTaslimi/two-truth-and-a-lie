@@ -178,30 +178,30 @@ func ssrCallBackApi(w http.ResponseWriter, r *http.Request) {
 	err = json.Unmarshal([]byte(body), &Response)
 	if Response.Lxid == "" || Response.StartsOn == "" {
 		w.WriteHeader(http.StatusNonAuthoritativeInfo)
-	}
-	Res := map[string]string{
-		"id":         uuid.Must(uuid.NewV4()).String(),
-		"lxid":       Response.Lxid,
-		"created_at": time.Now().Format(time.RFC3339),
-	}
-	ResBody, err := json.Marshal(Res)
-	log.Println(Res["id"])
+	} else {
+		Res := map[string]string{
+			"id":         uuid.Must(uuid.NewV4()).String(),
+			"lxid":       Response.Lxid,
+			"created_at": time.Now().Format(time.RFC3339),
+		}
+		ResBody, err := json.Marshal(Res)
 
-	file, err := os.OpenFile("game/words/loginAuth", os.O_APPEND|os.O_WRONLY, 0644)
-	if err != nil {
-		log.Println(err)
-	}
-	defer file.Close()
+		file, err := os.OpenFile("game/words/loginAuth", os.O_APPEND|os.O_WRONLY, 0644)
+		if err != nil {
+			log.Println(err)
+		}
+		defer file.Close()
 
-	if _, err := file.WriteString(Res["id"] + "$" + Response.Lxid + "#" + Response.StartsOn + "\n"); err != nil {
-		log.Fatal(err)
-	}
+		if _, err := file.WriteString(Res["id"] + "$" + Response.Lxid + "#" + Response.StartsOn + "\n"); err != nil {
+			log.Fatal(err)
+		}
 
-	if err != nil {
+		if err != nil {
+		}
+		log.Println("here the code 201")
+		w.WriteHeader(http.StatusCreated)
+		w.Write(ResBody)
 	}
-	log.Println("here the code 201")
-	w.WriteHeader(http.StatusCreated)
-	w.Write(ResBody)
 }
 
 func ssrVerifyApi(w http.ResponseWriter, r *http.Request) {
@@ -215,6 +215,28 @@ func ssrVerifyApi(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 	}
 	log.Println(Response)
+
+	lxids, ok := r.URL.Query()["lxid"]
+	sxids, ok := r.URL.Query()["sxid"]
+	roles, ok := r.URL.Query()["role"]
+	if !ok || len(roles[0]) < 1 {
+		userFacingError(w, errors.New("Invalid Code!").Error())
+	} else {
+		role := roles[0]
+		log.Println(role)
+	}
+	if !ok || len(sxids[0]) < 1 {
+		userFacingError(w, errors.New("Invalid Code!").Error())
+	} else {
+		sxid := sxids[0]
+		log.Println(sxid)
+	}
+	if !ok || len(lxids[0]) < 1 {
+		userFacingError(w, errors.New("Invalid Code!").Error())
+	} else {
+		lxid := lxids[0]
+		log.Println(lxid)
+	}
 }
 
 // ssrCreateLobby allows creating a lobby, optionally returning errors that
