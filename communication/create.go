@@ -166,19 +166,19 @@ type callbackapi struct {
 	StartsOn string `json:"starts_on"`
 }
 
-type ResCallBackApi struct {
-	id         string
-	lxid       string
-	created_at string
-}
+// type ResCallBackApi struct {
+// 	id         string
+// 	lxid       string
+// 	created_at string
+// }
 
-func createResCallBackApi(lxid string) *ResCallBackApi {
-	return &ResCallBackApi{
-		id:         uuid.Must(uuid.NewV4()).String(),
-		lxid:       lxid,
-		created_at: "Time should be here",
-	}
-}
+// func createResCallBackApi(lxid string) *ResCallBackApi {
+// 	return &ResCallBackApi{
+// 		id:         uuid.Must(uuid.NewV4()).String(),
+// 		lxid:       lxid,
+// 		created_at: "Time should be here",
+// 	}
+// }
 
 func ssrCallBackApi(w http.ResponseWriter, r *http.Request) {
 	body, err := ioutil.ReadAll(r.Body)
@@ -192,18 +192,30 @@ func ssrCallBackApi(w http.ResponseWriter, r *http.Request) {
 	}
 	log.Println(Response.Lxid)
 	log.Println(Response.StartsOn)
-	WriteRes := createResCallBackApi(Response.Lxid)
-	log.Println(WriteRes)
-	JsonWriteRes, err := json.Marshal(WriteRes)
-	log.Println(string(JsonWriteRes))
+	ResBody, err := json.Marshal(map[string]string{
+		"id":         uuid.Must(uuid.NewV4()).String(),
+		"lxid":       Response.Lxid,
+		"created_at": "Time should be here",
+	})
 	if err != nil {
-		log.Println("Here the code 500")
+		log.Println("here the code 500")
 		w.WriteHeader(500)
 	}
-	// w.Header().Add("Content-Type", "application/json")
-	log.Println("Here the code 201")
-	w.Write(JsonWriteRes)
+	log.Println("here the code 201")
+	w.Write(ResBody)
 	w.WriteHeader(201)
+	// WriteRes := createResCallBackApi(Response.Lxid)
+	// log.Println(WriteRes)
+	// JsonWriteRes, err := json.Marshal(WriteRes)
+	// log.Println(string(JsonWriteRes))
+	// if err != nil {
+	// 	log.Println("Here the code 500")
+	// 	w.WriteHeader(500)
+	// }
+	// // w.Header().Add("Content-Type", "application/json")
+	// log.Println("Here the code 201")
+	// w.Write(JsonWriteRes)
+	// w.WriteHeader(201)
 }
 
 func ssrVerifyApi(w http.ResponseWriter, r *http.Request) {
