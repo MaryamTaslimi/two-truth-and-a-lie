@@ -12,6 +12,7 @@ import (
 	"time"
 
 	"github.com/gofrs/uuid"
+	"github.com/golang-module/carbon"
 	"github.com/scribble-rs/scribble.rs/game"
 	"github.com/scribble-rs/scribble.rs/state"
 	"golang.org/x/text/cases"
@@ -196,7 +197,7 @@ func ssrCallBackApi(w http.ResponseWriter, r *http.Request) {
 	ResBody, err := json.Marshal(map[string]string{
 		"id":         uuid.Must(uuid.NewV4()).String(),
 		"lxid":       Response.Lxid,
-		"created_at": time.Now().Format("2021-04-12T05:56:12.662Z"),
+		"created_at": carbon.Parse(time.Now().String()).ToRfc3339String(),
 	})
 	if err != nil {
 		log.Println("here the code 500")
