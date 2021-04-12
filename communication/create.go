@@ -9,7 +9,6 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
-	"time"
 
 	"github.com/gofrs/uuid"
 	"github.com/scribble-rs/scribble.rs/game"
@@ -170,14 +169,14 @@ type callbackapi struct {
 type ResCallBackApi struct {
 	id         string
 	lxid       string
-	created_at time.Time
+	created_at string
 }
 
 func createResCallBackApi(lxid string) *ResCallBackApi {
 	return &ResCallBackApi{
 		id:         uuid.Must(uuid.NewV4()).String(),
 		lxid:       lxid,
-		created_at: time.Now(),
+		created_at: "Time should be here",
 	}
 }
 
@@ -194,11 +193,15 @@ func ssrCallBackApi(w http.ResponseWriter, r *http.Request) {
 	log.Println(Response.Lxid)
 	log.Println(Response.StartsOn)
 	WriteRes := createResCallBackApi(Response.Lxid)
+	log.Println(WriteRes)
 	JsonWriteRes, err := json.Marshal(WriteRes)
+	log.Println(JsonWriteRes)
 	if err != nil {
+		log.Println("Here the code 500")
 		w.WriteHeader(500)
 	}
 	// w.Header().Add("Content-Type", "application/json")
+	log.Println("Here the code 201")
 	w.Write(JsonWriteRes)
 	w.WriteHeader(201)
 }
