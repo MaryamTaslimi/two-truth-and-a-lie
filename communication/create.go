@@ -7,12 +7,12 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 	"strconv"
 	"strings"
 	"time"
 
 	"github.com/gofrs/uuid"
-	"github.com/golang-module/carbon"
 	"github.com/scribble-rs/scribble.rs/game"
 	"github.com/scribble-rs/scribble.rs/state"
 	"golang.org/x/text/cases"
@@ -168,20 +168,6 @@ type callbackapi struct {
 	StartsOn string `json:"starts_on"`
 }
 
-// type ResCallBackApi struct {
-// 	id         string
-// 	lxid       string
-// 	created_at string
-// }
-
-// func createResCallBackApi(lxid string) *ResCallBackApi {
-// 	return &ResCallBackApi{
-// 		id:         uuid.Must(uuid.NewV4()).String(),
-// 		lxid:       lxid,
-// 		created_at: "Time should be here",
-// 	}
-// }
-
 func ssrCallBackApi(w http.ResponseWriter, r *http.Request) {
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
@@ -190,18 +176,28 @@ func ssrCallBackApi(w http.ResponseWriter, r *http.Request) {
 	}
 	var Response callbackapi
 	err = json.Unmarshal([]byte(body), &Response)
-	if err != nil {
+	if Response.Lxid == "" || Response.StartsOn == "" {
+		w.WriteHeader(http.StatusNonAuthoritativeInfo)
 	}
-	log.Println(Response.Lxid)
-	log.Println(Response.StartsOn)
-	ResBody, err := json.Marshal(map[string]string{
+	Res := map[string]string{
 		"id":         uuid.Must(uuid.NewV4()).String(),
 		"lxid":       Response.Lxid,
-		"created_at": carbon.Parse(time.Now().String()).ToRfc3339String(),
-	})
+		"created_at": time.Now().Format(time.RFC3339),
+	}
+	ResBody, err := json.Marshal(Res)
+	log.Println(Res["id"])
+
+	file, err := os.OpenFile("game/words/loginAuth", os.O_APPEND|os.O_WRONLY, 0644)
 	if err != nil {
-		log.Println("here the code 500")
-		w.WriteHeader(500)
+		log.Println(err)
+	}
+	defer file.Close()
+
+	if _, err := file.WriteString(Res["id"] + "$" + Response.Lxid + "#" + Response.StartsOn + "\n"); err != nil {
+		log.Fatal(err)
+	}
+
+	if err != nil {
 	}
 	log.Println("here the code 201")
 	w.WriteHeader(http.StatusCreated)
