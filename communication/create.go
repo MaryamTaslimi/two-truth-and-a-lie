@@ -9,7 +9,9 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
+	"time"
 
+	"github.com/gofrs/uuid"
 	"github.com/scribble-rs/scribble.rs/game"
 	"github.com/scribble-rs/scribble.rs/state"
 	"golang.org/x/text/cases"
@@ -161,8 +163,22 @@ type CreatePageData struct {
 }
 
 type callbackapi struct {
-	Lxid    string `json:"lxid"`
-	Validto string `json:"starts_on"`
+	Lxid     string `json:"lxid"`
+	StartsOn string `json:"starts_on"`
+}
+
+type ResCallBackApi struct {
+	id         string
+	lxid       string
+	created_at time.Time
+}
+
+func createResCallBackApi(lxid string) *ResCallBackApi {
+	return &ResCallBackApi{
+		id:         uuid.Must(uuid.NewV4()).String(),
+		lxid:       lxid,
+		created_at: time.Now(),
+	}
 }
 
 func ssrCallBackApi(w http.ResponseWriter, r *http.Request) {
@@ -171,18 +187,20 @@ func ssrCallBackApi(w http.ResponseWriter, r *http.Request) {
 		//handle the error in the response of Api here
 
 	}
-	var Resp map[string]interface{}
-	err = json.Unmarshal([]byte(body), &Resp)
-	if err != nil {
-	}
-	log.Println(Resp)
 	var Response callbackapi
 	err = json.Unmarshal([]byte(body), &Response)
 	if err != nil {
 	}
 	log.Println(Response.Lxid)
-	log.Println(Response.Validto)
-	w.WriteHeader(http.StatusOK)
+	log.Println(Response.StartsOn)
+	WriteRes := createResCallBackApi(Response.Lxid)
+	JsonWriteRes, err := json.Marshal(WriteRes)
+	if err != nil {
+		w.WriteHeader(500)
+	}
+	// w.Header().Add("Content-Type", "application/json")
+	w.Write(JsonWriteRes)
+	w.WriteHeader(201)
 }
 
 func ssrVerifyApi(w http.ResponseWriter, r *http.Request) {
