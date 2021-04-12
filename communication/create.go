@@ -66,32 +66,32 @@ func ssrCheckCode(w http.ResponseWriter, r *http.Request) {
 	WFHomiecode := r.FormValue("token")
 	WFHomieusername := r.FormValue("username")
 
-	resp, err := http.Get("https://us-central1-wfhomie-85a56.cloudfunctions.net/validate?token=" + WFHomiecode)
-	if err != nil {
-		///handle the error on the way of calling Api here
+	// resp, err := http.Get("https://us-central1-wfhomie-85a56.cloudfunctions.net/validate?token=" + WFHomiecode)
+	// if err != nil {
+	// 	///handle the error on the way of calling Api here
 
-	}
-	//We Read the response body on the line below.
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		//handle the error in the response of Api here
+	// }
+	// //We Read the response body on the line below.
+	// body, err := ioutil.ReadAll(resp.Body)
+	// if err != nil {
+	// 	//handle the error in the response of Api here
 
-	}
-	//Convert the body to type WFHomieResponseApi
-	var Response WFHomieResoinseApi
-	err = json.Unmarshal(body, &Response)
-	if err != nil {
+	// }
+	// //Convert the body to type WFHomieResponseApi
+	// var Response WFHomieResoinseApi
+	// err = json.Unmarshal(body, &Response)
+	// if err != nil {
 
-	}
-	Response.Group_Name = "WFHomie"
-	Response.Group_Id = "1"
-	if Response.Group_Id+Response.Group_Name != "" {
-		var lobbycheck bool = LobbyCheck(Response.Group_Id + Response.Group_Name)
+	// }
+	// Response.Group_Name = "WFHomie"
+	// Response.Group_Id = "1"
+	if WFHomiecode != "" {
+		var lobbycheck bool = LobbyCheck(WFHomiecode)
 		if lobbycheck == false {
 			var playerName = getPlayername(r)
-			LobbyCreate(playerName, Response.Group_Id+Response.Group_Name, Response.Group_Name, r, w)
+			LobbyCreate(playerName, WFHomiecode, "WFHomie", r, w)
 		}
-		http.Redirect(w, r, CurrentBasePageConfig.RootPath+"/ssrEnterLobby?lobby_id="+Response.Group_Id+Response.Group_Name+"&username="+WFHomieusername, http.StatusFound)
+		http.Redirect(w, r, CurrentBasePageConfig.RootPath+"/ssrEnterLobby?lobby_id="+WFHomiecode+"&username="+WFHomieusername, http.StatusFound)
 	} else {
 		userFacingError(w, errors.New("Invalid Code!").Error())
 	}
@@ -205,37 +205,17 @@ func ssrCallBackApi(w http.ResponseWriter, r *http.Request) {
 }
 
 func ssrVerifyApi(w http.ResponseWriter, r *http.Request) {
-	body, err := ioutil.ReadAll(r.Body)
-	if err != nil {
-		//handle the error in the response of Api here
-
-	}
-	var Response map[string]interface{}
-	err = json.Unmarshal([]byte(body), &Response)
-	if err != nil {
-	}
-	log.Println(Response)
-
 	lxids, ok := r.URL.Query()["lxid"]
 	sxids, ok := r.URL.Query()["sxid"]
 	roles, ok := r.URL.Query()["role"]
-	if !ok || len(roles[0]) < 1 {
+	if !ok || len(roles[0]) < 1 || len(sxids[0]) < 1 || len(lxids[0]) < 1 {
 		userFacingError(w, errors.New("Invalid Code!").Error())
 	} else {
-		role := roles[0]
-		log.Println(role)
-	}
-	if !ok || len(sxids[0]) < 1 {
-		userFacingError(w, errors.New("Invalid Code!").Error())
-	} else {
-		sxid := sxids[0]
-		log.Println(sxid)
-	}
-	if !ok || len(lxids[0]) < 1 {
-		userFacingError(w, errors.New("Invalid Code!").Error())
-	} else {
-		lxid := lxids[0]
-		log.Println(lxid)
+		err := pageTemplates.ExecuteTemplate(w, "enter-user-page", createDefaultUserPageData(lxids[0]))
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			log.Println(err)
+		}
 	}
 }
 
