@@ -917,7 +917,7 @@
                             if (isSelf) {
                                 newEntry += ' gameover-scoreboard-entry-self';
                             }
-                            newEntry += '"><div style="display: flex;position: relative;margin: auto;left: 0;right: 0;height: 60px;width: 500px;border-radius: 10px;background: rgba(255,255,255,.85);border: 2px solid rgba(0,0,0,.2);padding: 15px;margin-top: 5px;margin-bottom: 5px;">'
+                            newEntry += '"><div style="display: flex;position: relative;margin: auto;left: 0;right: 0;height: 60px;width: 300px;border-radius: 10px;background: rgba(255,255,255,.85);border: 2px solid rgba(0,0,0,.2);padding: 15px;margin-top: 5px;margin-bottom: 5px;">'
                                 + '<div class="gameover-scoreboard-rank">'
                                 + player.rank
                                 + '</div>'
@@ -1507,6 +1507,7 @@
                 interfaceConfigOverwrite: { TILE_VIEW_MAX_COLUMNS: 2, SHOW_CHROME_EXTENSION_BANNER: false }
             }
             var api = new JitsiMeetExternalAPI(domain, options);
+            api.executeCommand('toggleTileView');
             api.executeCommand('displayName', localDisplayName);
 
             api.addEventListeners({
