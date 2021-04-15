@@ -1482,7 +1482,7 @@
         //Call intially to correct initial state
         handleCanvasResize();
         window.addEventListener("resize", () => {
-            // handleCanvasResize();
+            handleCanvasResize();
             //Since the canvas gets cleared, we request the drawing again.
             //Saving it locally would be wasteful and might slow down some
             //clients due to a lot of memory allocation.
