@@ -602,6 +602,11 @@
             // toolBox.style.top = drawingBoard.height - toolBox.height + "px";
             // document.getElementById("player-container").style.maxHeight = drawingBoard.clientHeight + "px";
             // document.getElementById("top-row-middle-part").style.width = drawingBoard.style.width - 48 + "px";
+                        document.getElementById("drawing-board-wrapper").style.paddingBottom = window.screen.height*0.5 + "px";
+            document.getElementById("player-container").style.maxHeight = document.getElementById("drawing-board-wrapper").clientHeight + "px";
+            document.getElementById("player-container").style.height = document.getElementById("drawing-board-wrapper").clientHeight + "px";
+            chat.style.maxHeight = document.getElementById("drawing-board-wrapper").clientHeight + "px";
+            chat.style.height = document.getElementById("drawing-board-wrapper").clientHeight + "px";
 
             chat.style.maxHeight = drawingBoard.clientHeight + "px";
         }
