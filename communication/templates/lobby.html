@@ -598,11 +598,11 @@
 
             // toolBox.height = toolBox.clientHeight;
             setLineWidth(localLineWidthUnscaled);
-            chat.style.maxHeight =  drawingBoard.height - toolBox.height + "px";
+            chat.style.maxHeight = drawingBoard.height - toolBox.height + "px";
             // toolBox.style.top = drawingBoard.height - toolBox.height + "px";
             // document.getElementById("player-container").style.maxHeight = drawingBoard.clientHeight + "px";
             // document.getElementById("top-row-middle-part").style.width = drawingBoard.style.width - 48 + "px";
-                        document.getElementById("drawing-board-wrapper").style.paddingBottom = window.screen.height*0.5 + "px";
+            document.getElementById("drawing-board-wrapper").style.paddingBottom = window.screen.height * 0.5 + "px";
             document.getElementById("player-container").style.maxHeight = document.getElementById("drawing-board-wrapper").clientHeight + "px";
             document.getElementById("player-container").style.height = document.getElementById("drawing-board-wrapper").clientHeight + "px";
             chat.style.maxHeight = document.getElementById("drawing-board-wrapper").clientHeight + "px";
@@ -982,10 +982,10 @@
             } else if (parsed.type === "system-message") {
                 applyMessage("system-message", "", parsed.data);
             } else if (parsed.type === "non-guessing-player-message") {
-                if(parsed.data.authorId === ownID)
-                applyMessage("correct-guess-message", "You", parsed.data.content);
+                if (parsed.data.authorId === ownID)
+                    applyMessage("correct-guess-message", "You", parsed.data.content);
                 else
-                applyMessage("correct-guess-message", parsed.data.author, parsed.data.content);
+                    applyMessage("correct-guess-message", parsed.data.author, parsed.data.content);
             } else if (parsed.type === "line") {
                 drawLine(context, parsed.data.fromX * scaleDownFactor(), parsed.data.fromY * scaleDownFactor(), parsed.data.toX * scaleDownFactor(), parsed.data.toY * scaleDownFactor(), parsed.data.color, parsed.data.lineWidth * scaleDownFactor());
             } else if (parsed.type === "fill") {
@@ -1509,7 +1509,13 @@
                 allow: "microphone; camera",
                 parentNode: document.getElementById("jitsi"),
                 configOverwrite: { prejoinPageEnabled: false },
-                interfaceConfigOverwrite: { TILE_VIEW_MAX_COLUMNS: 2, SHOW_CHROME_EXTENSION_BANNER: false }
+                interfaceConfigOverwrite: {
+                    TILE_VIEW_MAX_COLUMNS: 2,
+                    SHOW_CHROME_EXTENSION_BANNER: false,
+                    TOOLBAR_ALWAYS_VISIBLE: false,
+                    TOOLBAR_BUTTONS: ['microphone','camera'],
+                    HIDE_INVITE_MORE_HEADER: true
+                }
             }
             var api = new JitsiMeetExternalAPI(domain, options);
             api.executeCommand('toggleTileView');
