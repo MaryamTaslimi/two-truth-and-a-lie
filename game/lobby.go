@@ -147,10 +147,10 @@ func HandleEvent(raw []byte, received *GameEvent, lobby *Lobby, player *Player) 
 		mapstructure.Decode(received.Data, &c)
 		drawer := lobby.drawer
 		if player == drawer {
-			if len(lobby.CurrentWord) < 8 {
+			if len(lobby.CurrentWord) < 12 {
 				lobby.CurrentWord = c.Lie
 			}
-			lobby.CurrentWord = c.Lie[0:6]
+			lobby.CurrentWord = c.Lie[0:10]
 			TriggerUpdatePerPlayerEvent("show-statements", func(player *Player) interface{} {
 				return c
 			}, lobby)
@@ -214,8 +214,7 @@ func HandleEvent(raw []byte, received *GameEvent, lobby *Lobby, player *Player) 
 }
 
 func handleMessage(message string, sender *Player, lobby *Lobby) {
-	trimmedMessage := strings.TrimSpace(message)
-	if trimmedMessage == "" {
+	if message == "" {
 		return
 	}
 
@@ -226,12 +225,11 @@ func handleMessage(message string, sender *Player, lobby *Lobby) {
 	if sender.State == Drawing || sender.State == Standby {
 
 	} else if sender.State == Guessing {
-		lowerCasedInput := lobby.lowercaser.String(trimmedMessage)
 		currentWord := lobby.CurrentWord
-		normInput := simplifyText(lowerCasedInput)
-		normSearched := simplifyText(currentWord)
-
-		if normSearched == normInput {
+		if len(message) > 12 {
+			message = message[0:10]
+		}
+		if message == currentWord {
 			secondsLeft := int(lobby.RoundEndTime/1000 - time.Now().UTC().UnixNano()/1000000000)
 
 			sender.LastScore = 20 + secondsLeft
