@@ -147,10 +147,10 @@ func HandleEvent(raw []byte, received *GameEvent, lobby *Lobby, player *Player) 
 		mapstructure.Decode(received.Data, &c)
 		drawer := lobby.drawer
 		if player == drawer {
-			if len(lobby.CurrentWord) < 12 {
-				lobby.CurrentWord = c.Lie
+			if len(lobby.CurrentWord) > 12 {
+				lobby.CurrentWord = c.Lie[0:10]
 			}
-			lobby.CurrentWord = c.Lie[0:10]
+			lobby.CurrentWord = c.Lie
 			TriggerUpdatePerPlayerEvent("show-statements", func(player *Player) interface{} {
 				return c
 			}, lobby)
