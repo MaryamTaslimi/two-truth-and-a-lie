@@ -69,11 +69,12 @@
                                     <span class="dialog-title">Write two truth and a lie about yourself</span>
                                     <div class="center-dialog-content">
                                         <div class="word-button-container" style="flex-direction:column">
-                                            <label for="truthOne">truth<input type="text" id="truthOne" name="truthOne"
+                                            <label for="truthOne">First truth<input type="text" id="truthOne"
+                                                    name="truthOne" required></label>
+                                            <label for="truthTwo">Second truth<input type="text" id="truthTwo"
+                                                    name="truthTwo" required></label>
+                                            <label for="lie">Lie!<input type="text" id="lie" name="lie"
                                                     required></label>
-                                            <label for="truthTwo">truth<input type="text" id="truthTwo" name="truthTwo"
-                                                    required></label>
-                                            <label for="lie">lie<input type="text" id="lie" name="lie" required></label>
                                             <button id="submit-btn" class="dialog-button" style="margin-top: 10px;"
                                                 onclick="chooseWord()">Submit
                                             </button>
@@ -798,15 +799,16 @@
         };
 
         function validateAns() {
-            document.getElementById("ans-btn").disabled=true;
+            document.getElementById("ans-btn").disabled = true;
             var checkedValue;
-            var ele = document.getElementsByName('states');
-
-            for (i = 0; i < ele.length; i++) {
-                if (ele[i].checked) {
-                    checkedValue = ele[i].value;
-                }
+            if (document.getElementById('first').checked) {
+                checkedValue = valuezero;
+            } else if (document.getElementById('second').checked) {
+                checkedValue = valueone;
+            } else {
+                checkedValue = valuetwo;
             }
+            console.log(checkedValue)
             socket.send(JSON.stringify({
                 type: "message",
                 data: checkedValue
@@ -963,7 +965,6 @@
                     }, {});
 
                 var keyzero = Object.keys(statements)[0];
-
                 valuezero = statements[keyzero]
 
                 var keyone = Object.keys(statements)[1];
@@ -971,14 +972,15 @@
 
                 var keytwo = Object.keys(statements)[2];
                 valuetwo = statements[keytwo]
+                console.log(valuetwo)
 
 
                 document.getElementById('statement').innerHTML =
-                    `<input type="radio" id="first" required name="states" value=` + valuezero + `>
+                    `<input type="radio" id="first" required name="states" value=>
                     <label for="first">`+ valuezero + `</label><br>
-                        <input type="radio" id="second" required name="states" value=`+ valueone + `>
+                        <input type="radio" id="second" required name="states" value=2>
                             <label for="second">`+ valueone + `</label><br>
-                                <input type="radio" id="third" required name="states" value=`+ valuetwo + `>
+                                <input type="radio" id="third" required name="states" value=3>
                                     <label for="third">`+ valuetwo + `</label>
                                         <button id="ans-btn" class="dialog-button" style="margin-top: 10px;"
                                                 onclick="validateAns()">Submit
