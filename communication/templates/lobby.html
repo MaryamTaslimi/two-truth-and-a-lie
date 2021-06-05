@@ -51,6 +51,11 @@
                 <div id="drawing-board-wrapper">
                     <div id="drawing-board-inner-wrapper">
                         <canvas id="drawing-board"></canvas>
+                        <div id="statement-wrapper">
+                            <div id="statement-container">
+                                <h1 id="statement"></h1>
+                            </div>
+                        </div>
 
                         <!-- The so called "center dialogs" are divs that float above the canvas.
                 They are centered are always a fraction of the canvas size but never bigger.
@@ -61,17 +66,16 @@
                         <div id="center-dialogs">
                             <div id="center-dialog-container">
                                 <div id="word-dialog" class="center-dialog">
-                                    <span class="dialog-title">Choose a word</span>
+                                    <span class="dialog-title">Write two truth and a lie about yourself</span>
                                     <div class="center-dialog-content">
-                                        <div class="word-button-container">
-                                            <button id="word-button-zero" class="dialog-button"
-                                                onclick="chooseWord(0)">Placeholder
-                                            </button>
-                                            <button id="word-button-one" class="dialog-button"
-                                                onclick="chooseWord(1)">Placeholder
-                                            </button>
-                                            <button id="word-button-two" class="dialog-button"
-                                                onclick="chooseWord(2)">Placeholder
+                                        <div class="word-button-container" style="flex-direction:column">
+                                            <label for="truthOne">truth<input type="text" id="truthOne" name="truthOne"
+                                                    required></label>
+                                            <label for="truthTwo">truth<input type="text" id="truthTwo" name="truthTwo"
+                                                    required></label>
+                                            <label for="lie">lie<input type="text" id="lie" name="lie" required></label>
+                                            <button id="submit-btn" class="dialog-button" style="margin-top: 10px;"
+                                                onclick="chooseWord()">Submit
                                             </button>
                                         </div>
                                     </div>
@@ -526,17 +530,6 @@
         }
 
         function GetCurrentLobbyName() {
-            // fetch("{{.RootPath}}/v1/lobby")
-            //     .then((response) => {
-            //         return response.json();
-            //     })
-            //     .then((data) => {
-            //         data.forEach(lobby => {
-            //             if (lobby.lobby_id == '{{.LobbyID}}')
-            //             return lobby.lobby_nam
-            //             console.log('{{.LobbyID}}');
-            //         })
-            //     });
             console.log('{{.LobbyID}}');
         }
 
@@ -590,25 +583,14 @@
 
         function handleCanvasResize() {
             //Resize canvas HTML element properly.
-            drawingBoard.width = drawingBoard.clientWidth;
-            drawingBoard.height = drawingBoard.clientHeight;
-            // drawingBoard.maxHeight = drawingBoard.clientHeight + "px";
-            // document.getElementById("drawing-board-wrapper").height = drawingBoard.height;
-            // document.getElementById("drawing-board-inner-wrapper").height = drawingBoard.height;
-
-            // toolBox.height = toolBox.clientHeight;
+            document.getElementById("statement-wrapper").width = document.getElementById("statement-wrapper").clientWidth;
+            document.getElementById("statement-wrapper").height = document.getElementById("statement-wrapper").clientHeight;
             setLineWidth(localLineWidthUnscaled);
-            chat.style.maxHeight = drawingBoard.height - toolBox.height + "px";
-            // toolBox.style.top = drawingBoard.height - toolBox.height + "px";
-            // document.getElementById("player-container").style.maxHeight = drawingBoard.clientHeight + "px";
-            // document.getElementById("top-row-middle-part").style.width = drawingBoard.style.width - 48 + "px";
             document.getElementById("drawing-board-wrapper").style.paddingBottom = window.screen.height * 0.5 + "px";
-            document.getElementById("player-container").style.maxHeight = document.getElementById("drawing-board-wrapper").clientHeight + "px";
-            document.getElementById("player-container").style.height = document.getElementById("drawing-board-wrapper").clientHeight + "px";
-            chat.style.maxHeight = document.getElementById("drawing-board-wrapper").clientHeight + "px";
-            chat.style.height = document.getElementById("drawing-board-wrapper").clientHeight + "px";
-
-            chat.style.maxHeight = drawingBoard.clientHeight + "px";
+            document.getElementById("player-container").style.maxHeight = document.getElementById("statement-wrapper").clientHeight + "px";
+            document.getElementById("player-container").style.height = document.getElementById("statement-wrapper").clientHeight + "px";
+            chat.style.maxHeight = document.getElementById("statement-wrapper").clientHeight + "px";
+            chat.style.height = document.getElementById("statement-wrapper").clientHeight + "px";
         }
 
         function scaleUpFactor() {
@@ -815,10 +797,32 @@
             return false;
         };
 
-        function chooseWord(index) {
+        function validateAns() {
+            document.getElementById("ans-btn").disabled=true;
+            var checkedValue;
+            var ele = document.getElementsByName('states');
+
+            for (i = 0; i < ele.length; i++) {
+                if (ele[i].checked) {
+                    checkedValue = ele[i].value;
+                }
+            }
+            socket.send(JSON.stringify({
+                type: "message",
+                data: checkedValue
+            }));
+        }
+
+
+        function chooseWord() {
+            var sObject = {
+                truthOne: document.getElementById("truthOne").value,
+                truthTwo: document.getElementById("truthTwo").value,
+                lie: document.getElementById("lie").value
+            }
             socket.send(JSON.stringify({
                 type: "choose-word",
-                data: index
+                data: sObject
             }));
             allowDrawing = true;
             updateCursor();
@@ -948,6 +952,37 @@
                 }
             } else if (parsed.type === "update-players") {
                 applyPlayers(parsed.data);
+            } else if (parsed.type === "show-statements") {
+                let statements = parsed.data
+                statements = Object.keys(statements)
+                    .map((key) => ({ key, value: statements[key] }))
+                    .sort((a, b) => b.key.localeCompare(a.key))
+                    .reduce((acc, e) => {
+                        acc[e.key] = e.value;
+                        return acc;
+                    }, {});
+
+                var keyzero = Object.keys(statements)[0];
+
+                valuezero = statements[keyzero]
+
+                var keyone = Object.keys(statements)[1];
+                valueone = statements[keyone]
+
+                var keytwo = Object.keys(statements)[2];
+                valuetwo = statements[keytwo]
+
+
+                document.getElementById('statement').innerHTML =
+                    `<input type="radio" id="first" required name="states" value=` + valuezero + `>
+                    <label for="first">`+ valuezero + `</label><br>
+                        <input type="radio" id="second" required name="states" value=`+ valueone + `>
+                            <label for="second">`+ valueone + `</label><br>
+                                <input type="radio" id="third" required name="states" value=`+ valuetwo + `>
+                                    <label for="third">`+ valuetwo + `</label>
+                                        <button id="ans-btn" class="dialog-button" style="margin-top: 10px;"
+                                                onclick="validateAns()">Submit
+                                         </button>`;
             } else if (parsed.type === "name-change") {
                 const playernameSpan = document.getElementById("playername-" + parsed.data.playerId);
                 if (playernameSpan !== null) {
@@ -1005,7 +1040,8 @@
                 wordDialog.style.visibility = "hidden";
                 // playWav('{{.RootPath}}/resources/end-turn.wav');
 
-                clear(context);
+                // clear(context);
+                document.getElementById('statement').innerHTML = "";
 
                 roundEndTime = parsed.data.roundEndTime;
                 applyRounds(parsed.data.round, maxRounds);
@@ -1026,7 +1062,8 @@
             } else if (parsed.type === "your-turn") {
                 // playWav('{{.RootPath}}/resources/your-turn.wav');
 
-                promptWords(parsed.data[0], parsed.data[1], parsed.data[2]);
+                // promptWords(parsed.data[0], parsed.data[1], parsed.data[2]);
+                wordDialog.style.visibility = "visible";
             } else if (parsed.type === "drawing") {
                 applyDrawData(parsed.data);
             } else if (parsed.type === "kick-vote") {
@@ -1504,7 +1541,7 @@
             var domain = "meet.jit.si";
             var options = {
                 roomName: '{{.LobbyID}}',
-                width: drawingBoard.clientWidth + 460,
+                width: document.getElementById("question-wrapper").clientWidth + 460,
                 height: 150,
                 allow: "microphone; camera",
                 parentNode: document.getElementById("jitsi"),
@@ -1513,7 +1550,7 @@
                     TILE_VIEW_MAX_COLUMNS: 6,
                     SHOW_CHROME_EXTENSION_BANNER: false,
                     TOOLBAR_ALWAYS_VISIBLE: false,
-                    TOOLBAR_BUTTONS: ['microphone','camera'],
+                    TOOLBAR_BUTTONS: ['microphone', 'camera'],
                     HIDE_INVITE_MORE_HEADER: true
                 }
             }

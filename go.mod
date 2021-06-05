@@ -10,6 +10,7 @@ require (
 	github.com/golang-module/carbon v1.3.7 // indirect
 	github.com/gorilla/websocket v1.4.2
 	github.com/kennygrant/sanitize v1.2.4
+	github.com/mitchellh/mapstructure v1.4.1 // indirect
 	golang.org/x/net v0.0.0-20210220033124-5f55cee0dc0d // indirect
 	golang.org/x/text v0.3.5
 )

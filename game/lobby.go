@@ -16,6 +16,7 @@ import (
 	"github.com/agnivade/levenshtein"
 	petname "github.com/dustinkirkland/golang-petname"
 	"github.com/kennygrant/sanitize"
+	"github.com/mitchellh/mapstructure"
 	"golang.org/x/text/cases"
 	"golang.org/x/text/language"
 )
@@ -87,6 +88,12 @@ type KickVote struct {
 	RequiredVoteCount int    `json:"requiredVoteCount"`
 }
 
+type Statements struct {
+	TruthOne string `json:"truthOne"`
+	TruthTwo string `json:"truthTwo"`
+	Lie      string `json:"lie"`
+}
+
 func HandleEvent(raw []byte, received *GameEvent, lobby *Lobby, player *Player) error {
 	if received.Type == "message" {
 		dataAsString, isString := (received.Data).(string)
@@ -136,20 +143,14 @@ func HandleEvent(raw []byte, received *GameEvent, lobby *Lobby, player *Player) 
 			SendDataToEveryoneExceptSender(player, lobby, received)
 		}
 	} else if received.Type == "choose-word" {
-		chosenIndex, isInt := (received.Data).(int)
-		if !isInt {
-			asFloat, isFloat32 := (received.Data).(float64)
-			if isFloat32 && asFloat < 4 {
-				chosenIndex = int(asFloat)
-			} else {
-				return fmt.Errorf("invalid data in choose-word event: %v", received.Data)
-			}
-		}
-
+		c := Statements{}
+		mapstructure.Decode(received.Data, &c)
 		drawer := lobby.drawer
-		if player == drawer && len(lobby.wordChoice) > 0 && chosenIndex >= 0 && chosenIndex <= 2 {
-			lobby.CurrentWord = lobby.wordChoice[chosenIndex]
-
+		if player == drawer {
+			lobby.CurrentWord = c.Lie
+			TriggerUpdatePerPlayerEvent("show-statements", func(player *Player) interface{} {
+				return c
+			}, lobby)
 			//Depending on how long the word is, a fixed amount of hints
 			//would be too easy or too hard.
 			runeCount := utf8.RuneCountInString(lobby.CurrentWord)
@@ -216,23 +217,21 @@ func handleMessage(message string, sender *Player, lobby *Lobby) {
 	}
 
 	if lobby.CurrentWord == "" {
-		sendMessageToAll(trimmedMessage, sender, lobby)
 		return
 	}
 
 	if sender.State == Drawing || sender.State == Standby {
-		sendMessageToAllNonGuessing(trimmedMessage, sender, lobby)
+
 	} else if sender.State == Guessing {
 		lowerCasedInput := lobby.lowercaser.String(trimmedMessage)
 		currentWord := lobby.CurrentWord
-
 		normInput := simplifyText(lowerCasedInput)
 		normSearched := simplifyText(currentWord)
 
 		if normSearched == normInput {
 			secondsLeft := int(lobby.RoundEndTime/1000 - time.Now().UTC().UnixNano()/1000000000)
 
-			sender.LastScore = calculateGuesserScore(lobby.hintCount, lobby.hintsLeft, secondsLeft, lobby.DrawingTime)
+			sender.LastScore = 20 + secondsLeft
 			sender.Score += sender.LastScore
 
 			lobby.scoreEarnedByGuessers += sender.LastScore
@@ -249,15 +248,9 @@ func handleMessage(message string, sender *Player, lobby *Lobby) {
 				triggerPlayersUpdate(lobby)
 			}
 		} else if levenshtein.ComputeDistance(normInput, normSearched) == 1 {
-			log.Println(normSearched)
-			log.Println(normInput)
-			WriteAsJSON(sender, GameEvent{Type: "close-guess", Data: trimmedMessage})
-			//In cases of a close guess, we still send the message to everyone.
-			//This allows other players to guess the word by watching what the
-			//other players are misstyping.
-			sendMessageToAll(trimmedMessage, sender, lobby)
+
 		} else {
-			sendMessageToAll(trimmedMessage, sender, lobby)
+
 		}
 	}
 }
