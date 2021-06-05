@@ -13,7 +13,6 @@ import (
 	"unicode/utf8"
 
 	discordemojimap "github.com/Bios-Marcel/discordemojimap/v2"
-	"github.com/agnivade/levenshtein"
 	petname "github.com/dustinkirkland/golang-petname"
 	"github.com/kennygrant/sanitize"
 	"github.com/mitchellh/mapstructure"
@@ -147,10 +146,11 @@ func HandleEvent(raw []byte, received *GameEvent, lobby *Lobby, player *Player) 
 		mapstructure.Decode(received.Data, &c)
 		drawer := lobby.drawer
 		if player == drawer {
-			if len(lobby.CurrentWord) > 12 {
+			if len(c.Lie) > 12 {
 				lobby.CurrentWord = c.Lie[0:10]
+			} else {
+				lobby.CurrentWord = c.Lie
 			}
-			lobby.CurrentWord = c.Lie
 			TriggerUpdatePerPlayerEvent("show-statements", func(player *Player) interface{} {
 				return c
 			}, lobby)
@@ -248,8 +248,6 @@ func handleMessage(message string, sender *Player, lobby *Lobby) {
 				recalculateRanks(lobby)
 				triggerPlayersUpdate(lobby)
 			}
-		} else if levenshtein.ComputeDistance(normInput, normSearched) == 1 {
-
 		} else {
 
 		}
