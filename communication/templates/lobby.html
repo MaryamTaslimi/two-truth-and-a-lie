@@ -35,7 +35,8 @@
                         title="Change your name">
                         <img src="{{.RootPath}}/resources/user.svg" class="header-button-image" />
                     </button> -->
-                    <div id="word-container" style="flex: 1; align-self: center; justify-content: baseline;"></div>
+                    <div id="word-container"
+                        style="flex: 1; align-self: center; justify-content: baseline; display:none"></div>
                 </div>
 
                 <div style="width: 16.5rem;">
@@ -50,7 +51,7 @@
             <div>
                 <div id="drawing-board-wrapper">
                     <div id="drawing-board-inner-wrapper">
-                        <canvas id="drawing-board"></canvas>
+                        <canvas id="drawing-board" style="display:none"></canvas>
                         <div id="statement-wrapper">
                             <div id="statement-container">
                                 <h1 id="statement"></h1>
@@ -229,7 +230,7 @@
             </div>
 
             <div id="chat">
-                <div id="toolbox">
+                <div id="toolbox" style="top: 420px; display:none;">
                     <div class="pencil-sizes-container toolbox-group">
                         <label for="tool-type-pencil">
                             <input id="tool-type-pencil" class="custom-check-or-radio line-width-button"
@@ -366,7 +367,7 @@
                 </div>
                 <form class="message-input-form" onsubmit="return sendMessage()">
                     <input id="message-input" type="text" autocomplete="off" style="color:#495057;"
-                        placeholder="Type your guesses and messages" />
+                        placeholder="Type your messages" />
                 </form>
             </div>
             <div id="jitsicontainer">
@@ -464,9 +465,6 @@
         const gameOverScoreboard = document.getElementById("game-over-scoreboard");
         const restartButton = document.getElementById("restart-button");
         const wordDialog = document.getElementById("word-dialog");
-        const wordButtonZero = document.getElementById("word-button-zero");
-        const wordButtonOne = document.getElementById("word-button-one");
-        const wordButtonTwo = document.getElementById("word-button-two");
 
         const kickDialog = document.getElementById("kick-dialog");
         const kickDialogPlayers = document.getElementById("kick-dialog-players");
@@ -529,11 +527,6 @@
         function hideLobbySettingsDialog() {
             lobbySettingsDialog.style.visibility = "hidden";
         }
-
-        function GetCurrentLobbyName() {
-            console.log('{{.LobbyID}}');
-        }
-
 
         function saveLobbySettings() {
             fetch("{{.RootPath}}/v1/lobby?" + new URLSearchParams({
@@ -810,7 +803,7 @@
             }
             console.log(checkedValue)
             socket.send(JSON.stringify({
-                type: "message",
+                type: "states",
                 data: checkedValue
             }));
         }
@@ -997,12 +990,12 @@
                 // playWav('{{.RootPath}}/resources/plop.wav');
 
                 if (parsed.data === ownID) {
-                    applyMessage("correct-guess-message", "", "You have correctly guessed the word.")
+                    applyMessage("correct-guess-message", "", "You have correctly guessed the lie statement.")
                 } else {
                     for (let i = 0; i < cachedPlayers.length; i++) {
                         let player = cachedPlayers[i];
                         if (player.id === parsed.data) {
-                            applyMessage("correct-guess-message", "", player.name + " correctly guessed the word.")
+                            applyMessage("correct-guess-message", "", player.name + " correctly guessed the lie statement.")
                             break;
                         }
                     }
@@ -1019,10 +1012,7 @@
             } else if (parsed.type === "system-message") {
                 applyMessage("system-message", "", parsed.data);
             } else if (parsed.type === "non-guessing-player-message") {
-                if (parsed.data.authorId === ownID)
-                    applyMessage("correct-guess-message", "You", parsed.data.content);
-                else
-                    applyMessage("non-guessing-player-message", parsed.data.author, parsed.data.content);
+                applyMessage("correct-guess-message", "You", parsed.data.content);
             } else if (parsed.type === "line") {
                 drawLine(context, parsed.data.fromX * scaleDownFactor(), parsed.data.fromY * scaleDownFactor(), parsed.data.toX * scaleDownFactor(), parsed.data.toY * scaleDownFactor(), parsed.data.color, parsed.data.lineWidth * scaleDownFactor());
             } else if (parsed.type === "fill") {
@@ -1053,9 +1043,9 @@
                 wordContainer.innerHTML = "";
                 if (parsed.data.previousWord !== null) {
                     if (parsed.data.previousWord === "") {
-                        applyMessage("system-message", "", "Round over. No word was chosen.");
+                        applyMessage("system-message", "", "Round over.");
                     } else {
-                        applyMessage("system-message", "", "Round over. Previous word was '" + parsed.data.previousWord + "'");
+                        applyMessage("system-message", "", "Round over. Previous lie statement was '" + parsed.data.previousWord + "'");
                     }
                 }
 
@@ -1196,9 +1186,8 @@
                     newPlayerElement += '<span>&#128081;</span>';
                 else
                     newPlayerElement += '<span></span>';
-                if (player.state === "drawing") {
-                    newPlayerElement += '<span class="rank" style="transition: transform 50ms ease-in-out;"><img src="/resources/pencil.gif" width="35px" height="35px"></span>';
-                } else if (player.state === "standby") {
+
+                if (player.state === "standby") {
                     newPlayerElement += '<span>✔️</span>';
                 } else
                     newPlayerElement += '<span></span>';

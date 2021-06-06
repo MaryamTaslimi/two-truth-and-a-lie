@@ -101,6 +101,13 @@ func HandleEvent(raw []byte, received *GameEvent, lobby *Lobby, player *Player) 
 		}
 
 		handleMessage(dataAsString, player, lobby)
+	} else if received.Type == "states" {
+		dataAsString, isString := (received.Data).(string)
+		if !isString {
+			return fmt.Errorf("invalid data received: '%s'", received.Data)
+		}
+
+		handlestate(dataAsString, player, lobby)
 	} else if received.Type == "line" {
 		if lobby.canDraw(player) {
 			line := &LineEvent{}
@@ -214,6 +221,14 @@ func HandleEvent(raw []byte, received *GameEvent, lobby *Lobby, player *Player) 
 }
 
 func handleMessage(message string, sender *Player, lobby *Lobby) {
+	trimmedMessage := strings.TrimSpace(message)
+	if trimmedMessage == "" {
+		return
+	}
+	sendMessageToAll(trimmedMessage, sender, lobby)
+}
+
+func handlestate(message string, sender *Player, lobby *Lobby) {
 	if message == "" {
 		return
 	}
@@ -483,13 +498,13 @@ func advanceLobby(lobby *Lobby) {
 			playerCount--
 		}
 
-		var averageScore int
-		if playerCount > 0 {
-			averageScore = lobby.scoreEarnedByGuessers / playerCount
-		}
+		// var averageScore int
+		// if playerCount > 0 {
+		// 	averageScore = lobby.scoreEarnedByGuessers / playerCount
+		// }
 
-		drawer.LastScore = averageScore
-		drawer.Score += drawer.LastScore
+		// drawer.LastScore = averageScore
+		// drawer.Score += drawer.LastScore
 	}
 
 	//We need this for the next-turn event, in order to allow the client
