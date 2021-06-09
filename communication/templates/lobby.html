@@ -53,7 +53,7 @@
                     <div id="drawing-board-inner-wrapper">
                         <canvas id="drawing-board" style="display:none"></canvas>
                         <div id="statement-wrapper">
-                            <div id="statement-container">
+                            <div id="statement-container" style="position: relative;">
                                 <h1 id="statement"></h1>
                             </div>
                         </div>
@@ -67,16 +67,21 @@
                         <div id="center-dialogs">
                             <div id="center-dialog-container">
                                 <div id="word-dialog" class="center-dialog">
-                                    <span class="dialog-title">Write two truth and a lie about yourself</span>
+                                    <span class="dialog-title" style="text-align: center;">Write two truth and a lie
+                                        about yourself</span>
                                     <div class="center-dialog-content">
-                                        <div class="word-button-container" style="flex-direction:column">
-                                            <label for="truthOne">First truth<input type="text" id="truthOne"
-                                                    name="truthOne" required></label>
-                                            <label for="truthTwo">Second truth<input type="text" id="truthTwo"
-                                                    name="truthTwo" required></label>
-                                            <label for="lie">Lie!<input type="text" id="lie" name="lie"
-                                                    required></label>
-                                            <button id="submit-btn" class="dialog-button" style="margin-top: 10px;"
+                                        <div class="word-button-container" style="width: 400px;">
+                                            <label for="truthOne">Truth</label>
+                                            <input type="text" id="truthOne" name="truthOne" required
+                                                style="float:right; border-radius: 3px; border: none;"></input>
+                                            <label for="truthTwo">Truth</label>
+                                            <input type="text" id="truthTwo" name="truthTwo" required
+                                                style="float:right; border-radius: 3px; border: none;"></input>
+                                            <label for="lie">Lie!</label>
+                                            <input type="text" id="lie" name="lie" required
+                                                style="float:right; border-radius: 3px; border: none;"></input>
+                                            <button id="submit-btn" class="dialog-button"
+                                                style="margin-top: 10px;grid-column-start: 1; grid-column-end: 3;"
                                                 onclick="chooseWord()">Submit
                                             </button>
                                         </div>
@@ -386,6 +391,7 @@
     <script src="https://meet.jit.si/external_api.js"></script>
     <script type="text/javascript">
 
+
         const reconnectDialog = document.getElementById("reconnect-dialog");
         let socketIsConnecting = false;
         let socket;
@@ -585,6 +591,7 @@
             document.getElementById("player-container").style.height = document.getElementById("statement-wrapper").clientHeight + "px";
             chat.style.maxHeight = document.getElementById("statement-wrapper").clientHeight + "px";
             chat.style.height = document.getElementById("statement-wrapper").clientHeight + "px";
+
         }
 
         function scaleUpFactor() {
@@ -768,6 +775,9 @@
             socket.send(JSON.stringify({
                 type: "start",
             }))
+            startDialog.style.visibility = "hidden";
+            gameOverDialog.style.visibility = "hidden";
+            wordDialog.style.visibility = "visible";
         }
 
         function clearCanvasAndSendEvent() {
@@ -821,7 +831,12 @@
             }));
             allowDrawing = true;
             updateCursor();
+
+            document.getElementById("truthOne").value = ""
+            document.getElementById("truthTwo").value = ""
+            document.getElementById("lie").value = ""
             wordDialog.style.visibility = "hidden";
+
         }
 
         function onVotekickPlayer(playerId) {
@@ -967,17 +982,26 @@
                 valuetwo = statements[keytwo]
                 console.log(valuetwo)
 
-
-                document.getElementById('statement').innerHTML =
-                    `<input type="radio" id="first" required name="states" value=>
-                    <label for="first">`+ valuezero + `</label><br>
-                        <input type="radio" id="second" required name="states" value=2>
-                            <label for="second">`+ valueone + `</label><br>
-                                <input type="radio" id="third" required name="states" value=3>
-                                    <label for="third">`+ valuetwo + `</label>
-                                        <button id="ans-btn" class="dialog-button" style="margin-top: 10px;"
-                                                onclick="validateAns()">Submit
+                if (allowDrawing) {
+                    document.getElementById('statement').innerHTML =
+                        `<div><div  id="first" required name="states" value=1></div>
+                    <label class="radio-label" for="first" style="font-size: 4vh;">`+ valuezero + `</label></div>
+                        <div><div  id="second" required name="states" value=2></div>
+                            <label class="radio-label" for="second" style="font-size: 4vh;">`+ valueone + `</label></div>
+                                <div><div id="third" required name="states" value=3></div>
+                                    <label class="radio-label" for="third" style="font-size: 4vh;">`+ valuetwo + `</label></div>`
+                } else {
+                    document.getElementById('statement').innerHTML =
+                        `<div><input type="radio" id="first" required name="states" value=1></input>
+                    <label class="radio-label" for="first" style="font-size: 4vh;">`+ valuezero + `</label></div>
+                        <div><input type="radio" id="second" required name="states" value=2></input>
+                            <label class="radio-label" for="second" style="font-size: 4vh;">`+ valueone + `</label></div>
+                                <div><input type="radio" id="third" required name="states" value=3></input>
+                                    <label class="radio-label" for="third" style="font-size: 4vh;">`+ valuetwo + `</label></div>
+                                        <button id="ans-btn" class="dialog-button" onclick="validateAns()">Submit
                                          </button>`;
+                }
+
             } else if (parsed.type === "name-change") {
                 const playernameSpan = document.getElementById("playername-" + parsed.data.playerId);
                 if (playernameSpan !== null) {
@@ -1019,6 +1043,16 @@
                 fill(context, parsed.data.x * scaleDownFactor(), parsed.data.y * scaleDownFactor(), parsed.data.color);
             } else if (parsed.type === "clear-drawing-board") {
                 clear(context)
+            } else if (parsed.type === "turn") {
+                // clear(context);
+                document.getElementById('statement').innerHTML = "";
+                if (parsed.data !== null) {
+                    if (parsed.data === "") {
+                        applyMessage("system-message", "", "Round over.");
+                    } else {
+                        applyMessage("system-message", "", "Round over. Previous lie statement was '" + parsed.data + "'");
+                    }
+                }
             } else if (parsed.type === "next-turn") {
                 //As soon as a turn starts, the round should be ongoing, so we make
                 //sure that all types of dialogs, that indicate the game isn't
@@ -1031,30 +1065,17 @@
                 //If a player doesn't choose, the dialog will still be up.
                 wordDialog.style.visibility = "hidden";
                 // playWav('{{.RootPath}}/resources/end-turn.wav');
-
-                // clear(context);
-                document.getElementById('statement').innerHTML = "";
-
                 roundEndTime = parsed.data.roundEndTime;
                 applyRounds(parsed.data.round, maxRounds);
                 applyPlayers(parsed.data.players);
 
                 //We clear this, since there's no word chosen right now.
-                wordContainer.innerHTML = "";
-                if (parsed.data.previousWord !== null) {
-                    if (parsed.data.previousWord === "") {
-                        applyMessage("system-message", "", "Round over.");
-                    } else {
-                        applyMessage("system-message", "", "Round over. Previous lie statement was '" + parsed.data.previousWord + "'");
-                    }
-                }
-
-                allowDrawing = false;
+                allowDrawing = true;
                 updateCursor();
             } else if (parsed.type === "your-turn") {
                 // playWav('{{.RootPath}}/resources/your-turn.wav');
 
-                // promptWords(parsed.data[0], parsed.data[1], parsed.data[2]);
+                // promptWords(parsed.data[0], parsed.data[1], parsed.data[2]);                
                 wordDialog.style.visibility = "visible";
             } else if (parsed.type === "drawing") {
                 applyDrawData(parsed.data);
@@ -1532,7 +1553,7 @@
             var domain = "meet.jit.si";
             var options = {
                 roomName: '{{.LobbyID}}',
-                width: document.getElementById("question-wrapper").clientWidth + 460,
+                width: document.getElementById("statement-wrapper").clientWidth + 460,
                 height: 150,
                 allow: "microphone; camera",
                 parentNode: document.getElementById("jitsi"),

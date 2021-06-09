@@ -1,3 +1,78 @@
+#statement {
+    /* display: flex;
+    flex-flow: column wrap; */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}
+
+statement>div {
+    flex: 1;
+    padding: 2rem;
+    gap: 12px;
+}
+
+input[type="radio"] {
+    display: none;
+}
+
+input[type="radio"] :not(:disabled)~label {
+    cursor: pointer;
+}
+
+input[type="radio"] :disabled~label {
+    color: hsla(150, 5%, 75%, 1);
+    border-color: hsla(150, 5%, 75%, 1);
+    box-shadow: none;
+    cursor: not-allowed;
+}
+
+.radio-label {
+    color:hsla(215, 5%, 50%, 1);
+    height: 100%;
+    display: block;
+    background: white;
+    border: 2px solid rgb(32, 185, 223);
+    border-radius: 20px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    text-align: center;
+    box-shadow: 0px 3px 10px -2px hsla(150, 5%, 65%, 0.5);
+    position: relative;
+}
+
+input[type="radio"]:checked+label {
+    background: #5cddf6a8;
+    color: hsla(215, 0%, 100%, 1);
+    box-shadow: 0px 0px 20px hsla(192, 100%, 50%, 0.75);
+}
+
+input[type="radio"]:checked+label::after {
+    color: #5cddf6a8;
+    font-family: FontAwesome;
+    border: 2px solid #5cddf6a8;
+    content: "\2713";
+    font-size: 24px;
+    position: absolute;
+    top: -25px;
+    left: 50%;
+    transform: translateX(-50%);
+    height: 50px;
+    width: 50px;
+    line-height: 50px;
+    text-align: center;
+    border-radius: 50%;
+    background: white;
+    box-shadow: 0px 2px 5px -2px hsla(0, 0%, 0%, 0.25);
+}
+
+input[type="radio"]#control_05:checked+label {
+    background: red;
+    border-color: red;
+}
+
 #statement-wrapper {
     position: absolute;
     background-color: #fff;
@@ -131,7 +206,8 @@
     bottom: -1px;
     left: -1px;
     right: -1px;
-    border: 5px solid rgb(73, 72, 72);;
+    border: 5px solid rgb(73, 72, 72);
+    ;
     border-radius: 50%;
     content: "";
 }
@@ -278,7 +354,7 @@
     min-width: 15rem;
     height: 100%;
     display: grid;
-    grid-template-rows: fit-content(100%) auto fit-content(100%);
+    grid-template-rows: auto fit-content(100%);
     grid-column: 3;
     grid-row-start: 3;
     grid-row-end: 4;
@@ -365,8 +441,10 @@
 }
 
 .word-button-container {
-    display: flex;
-    flex-direction: row;
+    display: grid;
+    grid-template-columns: fit-content(100%) auto;
+    grid-row-gap: 5px;
+    grid-column-gap: 5px;
     margin-left: 20px;
     margin-right: 20px;
 }
@@ -382,7 +460,7 @@
     background-color: transparent;
 }
 
-.dialog-button:hover{
+.dialog-button:hover {
     border: 2px solid #553585;
 }
 
