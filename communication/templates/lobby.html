@@ -1070,13 +1070,13 @@
                 applyPlayers(parsed.data.players);
 
                 //We clear this, since there's no word chosen right now.
-                allowDrawing = true;
+                // allowDrawing = true;
                 updateCursor();
             } else if (parsed.type === "your-turn") {
                 // playWav('{{.RootPath}}/resources/your-turn.wav');
 
                 // promptWords(parsed.data[0], parsed.data[1], parsed.data[2]);
-                allowDrawing = false;                
+                allowDrawing = true;                
                 wordDialog.style.visibility = "visible";
             } else if (parsed.type === "drawing") {
                 applyDrawData(parsed.data);
