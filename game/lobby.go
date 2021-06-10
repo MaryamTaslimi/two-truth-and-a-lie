@@ -620,8 +620,8 @@ func roundTimerTicker(lobby *Lobby) {
 					lobby.timeLeftTicker.Stop()
 					lobby.timeLeftTicker = nil
 				}
-				go TriggerUpdateEvent("turn", lobby.CurrentWord, lobby)
-				go WriteAsJSON(lobby.drawer, &GameEvent{Type: "your-turn", Data: lobby.wordChoice})
+				TriggerUpdateEvent("turn", lobby.CurrentWord, lobby)
+				WriteAsJSON(lobby.drawer, &GameEvent{Type: "your-turn", Data: lobby.wordChoice})
 				// go advanceLobby(lobby)
 			}
 
