@@ -149,7 +149,6 @@ func HandleEvent(raw []byte, received *GameEvent, lobby *Lobby, player *Player) 
 			SendDataToEveryoneExceptSender(player, lobby, received)
 		}
 	} else if received.Type == "choose-word" {
-		advanceLobby(lobby)
 		c := Statements{}
 		mapstructure.Decode(received.Data, &c)
 		drawer := lobby.drawer
@@ -202,8 +201,7 @@ func HandleEvent(raw []byte, received *GameEvent, lobby *Lobby, player *Player) 
 				//the same rank, therefore y'll winners for now.
 				otherPlayer.Rank = 1
 			}
-			// WriteAsJSON(lobby.drawer, &GameEvent{Type: "your-turn", Data: lobby.wordChoice})
-			// advanceLobby(lobby)
+			advanceLobby(lobby)
 		}
 	} else if received.Type == "name-change" {
 		newName, isString := (received.Data).(string)
@@ -254,13 +252,7 @@ func handlestate(message string, sender *Player, lobby *Lobby) {
 			TriggerUpdateEvent("correct-guess", sender.ID, lobby)
 
 			if !lobby.isAnyoneStillGuessing() {
-				// advanceLobby(lobby)
-				if lobby.timeLeftTicker != nil {
-					lobby.timeLeftTicker.Stop()
-					lobby.timeLeftTicker = nil
-				}
-				TriggerUpdateEvent("turn", lobby.CurrentWord, lobby)
-				WriteAsJSON(lobby.drawer, &GameEvent{Type: "your-turn", Data: lobby.wordChoice})
+				advanceLobby(lobby)
 			} else {
 				//Since the word has been guessed correctly, we reveal it.
 				WriteAsJSON(sender, GameEvent{Type: "update-wordhint", Data: lobby.wordHintsShown})
@@ -417,13 +409,7 @@ func handleKickEvent(lobby *Lobby, player *Player, toKickID string) {
 			triggerPlayersUpdate(lobby)
 
 			if lobby.drawer == playerToKick || !lobby.isAnyoneStillGuessing() {
-				// advanceLobby(lobby)
-				if lobby.timeLeftTicker != nil {
-					lobby.timeLeftTicker.Stop()
-					lobby.timeLeftTicker = nil
-				}
-				TriggerUpdateEvent("turn", lobby.CurrentWord, lobby)
-				WriteAsJSON(lobby.drawer, &GameEvent{Type: "your-turn", Data: lobby.wordChoice})
+				advanceLobby(lobby)
 			}
 		}
 	}
@@ -492,6 +478,11 @@ func handleNameChangeEvent(caller *Player, lobby *Lobby, name string) {
 
 // advanceLobby will either start the game or jump over to the next turn.
 func advanceLobby(lobby *Lobby) {
+	if lobby.timeLeftTicker != nil {
+		lobby.timeLeftTicker.Stop()
+		lobby.timeLeftTicker = nil
+	}
+
 	//The drawer can potentially be null if he's kicked, in that case we proceed with the round if anyone has already
 	drawer := lobby.drawer
 	if drawer != nil && lobby.scoreEarnedByGuessers > 0 {
@@ -569,6 +560,8 @@ func advanceLobby(lobby *Lobby) {
 		nextTurnEvent.PreviousWord = &previousWord
 	}
 	TriggerUpdateEvent("next-turn", nextTurnEvent, lobby)
+
+	WriteAsJSON(lobby.drawer, &GameEvent{Type: "your-turn", Data: lobby.wordChoice})
 }
 
 func endGame(lobby *Lobby) {
@@ -616,13 +609,7 @@ func roundTimerTicker(lobby *Lobby) {
 		case <-ticker.C:
 			currentTime := getTimeAsMillis()
 			if currentTime >= lobby.RoundEndTime {
-				if lobby.timeLeftTicker != nil {
-					lobby.timeLeftTicker.Stop()
-					lobby.timeLeftTicker = nil
-				}
-				TriggerUpdateEvent("turn", lobby.CurrentWord, lobby)
-				WriteAsJSON(lobby.drawer, &GameEvent{Type: "your-turn", Data: lobby.wordChoice})
-				// go advanceLobby(lobby)
+				go advanceLobby(lobby)
 			}
 
 			if lobby.hintsLeft > 0 && lobby.wordHints != nil {

@@ -479,7 +479,6 @@
         let sound = localStorage.getItem("sound") !== "false";
         updateSoundIcon();
 
-
         function showKickDialog() {
             if (votekickEnabled !== true) {
                 alert("Votekicking isn't enabled in this lobby.");
@@ -776,9 +775,6 @@
             socket.send(JSON.stringify({
                 type: "start",
             }))
-            startDialog.style.visibility = "hidden";
-            gameOverDialog.style.visibility = "hidden";
-            wordDialog.style.visibility = "visible";
         }
 
         function clearCanvasAndSendEvent() {
@@ -983,17 +979,17 @@
                 valuetwo = statements[keytwo]
                 console.log(valuetwo)
 
-                if (!allowDrawing) {
-                    document.getElementById('statement').innerHTML =
-                        `<div><div  id="first" required name="states" value=1></div>
-                    <label class="radio-label" for="first" style="font-size: 4vh;">`+ valuezero + `</label></div>
-                        <div><div  id="second" required name="states" value=2></div>
-                            <label class="radio-label" for="second" style="font-size: 4vh;">`+ valueone + `</label></div>
-                                <div><div id="third" required name="states" value=3></div>
-                                    <label class="radio-label" for="third" style="font-size: 4vh;">`+ valuetwo + `</label></div>`
-                } else {
-                    document.getElementById('statement').innerHTML =
-                        `<div><input type="radio" id="first" required name="states" value=1></input>
+
+                // document.getElementById('statement').innerHTML =
+                //     `<div><div  id="first" required name="states" value=1></div>
+                // <label class="radio-label" for="first" style="font-size: 4vh;">`+ valuezero + `</label></div>
+                //     <div><div  id="second" required name="states" value=2></div>
+                //         <label class="radio-label" for="second" style="font-size: 4vh;">`+ valueone + `</label></div>
+                //             <div><div id="third" required name="states" value=3></div>
+                //                 <label class="radio-label" for="third" style="font-size: 4vh;">`+ valuetwo + `</label></div>`
+
+                document.getElementById('statement').innerHTML =
+                    `<div><input type="radio" id="first" required name="states" value=1></input>
                     <label class="radio-label" for="first" style="font-size: 4vh;">`+ valuezero + `</label></div>
                         <div><input type="radio" id="second" required name="states" value=2></input>
                             <label class="radio-label" for="second" style="font-size: 4vh;">`+ valueone + `</label></div>
@@ -1001,7 +997,6 @@
                                     <label class="radio-label" for="third" style="font-size: 4vh;">`+ valuetwo + `</label></div>
                                         <button id="ans-btn" class="dialog-button" onclick="validateAns()">Submit
                                          </button>`;
-                }
 
             } else if (parsed.type === "name-change") {
                 const playernameSpan = document.getElementById("playername-" + parsed.data.playerId);
@@ -1044,16 +1039,6 @@
                 fill(context, parsed.data.x * scaleDownFactor(), parsed.data.y * scaleDownFactor(), parsed.data.color);
             } else if (parsed.type === "clear-drawing-board") {
                 clear(context)
-            } else if (parsed.type === "turn") {
-                // clear(context);
-                document.getElementById('statement').innerHTML = "";
-                if (parsed.data !== null) {
-                    if (parsed.data === "") {
-                        applyMessage("system-message", "", "Round over.");
-                    } else {
-                        applyMessage("system-message", "", "Round over. Previous lie statement was '" + parsed.data + "'");
-                    }
-                }
             } else if (parsed.type === "next-turn") {
                 //As soon as a turn starts, the round should be ongoing, so we make
                 //sure that all types of dialogs, that indicate the game isn't
@@ -1066,11 +1051,21 @@
                 //If a player doesn't choose, the dialog will still be up.
                 wordDialog.style.visibility = "hidden";
                 // playWav('{{.RootPath}}/resources/end-turn.wav');
+                // clear(context);
+                document.getElementById('statement').innerHTML = "";
                 roundEndTime = parsed.data.roundEndTime;
                 applyRounds(parsed.data.round, maxRounds);
                 applyPlayers(parsed.data.players);
 
                 //We clear this, since there's no word chosen right now.
+                wordContainer.innerHTML = "";
+                if (parsed.data.previousWord !== null) {
+                    if (parsed.data.previousWord === "") {
+                        applyMessage("system-message", "", "Round over.");
+                    } else {
+                        applyMessage("system-message", "", "Round over. Previous lie statement was '" + parsed.data.previousWord + "'");
+                    }
+                }
                 allowDrawing = false;
                 updateCursor();
             } else if (parsed.type === "your-turn") {
