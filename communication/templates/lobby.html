@@ -479,6 +479,7 @@
         let sound = localStorage.getItem("sound") !== "false";
         updateSoundIcon();
 
+
         function showKickDialog() {
             if (votekickEnabled !== true) {
                 alert("Votekicking isn't enabled in this lobby.");
@@ -982,7 +983,7 @@
                 valuetwo = statements[keytwo]
                 console.log(valuetwo)
 
-                if (allowDrawing) {
+                if (!allowDrawing) {
                     document.getElementById('statement').innerHTML =
                         `<div><div  id="first" required name="states" value=1></div>
                     <label class="radio-label" for="first" style="font-size: 4vh;">`+ valuezero + `</label></div>
@@ -1070,13 +1071,12 @@
                 applyPlayers(parsed.data.players);
 
                 //We clear this, since there's no word chosen right now.
-                // allowDrawing = true;
+                allowDrawing = false;
                 updateCursor();
             } else if (parsed.type === "your-turn") {
                 // playWav('{{.RootPath}}/resources/your-turn.wav');
 
-                // promptWords(parsed.data[0], parsed.data[1], parsed.data[2]);
-                allowDrawing = true;                
+                // promptWords(parsed.data[0], parsed.data[1], parsed.data[2]);                
                 wordDialog.style.visibility = "visible";
             } else if (parsed.type === "drawing") {
                 applyDrawData(parsed.data);
