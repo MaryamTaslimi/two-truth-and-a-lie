@@ -1075,7 +1075,8 @@
             } else if (parsed.type === "your-turn") {
                 // playWav('{{.RootPath}}/resources/your-turn.wav');
 
-                // promptWords(parsed.data[0], parsed.data[1], parsed.data[2]);                
+                // promptWords(parsed.data[0], parsed.data[1], parsed.data[2]);
+                allowDrawing = false;                
                 wordDialog.style.visibility = "visible";
             } else if (parsed.type === "drawing") {
                 applyDrawData(parsed.data);
