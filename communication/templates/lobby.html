@@ -980,16 +980,18 @@
                 console.log(valuetwo)
 
 
-                // document.getElementById('statement').innerHTML =
-                //     `<div><div  id="first" required name="states" value=1></div>
-                // <label class="radio-label" for="first" style="font-size: 4vh;">`+ valuezero + `</label></div>
-                //     <div><div  id="second" required name="states" value=2></div>
-                //         <label class="radio-label" for="second" style="font-size: 4vh;">`+ valueone + `</label></div>
-                //             <div><div id="third" required name="states" value=3></div>
-                //                 <label class="radio-label" for="third" style="font-size: 4vh;">`+ valuetwo + `</label></div>`
 
-                document.getElementById('statement').innerHTML =
-                    `<div><input type="radio" id="first" required name="states" value=1></input>
+                if (allowDrawing) {
+                    document.getElementById('statement').innerHTML =
+                        `<div><div  id="first" required name="states" value=1></div>
+                <label class="radio-label" for="first" style="font-size: 4vh;">`+ valuezero + `</label></div>
+                    <div><div  id="second" required name="states" value=2></div>
+                        <label class="radio-label" for="second" style="font-size: 4vh;">`+ valueone + `</label></div>
+                            <div><div id="third" required name="states" value=3></div>
+                                <label class="radio-label" for="third" style="font-size: 4vh;">`+ valuetwo + `</label></div>`;
+                } else {
+                    document.getElementById('statement').innerHTML =
+                        `<div><input type="radio" id="first" required name="states" value=1></input>
                     <label class="radio-label" for="first" style="font-size: 4vh;">`+ valuezero + `</label></div>
                         <div><input type="radio" id="second" required name="states" value=2></input>
                             <label class="radio-label" for="second" style="font-size: 4vh;">`+ valueone + `</label></div>
@@ -997,6 +999,8 @@
                                     <label class="radio-label" for="third" style="font-size: 4vh;">`+ valuetwo + `</label></div>
                                         <button id="ans-btn" class="dialog-button" onclick="validateAns()">Submit
                                          </button>`;
+                }
+
 
             } else if (parsed.type === "name-change") {
                 const playernameSpan = document.getElementById("playername-" + parsed.data.playerId);
