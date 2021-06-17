@@ -960,26 +960,14 @@
             } else if (parsed.type === "update-players") {
                 applyPlayers(parsed.data);
             } else if (parsed.type === "show-statements") {
-                let statements = parsed.data
-                statements = Object.keys(statements)
-                    .map((key) => ({ key, value: statements[key] }))
-                    .sort((a, b) => b.key.localeCompare(a.key))
-                    .reduce((acc, e) => {
-                        acc[e.key] = e.value;
-                        return acc;
-                    }, {});
+                let statements = Object.entries(parsed.data);
+                statements.sort(() => Math.random() - 0.5);
 
-                var keyzero = Object.keys(statements)[0];
-                valuezero = statements[keyzero]
+                valuezero = statements[0][1]
 
-                var keyone = Object.keys(statements)[1];
-                valueone = statements[keyone]
+                valueone = statements[1][1]
 
-                var keytwo = Object.keys(statements)[2];
-                valuetwo = statements[keytwo]
-                console.log(valuetwo)
-
-
+                valuetwo = statements[2][1]
 
                 if (allowDrawing) {
                     document.getElementById('statement').innerHTML =
