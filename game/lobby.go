@@ -482,27 +482,6 @@ func advanceLobby(lobby *Lobby) {
 		lobby.timeLeftTicker.Stop()
 		lobby.timeLeftTicker = nil
 	}
-
-	//The drawer can potentially be null if he's kicked, in that case we proceed with the round if anyone has already
-	drawer := lobby.drawer
-	if drawer != nil && lobby.scoreEarnedByGuessers > 0 {
-
-		//Average score, but minus one player, since the own score is 0 and doesn't count.
-		playerCount := lobby.GetConnectedPlayerCount()
-		//If the drawer isn't connected though, we mustn't subtract from the count.
-		if drawer.Connected {
-			playerCount--
-		}
-
-		// var averageScore int
-		// if playerCount > 0 {
-		// 	averageScore = lobby.scoreEarnedByGuessers / playerCount
-		// }
-
-		// drawer.LastScore = averageScore
-		// drawer.Score += drawer.LastScore
-	}
-
 	//We need this for the next-turn event, in order to allow the client
 	//to know which word was previously supposed to be guessed.
 	previousWord := lobby.CurrentWord
@@ -541,6 +520,13 @@ func advanceLobby(lobby *Lobby) {
 
 	recalculateRanks(lobby)
 
+	if !firstTurn {
+		WriteAsJSON(lobby.drawer, &GameEvent{Type: "your-turn", Data: &previousWord})
+	} else {
+		WriteAsJSON(lobby.drawer, &GameEvent{Type: "your-turn", Data: nil})
+	}
+
+	time.Sleep(30 * time.Second)
 	//We use milliseconds for higher accuracy
 	lobby.RoundEndTime = time.Now().UTC().UnixNano()/1000000 + int64(lobby.DrawingTime)*1000
 	lobby.timeLeftTicker = time.NewTicker(1 * time.Second)
@@ -560,8 +546,8 @@ func advanceLobby(lobby *Lobby) {
 		nextTurnEvent.PreviousWord = &previousWord
 	}
 	TriggerUpdateEvent("next-turn", nextTurnEvent, lobby)
-
-	WriteAsJSON(lobby.drawer, &GameEvent{Type: "your-turn", Data: lobby.wordChoice})
+	WriteAsJSON(lobby.drawer, &GameEvent{Type: "submit-stat", Data: lobby.wordChoice})
+	// WriteAsJSON(lobby.drawer, &GameEvent{Type: "your-turn", Data: lobby.wordChoice})
 }
 
 func endGame(lobby *Lobby) {

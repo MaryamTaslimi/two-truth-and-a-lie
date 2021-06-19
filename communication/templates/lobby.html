@@ -67,10 +67,15 @@
                         <div id="center-dialogs">
                             <div id="center-dialog-container">
                                 <div id="word-dialog" class="center-dialog">
-                                    <span class="dialog-title" style="text-align: center;">Write two truth and a lie
+                                    <span class="dialog-title" style="text-align: center;">You got 60 seconds to write two truth and a lie
                                         about yourself</span>
                                     <div class="center-dialog-content">
                                         <div class="word-button-container" style="width: 400px;">
+                                            <div style="width: 4.5rem; grid-row-start:1;grid-row-end: 4;">
+                                                <span id="time-container-2">
+                                                    <p1 id="time-left-2">--</p1>
+                                                </span>
+                                            </div>
                                             <label for="truthOne">Truth</label>
                                             <input type="text" id="truthOne" name="truthOne" required
                                                 style="float:right; border-radius: 3px; border: none;"></input>
@@ -81,7 +86,7 @@
                                             <input type="text" id="lie" name="lie" required
                                                 style="float:right; border-radius: 3px; border: none;"></input>
                                             <button id="submit-btn" class="dialog-button"
-                                                style="margin-top: 10px;grid-column-start: 1; grid-column-end: 3;"
+                                                style="margin-top: 10px;grid-column-start: 1; grid-column-end: 3; display:none;"
                                                 onclick="chooseWord()">Submit
                                             </button>
                                         </div>
@@ -1031,40 +1036,39 @@
                 fill(context, parsed.data.x * scaleDownFactor(), parsed.data.y * scaleDownFactor(), parsed.data.color);
             } else if (parsed.type === "clear-drawing-board") {
                 clear(context)
-            } else if (parsed.type === "next-turn") {
-                //As soon as a turn starts, the round should be ongoing, so we make
-                //sure that all types of dialogs, that indicate the game isn't
-                //ongoing, are not visible anymore.
+            } else if (parsed.type === "next-turn") {                
+                roundEndTime = parsed.data.roundEndTime;
+                applyRounds(parsed.data.round, maxRounds);
+                applyPlayers(parsed.data.players);
+                wordContainer.innerHTML = "";
+                allowDrawing = false;
+                updateCursor();
+            } else if (parsed.type === "submit-stat") {                
+                document.getElementById("submit-btn").click();
+                wordDialog.style.visibility = "hidden";
+            } else if (parsed.type === "your-turn") {
                 unstartedDialog.style.visibility = "hidden";
                 startDialog.style.visibility = "hidden";
                 restartButton.style.display = "none";
                 gameOverDialog.style.visibility = "hidden";
-
-                //If a player doesn't choose, the dialog will still be up.
-                wordDialog.style.visibility = "hidden";
-                // playWav('{{.RootPath}}/resources/end-turn.wav');
-                // clear(context);
-                document.getElementById('statement').innerHTML = "";
-                roundEndTime = parsed.data.roundEndTime;
-                applyRounds(parsed.data.round, maxRounds);
-                applyPlayers(parsed.data.players);
-
-                //We clear this, since there's no word chosen right now.
-                wordContainer.innerHTML = "";
-                if (parsed.data.previousWord !== null) {
-                    if (parsed.data.previousWord === "") {
+                document.getElementById('statement').innerHTML = "";             
+                wordDialog.style.visibility = "visible";
+                if (parsed.data !== null) {
+                    if (parsed.data === "") {
                         applyMessage("system-message", "", "Round over.");
-                    } else {
-                        applyMessage("system-message", "", "Round over. Previous lie statement was '" + parsed.data.previousWord + "'");
+                    } else {                        
+                        applyMessage("system-message", "", "Round over. Previous lie statement was '" + parsed.data + "'");
                     }
                 }
-                allowDrawing = false;
-                updateCursor();
-            } else if (parsed.type === "your-turn") {
-                // playWav('{{.RootPath}}/resources/your-turn.wav');
-
-                // promptWords(parsed.data[0], parsed.data[1], parsed.data[2]);                
-                wordDialog.style.visibility = "visible";
+                let EndTime = 30000;
+                window.setInterval(function () {
+                    if (EndTime >= 0) {
+                        document.getElementById('time-left-2').innerText = Math.floor(EndTime / 1000);
+                        EndTime -= 500;
+                    } else {
+                        document.getElementById('time-left-2').innerText = "--";
+                    }
+                }, 500)
             } else if (parsed.type === "drawing") {
                 applyDrawData(parsed.data);
             } else if (parsed.type === "kick-vote") {
