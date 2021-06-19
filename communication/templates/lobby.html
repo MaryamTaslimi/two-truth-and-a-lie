@@ -1047,6 +1047,7 @@
                 document.getElementById("submit-btn").click();
                 wordDialog.style.visibility = "hidden";
             } else if (parsed.type === "your-turn") {
+                roundEndTime = -1;
                 unstartedDialog.style.visibility = "hidden";
                 startDialog.style.visibility = "hidden";
                 restartButton.style.display = "none";

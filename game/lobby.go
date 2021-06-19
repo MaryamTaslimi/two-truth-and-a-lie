@@ -479,6 +479,7 @@ func handleNameChangeEvent(caller *Player, lobby *Lobby, name string) {
 // advanceLobby will either start the game or jump over to the next turn.
 func advanceLobby(lobby *Lobby) {
 	if lobby.timeLeftTicker != nil {
+		log.Println("Here you finally")
 		lobby.timeLeftTicker.Stop()
 		lobby.timeLeftTicker = nil
 	}
