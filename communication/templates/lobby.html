@@ -966,6 +966,13 @@
                 applyPlayers(parsed.data);
             } else if (parsed.type === "show-statements") {
                 let statements = Object.entries(parsed.data);
+                let drawerName
+                for (let i = 0; i < statements.length; i++){
+                    if(statements[i][0] == "Drawer") {
+                        drawerName = statements[i][1];
+                        statements.splice(i, 1);
+                    }                    
+                }    
                 statements.sort(() => Math.random() - 0.5);
 
                 valuezero = statements[0][1]
@@ -984,7 +991,7 @@
                                 <label class="radio-label" for="third" style="font-size: 4vh;">`+ valuetwo + `</label></div>`;
                 } else {
                     document.getElementById('statement').innerHTML =
-                        `<p>guess which one is a lie about `+statements[3][1]+`</p><div><input type="radio" id="first" required name="states" value=1></input>
+                        `<p style="font-size: 24px;">guess which one is a lie about `+drawerName+ `</p><div><input type="radio" id="first" required name="states" value=1></input>
                     <label class="radio-label" for="first" style="font-size: 4vh;">`+ valuezero + `</label></div>
                         <div><input type="radio" id="second" required name="states" value=2></input>
                             <label class="radio-label" for="second" style="font-size: 4vh;">`+ valueone + `</label></div>
