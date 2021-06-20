@@ -526,6 +526,7 @@ func advanceLobby(lobby *Lobby) {
 	} else {
 		WriteAsJSON(lobby.drawer, &GameEvent{Type: "your-turn", Data: nil})
 	}
+	TriggerUpdateEvent("stop-timer", "", lobby)
 
 	time.Sleep(30 * time.Second)
 	//We use milliseconds for higher accuracy
