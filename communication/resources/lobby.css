@@ -1,6 +1,5 @@
 #statement {
-    /* display: flex;
-    flex-flow: column wrap; */
+    flex: 1;
     position: absolute;
     top: 50%;
     left: 50%;
@@ -90,6 +89,7 @@ input[type="radio"]#control_05:checked+label {
     width: 90%;
     text-align: center;
     display: flex;
+    flex-direction: column; /*added*/
     background: #fff;
     border-radius: 15px 15px 15px 15px;
     box-shadow: 4px 4px 10px 2px rgb(0 0 0 / 20%);
