@@ -67,7 +67,7 @@
                         <div id="center-dialogs">
                             <div id="center-dialog-container">
                                 <div id="word-dialog" class="center-dialog">
-                                    <span class="dialog-title" style="text-align: center;">You got 60 seconds to write two truth and a lie
+                                    <span class="dialog-title" style="text-align: center;">You got 30 seconds to write two truth and a lie
                                         about yourself</span>
                                     <div class="center-dialog-content">
                                         <div class="word-button-container" style="width: 400px;">
@@ -804,7 +804,7 @@
         };
 
         function validateAns() {
-            document.getElementById("ans-btn").disabled = true;
+            document.getElementById("ans-btn").style.visibility = "hidden";
             var checkedValue;
             if (document.getElementById('first').checked) {
                 checkedValue = valuezero;
