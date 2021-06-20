@@ -1068,11 +1068,9 @@
                 window.setInterval(function () {
                     if (EndTime >= 0) {
                         document.getElementById('time-left-2').innerText = Math.floor(EndTime / 1000);
-                        EndTime -= 500;
-                    } else {
-                        document.getElementById('time-left-2').innerText = "--";
-                    }
-                }, 500)
+                        EndTime -= 1000;
+                    } 
+                }, 1000)
             } else if (parsed.type === "drawing") {
                 applyDrawData(parsed.data);
             } else if (parsed.type === "kick-vote") {
