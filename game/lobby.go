@@ -91,6 +91,7 @@ type Statements struct {
 	TruthOne string `json:"truthOne"`
 	TruthTwo string `json:"truthTwo"`
 	Lie      string `json:"lie"`
+	drawer   *Player
 }
 
 func HandleEvent(raw []byte, received *GameEvent, lobby *Lobby, player *Player) error {
@@ -152,6 +153,7 @@ func HandleEvent(raw []byte, received *GameEvent, lobby *Lobby, player *Player) 
 		c := Statements{}
 		mapstructure.Decode(received.Data, &c)
 		drawer := lobby.drawer
+		c.drawer = drawer
 		if player == drawer {
 			if len(c.Lie) > 12 {
 				lobby.CurrentWord = c.Lie
