@@ -67,7 +67,8 @@
                         <div id="center-dialogs">
                             <div id="center-dialog-container">
                                 <div id="word-dialog" class="center-dialog">
-                                    <span class="dialog-title" style="text-align: center;">You got 60 seconds to write two truth and a lie
+                                    <span class="dialog-title" style="text-align: center;">You got 60 seconds to write
+                                        two truth and a lie
                                         about yourself</span>
                                     <div class="center-dialog-content">
                                         <div class="word-button-container" style="width: 400px;">
@@ -1036,28 +1037,27 @@
                 fill(context, parsed.data.x * scaleDownFactor(), parsed.data.y * scaleDownFactor(), parsed.data.color);
             } else if (parsed.type === "clear-drawing-board") {
                 clear(context)
-            } else if (parsed.type === "next-turn") {                
+            } else if (parsed.type === "next-turn") {
                 roundEndTime = parsed.data.roundEndTime;
                 applyRounds(parsed.data.round, maxRounds);
                 applyPlayers(parsed.data.players);
                 wordContainer.innerHTML = "";
                 allowDrawing = false;
                 updateCursor();
-            } else if (parsed.type === "submit-stat") {                
+            } else if (parsed.type === "submit-stat") {
                 document.getElementById("submit-btn").click();
                 wordDialog.style.visibility = "hidden";
             } else if (parsed.type === "your-turn") {
-                roundEndTime = -1;
                 unstartedDialog.style.visibility = "hidden";
                 startDialog.style.visibility = "hidden";
                 restartButton.style.display = "none";
                 gameOverDialog.style.visibility = "hidden";
-                document.getElementById('statement').innerHTML = "";             
+                document.getElementById('statement').innerHTML = "";
                 wordDialog.style.visibility = "visible";
                 if (parsed.data !== null) {
                     if (parsed.data === "") {
                         applyMessage("system-message", "", "Round over.");
-                    } else {                        
+                    } else {
                         applyMessage("system-message", "", "Round over. Previous lie statement was '" + parsed.data + "'");
                     }
                 }
@@ -1143,7 +1143,10 @@
         //         audio.play();
         //     }
         // }
-
+        if (wordDialog.style.visibility != "hidden") {
+            timeLeft.innerText = "75"
+            // roundEndTime = -1;
+        }
         window.setInterval(function () {
             if (roundEndTime >= 0) {
                 timeLeft.innerText = Math.floor(roundEndTime / 1000);
