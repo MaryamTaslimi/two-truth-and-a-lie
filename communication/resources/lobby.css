@@ -373,11 +373,6 @@ input[type="radio"]#control_05:checked+label {
     box-shadow: 4px 4px 10px 2px rgb(0 0 0 / 20%);
 }
 
-#lobby-wfhomie-scribble-img {
-    grid-column-start: 1;
-    grid-column-end: 5;
-}
-
 #center-dialog-content {
     color: #6c757d;
 }
